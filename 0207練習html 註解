@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+告訴檔案為html
+
+
+
+   <meta name="viewpoint" content="width=device-width,intial-scale=1.0"/>
+
+使螢幕根據設備大小調整
+  <!--註解方式-->
+
+
+<head>
+        <meta charset="UTF-8"></meta>(使用utf8編碼網頁，瀏覽器才能懂中文
+        <title>阿寶的網頁</title>(名稱
+     </head>
+
+
+
+
+(裡面要做縮排，方便閱讀)
+
+html
+放最外面
+
+head分別為開始和關閉
+放網頁資訊
+
+ <h3>第一篇文章</h3>3
+h1-h6字體大小
+h1為最重要標題
+
+
+ <h3>第一篇文章</h3>
+ <p>今天很熱<i><b>慘</b></i>哈哈</p>
+ <br/> 
+ <h2>第二篇文章</h2>
+ <p>今天很涼<i>讚</i></p>
+
+br間隔
+
+i斜體
+b粗體
+
+
+
+           <a href="https://www.google.com.tw/">google網站</a>
+
+href後https://www.google.com.tw代表屬性
+
+
+
+          <img scr="v2-81dcb196b25707d37994db5de61f58f4_r.jpg"width="400"height="400"
+                                                            (加上屬性)
+
+
+           <!--連結,圖片-->
+           <a href="https://www.google.com.tw/">google網站</a>
+           <a href="page2.html">第二頁</a>
+           <a href="dir/page3.html">第三頁</a>
+          <img scr="https://th.bing.com/th/id/OIP.EtYU_40iiDX4Aam01OpHlQHaE7?w=282&h=188&c=7&r=0&o=5&dpr=1.8&pid=1.7"/>
+          <img scr="v2-81dcb196b25707d37994db5de61f58f4_r.jpg"/>
+          <!--影片載入yotube影片-->
+          <video scr="c:\Users\wesle\Downloads\29844209_MotionElements_cosmic-stars-galaxy-background_preview.mp4"controls ></video>
+  
+ol數字排序
+   
+ol type="i">(羅馬數字排列)
+ol type="I">大寫羅馬數字
+ul
+
+
+ <tr>
+                     <td>日期</td>
+                     <td>數學</td>
+                     <td>英文</td>
+                </tr>
+                <tr>
+                    <td>9/2</td>
+                    <td>80</td>
+                    <td>60</td>
+                </tr>
+
+tr代表一行
+
+
+div
+容器標籤美化
+像是容器div後面加上程式碼後製需要使用一行就可以大部分修改
+
+div span差別是
+
+
+span寬度多少佔用空間就是多少
+div寬度不管多少就是占用一整行
+<!--輸入標籤-->
+
+        <input type="text" />
+        <br/>
+        <br/>
+        <input type="password" />
+密碼屬性會自動隱藏
+
+
+
+ <input type="text" placeholder="請輸入帳號"/>
+        <br/>
+        <br/>
+        <input type="password"pacehoder="請輸入密碼" />
+
+        <input type="date" placeholder="請輸入日期"/>
+   <br/>
+        <br/>
+        <input type="file" />
+
+  附加檔案
+        <br/>
+        <br/>
+        <input type="clickbox" />
+勾選欄位
+
+ <br/>
+        <br/>
+        <textarea>請輸入文字</textarea>
+
+                                                           
+body放內容
+
+
+
+
+
+page3../因為不在同個資料夾
+
+
+

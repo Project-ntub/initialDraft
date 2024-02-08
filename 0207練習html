@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+     <head>
+        <meta charset="UTF-8"></meta>
+        <meta name="description" content="讓網站更了解內容"/>
+        <meta name="author" content="123"/>
+        <meta name="keywords" content="html"/>
+        <meta name="viewpoint" content="width=device-width,intial-scale=1.0"/>
+
+        <title>阿寶的網頁</title>
+     </head>
+     <body>
+           hello我是阿寶
+           <!--註解方式-->
+           <h3>第一篇文章</h3>
+           <p>今天很熱<i><b>慘</b></i>哈哈</p>
+           <br/>
+           <h2>第二篇文章</h2>
+           <p>今天很涼<i>讚</i></p>
+
+
+           <!--連結,圖片-->
+           <a href="https://www.google.com.tw/">google網站</a>
+           <a href="page2.html">第二頁</a>
+           <a href="dir/page3.html">第三頁</a>
+          <img scr="https://th.bing.com/th/id/OIP.EtYU_40iiDX4Aam01OpHlQHaE7?w=282&h=188&c=7&r=0&o=5&dpr=1.8&pid=1.7"/>
+          <img scr="v2-81dcb196b25707d37994db5de61f58f4_r.jpg"/>
+          <!--影片載入yotube影片-->
+          <video scr="c:\Users\wesle\Downloads\29844209_MotionElements_cosmic-stars-galaxy-background_preview.mp4"controls ></video>
+          <!--列表表格-->
+          <ul> 
+            <li>google</li> 
+            <li>fb</li>
+            <li>ig</li>
+          </ul>
+
+          <table>
+                <tr>
+                     <td>日期</td>
+                     <td>數學</td>
+                     <td>英文</td>
+                </tr>
+                <tr>
+                    <td>9/2</td>
+                    <td>80</td>
+                    <td>60</td>
+                </tr>
+          </table>
+         <!--容器div span-->
+         <div>
+
+          <ul>
+            <li>google</li>
+            <li>fb</li>
+            <li>ig</li>
+          </ul>
+
+          <table>
+                <tr>
+                     <td>日期</td>
+                     <td>數學</td>
+                     <td>英文</td>
+                </tr>
+                <tr>
+                    <td>9/2</td>
+                    <td>80</td>
+                    <td>60</td>
+                </tr>
+
+                <span>span1</span>
+                <span>span2</span>
+                <hr>
+                <div>div1</div>
+                <div>div2</div>
+                <!--輸入標籤-->
+
+        <input type="text" placeholder="請輸入帳號"/>
+        <br/>
+        <br/>
+        <input type="password"pacehoder="請輸入密碼" />
+        <br/>
+        <br/>
+        <input type="date" placeholder="請輸入日期"/>
+        <br/>
+        <br/>
+        <input type="file" />
+        <br/>
+        <br/>
+        <input type="clickbox" />
+        <br/>
+        <br/>
+        <textarea>請輸入文字</textarea>
+
+        <!--meta標籤-->
+
+     </body>
+</html>
+
+
+
+
+
+
+
