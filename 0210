@@ -1,0 +1,116 @@
+Css
+
+
+內層會覆蓋到外層屬性
+
+
+
+
+<!DOCTYPE html>
+<html>
+     <head>
+            <meta charset="UTF-8"/>
+            <title>W的網頁</title>
+     </head>
+     <body>
+          <!--css-->
+          <div style="color:red;font-size:20px;">
+              <h1 style="color:blue;">css教學 </h1>
+              <p style="border:5px dashed green;width:200px;height:200px;"> 這是一個段落</p>
+          </div>
+     </body>
+
+
+
+</html>
+
+
+color顏色 網站找color picker
+
+可以用名字，編碼，rgb編碼
+
+
+<!DOCTYPE html>
+<html>
+     <head>
+            <meta charset="UTF-8"/>
+            <title>W的網頁</title>
+     </head>
+     <body>
+          <!--color-->
+            <h1 style="border:5px solid rgb(211, 238,73)">css教學</h1>
+            <p>這是一個段落</p>
+     </body>
+
+
+
+</html>
+
+
+
+
+
+padding and margin
+控制內部空間padding
+控制外部空間margin
+
+
+f12看製作過程
+
+
+<!DOCTYPE html>
+<html>
+     <head>
+            <meta charset="UTF-8"/>
+            <title>W的網頁</title>
+     </head>
+     <body>
+          <!--padding & margin-->
+          <h1>css教學</h1>
+          <div style="padding:20px; margin:20px;background-color:lightblue; border:20px solid black">
+                              哈瞜各位，新年快樂
+          </div>
+</html>
+
+
+
+
+
+
+float and display 
+
+
+排版
+
+
+使用incline寬度多少使用空間就多少
+block是不管寬度多少使用一整行
+
+
+<!DOCTYPE html>
+<html>
+     <head>
+            <meta charset="UTF-8"/>
+            <title>W的網頁</title>
+     </head>
+     <body>
+          <!--float & display-->
+          <ul style="background-color:lightblue; margin:0px;padding:15px">
+          <li>主頁</li>
+          <li>部落格</li>
+          <li>關於</li>
+          <li>關於我們</li>
+     </ul>
+          <p>Nobody can go back and start a new beginning, but anyone can start today and make a new ending.—Maria Robinson  </p>
+        <!--block incline-->
+        <p> 你好</p>
+        <p>哈哈</p>
+        <span style="display:inline">span1</span>
+        <span style="display:inline">span2</span>
+
+     </body>
+
+
+ 
+</html>
+
