@@ -1,0 +1,327 @@
+
+
+flex
+顯示方式預設由左至右
+
+
+.box-1{
+    flex:1;
+}
+
+滿版
+
+
+
+.box-1{
+    flex:1;
+    order:2;
+}
+
+
+.box-2{
+    flex:1;
+    order:1;
+
+}
+
+
+
+.box-3{
+    flex:1;
+    order:3;
+
+}
+
+自訂順序
+
+
+.container{
+      display:flex;
+      flex-wrap:wrap;
+}
+空間不夠自動換行，不擠壓空間
+.container div{
+border:1px solid rgb(202,201, 201);
+padding:10px;
+width:100px;
+
+}
+
+
+.box-1{
+    flex:1;
+    order:2;
+}
+
+
+.box-2{
+    flex:1;
+    order:1;
+
+}
+
+
+
+.box-3{
+    flex:1;
+    order:3;
+
+}
+
+
+
+
+左至右顯示改成上至下
+
+
+
+.container{
+      display:flex;
+      flex-wrap:wrap;
+      flex-direction:column;
+
+}
+
+.container div{
+border:1px solid rgb(202,201, 201);
+padding:10px;
+width:100px;
+
+}
+
+
+.box-1{
+    flex:1;
+    order:2;
+}
+
+
+.box-2{
+    flex:1;
+    order:1;
+
+}
+
+
+
+.box-3{
+    flex:1;
+    order:3;
+
+}
+
+
+由下至上
+
+.container{
+      display:flex;
+      flex-wrap:wrap;
+      flex-direction:column;
+
+}
+
+.container div{
+border:1px solid rgb(202,201, 201);
+padding:10px;
+width:100px;
+
+}
+
+
+.box-1{
+    flex:1;
+    order:2;
+}
+
+
+.box-2{
+    flex:1;
+    order:1;
+
+}
+
+
+
+.box-3{
+    flex:1;
+    order:3;
+
+}
+
+  預設為        flex-direction:row;
+
+
+相反      flex-direction:row-reverse;
+
+
+置中
+      align-items:center;
+
+
+
+
+<!DOCTYPE html>
+<html>
+     <head>
+            <meta charset="UTF-8"/>
+            <title>W的網頁</title>
+           <link rel="stylesheet" href="style.css"/>
+     </head>
+     <body>
+         <!--flex-->
+         <div class="container" >
+            <div class="box-1">區域1</div>
+            <div class="box-2">區域2</div>
+            <div class="box-3">區域3</div>
+         </div>
+        
+     </body>
+
+
+ 
+</html>
+
+.container{
+      display:flex;
+      flex-wrap:wrap;
+      flex-direction:row;
+      border:1px solid red;
+      height:400px;
+      justify-content:space-around;
+      align-items:center;
+}
+
+.container div{
+border:1px solid rgb(202,201, 201);
+padding:10px;
+width:100px;
+height:20px;
+}
+
+
+.box-1{
+    flex:1;
+    order:2;
+}
+
+
+.box-2{
+    flex:1;
+    order:1;
+
+}
+
+
+
+.box-3{
+    flex:1;
+    order:3;
+
+}
+
+
+
+
+
+animation
+
+
+
+
+    animation-iteration-count:infinite;
+輪迴
+    animation-iteration-count:2;
+跑兩次
+
+animation-delay:2s;
+
+
+延遲兩秒開始
+
+
+@keyframes change-color{
+   0%{background-color:red}
+   20%{background-color:blue}
+   40%{background-color:red}
+   60%{background-color:blue}
+   80%{background-color:red}
+   100%{background-color:blue}
+
+}
+變換
+
+
+@keyframes change-color{
+   0%{background-color:red;top:10px;left:10px;}
+   20%{background-color:blue;top:20px;left:20px;}
+   40%{background-color:red;top:30px;left:30px;}
+   60%{background-color:blue;top:40px;left:40px;}
+   80%{background-color:red;top:50px;left:50px;}
+   100%{background-color:blue;top:60px;left:60px;}
+}
+
+
+
+.box{
+    width:200px;
+    height:200px;
+    background-color:grey;
+}
+
+
+
+.box-animation{
+    animation-name: change-color;
+    animation-duration:5s;
+    animation-iteration-count:infinite;
+}
+
+
+
+
+動作
+
+
+<!DOCTYPE html>
+<html>
+     <head>
+            <meta charset="UTF-8"/>
+            <title>W的網頁</title>
+           <link rel="stylesheet" href="style.css"/>
+     </head>
+     <body>
+         <!--animation-->
+         <h1>css教學</h1>
+         <div class="box box-animation"></div>
+        
+     </body>
+
+
+ 
+</html>
+
+
+@keyframes change-color{
+   0%{background-color:red;top:10px;left:10px;}
+   20%{background-color:blue;top:20px;left:20px;}
+   40%{background-color:red;top:30px;left:30px;}
+   60%{background-color:blue;top:40px;left:40px;}
+   80%{background-color:red;top:50px;left:50px;}
+   100%{background-color:blue;top:60px;left:60px;}
+}
+
+
+
+.box{
+    width:200px;
+    height:200px;
+    background-color:grey;
+}
+
+
+
+.box-animation{
+    animation-name: change-color;
+    animation-duration:5s;
+    animation-iteration-count:infinite;
+}
