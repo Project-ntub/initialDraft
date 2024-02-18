@@ -1,0 +1,85 @@
+
+
+//物件表達現實東西
+
+var movie= {
+    title:"刻在你心底的名字",
+    maker:"氧氣電影",
+   duration:114,
+   actors:[
+      {
+         name:"王",
+         age:24,
+         is_male:true,
+      },
+      {
+        name:"陳",
+        age:24,
+        is_male:true,
+
+      }
+   ]
+};
+
+document.write(movie.title);
+
+document.write(movie.duration);
+
+
+document.write(movie.actors[0].name);
+
+document.write(movie.actors[0].age);
+
+
+document.write(movie.actors[0].is_male);
+
+
+//while迴圈   條件判斷
+var i =6;
+while(i<=3){
+        document.write(i);
+        document.write("<br/>");
+        //下面為值加一
+         i=i+1;
+
+}while(i<=3)
+
+
+//密碼檢驗程式
+
+//製作密碼登入平台需要
+var password=123456;
+var input;
+
+while(password!=input){
+          input=prompt("請輸入密碼");
+
+}
+alert("登入成功");
+
+
+//超出輸入次數
+
+var password = 123456;
+var input;
+var entry_count = 0;
+var entry_limit = 4;
+var out_of_limit = false;
+//判斷有無超出輸入次數
+
+
+//判斷使用者沒輸入正確密碼及次數
+while (password !== input && !out_of_limit) {
+    entry_count++;
+    if (entry_count <= entry_limit) {   
+        input = prompt("請輸入密碼");
+    } else {
+        out_of_limit = true;
+    }
+}
+
+if (out_of_limit) {
+    alert("超出輸入次數");
+} else {
+    alert("登入成功");
+}
