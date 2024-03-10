@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+
+<html>
+       <head>
+              <title>新增腳色</title>
+              <meta charset="UTF-8">
+       </head>
+
+   <body>
+         <h1>新增腳色</h1>
+         <form>
+               <fieldset>
+                  <legend>資料設定</legend>
+                 <label> 輸入腳色名稱:   </label>
+                 <br>
+                 <input type="text" name="username" size="40">
+                 <br>
+                 <br>
+                 <label>模組選擇</label>
+                 <br>
+                 <select name=" module[]" size="4" multiple>
+                    <option value=" sales figures analysis module">營業額分析模組</option>
+                    <option value="Inventory management module">庫存管理模組</option>
+                    <option value="Sales analysis module">銷售額分析模組</option>
+                 </select>
+                 <br>    
+                    <label>功能 權限</label>
+ 
+                 <br>
+                 <label>查看日營業報告</label>
+                 <input type="checkbox" name="check[]" value="check">查看
+                 <input type="checkbox" name="export[]" value="export">匯出
+                 <input type="checkbox" name="task[]" value="task">交辦任務
+
+
+
+               </fieldset>
+             <input type="submit" value="提交">
+             <input name="Submit" type="button" id="Submit" onClick="javascript:history.back(1)" value="取消" />
+
+         </form>
+
+
+   </body>
+
+
+
+</html>
