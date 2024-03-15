@@ -1,0 +1,158 @@
+#字串
+#"小白你好"
+#數字
+#-87
+#布林值(是或否)
+True
+False
+#清除cls   mac:clear
+
+
+#整數除法//
+#餘%
+#number=8
+#  字串  print("會印出數字"+str(number))
+
+#  次方    print(pow(2,4))
+#  最大   print(Max(2,5,88,5))
+#四捨五入  print(round(4.8))
+#無條件捨去print(floor(7.6))
+#無條件進位print(cell(7.1))
+#開根號print(squr(25))
+
+
+#建立基本計算機
+#name = input("請輸入名字:  ")
+#age= input("請輸入年紀")
+#print("哈摟"+ name+"你今年"+age+"歲")
+
+#會當成字串
+#因此要number1=input("請輸入數字")
+#number2=input("請輸入第二個數字")
+#print(int(number1)+float(number2))
+
+#列表list
+#score1=12
+#score2=85
+#score3=44
+#score=[12,85,44]
+#取締第幾位的值print(score[:2])
+#print(score.count(70))
+
+#元組tuple
+#scores=(90,80,60,70,50)
+#print(scores[0:2])
+#print(len(scores))
+
+
+#元組跟列表差在元組內資料不能修改
+#元組資料可以防止修改以及確保不想更動的資料完整性
+
+
+#函式function
+
+#定義函式
+#def hello(name,age):
+ #   print("hello"+name+"你今年"+str(age)+"歲")
+
+#呼叫函式
+#hello("小黃",55)
+
+#def add(num1,num2):
+#    print(num1+num2)
+    #回傳
+#    return 10
+#相加
+#add(2,3)
+
+#函式內的程式碼碰到return就會覆蓋掉呼叫
+
+#def add(num1,num2):
+   # print(num1+num2)
+    #回傳
+#    return num1+num2
+#相加
+#print(add(2,3))
+
+#練習
+#執行程式後python會看到我們定義了以下程式碼，然後value=add(3,4)往上看def add(num1,num2):  print(num1+num2)，之後印出相加7，之後撞到return10，就會被return覆蓋掉呼叫之後value=10，印出10
+
+#def add(num1,num2):
+#    print(num1+num2)
+    #回傳
+#    return 10
+
+#value=add(3,4)
+#print(value)
+
+
+#沒有return就會自動return none
+#def add(num1,num2):
+ #  print(num1+num2)
+
+
+#value=add(3,4)
+#print(value)
+
+#函式碰到return就會執行， print("你好")就會被無視
+
+#def add(num1,num2):
+#    print(num1+num2)
+#    return 10
+#    print("你好")
+
+#value=add(3,4)
+#print(value)
+
+
+#if判斷句
+
+
+#1
+
+#如果我肚子餓
+#我就去吃飯
+#hungry=False
+#if hungry:
+#    print("我就去吃飯")
+
+
+
+#2
+
+#如果今天下雨
+#     我就開車去上班
+#否則
+#      我就走路去上班
+#rainy=False
+#if rainy:
+#    print("我就開車去上班")
+#else:
+#    print("我就走路去上班")
+
+
+#3
+
+
+#如果 你考100分
+#     我就給你1000元
+#或是如果 你考80分以上
+#     我就給你500元
+#或是如果 你考60分以上
+#     我就給你100元
+#否則
+#      你給我300元
+
+score=100
+if score==100:
+#上面就=true
+    print("我就給你1000元")
+elif score>=80:
+    print("我給你500元")
+elif score>=60:
+    print("我給你100元")
+else :
+    print("你給我300元")
+    
+
+

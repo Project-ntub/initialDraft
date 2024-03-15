@@ -1,0 +1,62 @@
+#module模組
+#搜尋python module list可以找到模組
+#import tool
+#import token
+#import sys
+#print(sys.path)
+#import numpy
+#使用函式numpy.
+#print(tool.max_num(2,3,88))
+
+
+#類別class&物件object
+#資料過多定義類別型態時用到
+
+#class Phone:
+#    def _init__(self,os,number,is_waterproof):
+#    self.os= os
+#    self.number=number
+#   self.is_waterproof=is_waterproof
+
+#phone1= Phone("ios",123,True)
+#print(phone1.number)
+#phone2=phone("android"456,False)
+#print(phone2.os)
+
+
+
+
+
+#問答程式
+
+#from question import Question
+
+#test = [
+#    "1+3=?\n(a) 2\n(b) 3\n(b) 4\n\n",
+ #   "一公尺等於幾公分?\(a) 10\n(b) 100\n(b) 1000\n\n",
+#    "香蕉式什麼顏色?\n(a) 黑色\n(b) 黃色\n 白色\n\n"
+]
+#print(test[0])
+
+#questions = [
+#    Question(test[0], "c"),
+#   Question(test[1], "b"),
+#    Question(test[2], "b")
+#]
+
+#def run_test(questions):
+#    score = 0 
+#    for question in questions:
+#        answer = input(question.description)
+#        if answer == question.answer:
+#            score += 1
+#    print("你得到 " + str(score) + " 分，共 " + str(len(questions)) + " 題")
+
+#run_test(questions)
+
+
+
+class Question:
+    def __init__(self, description, answer):
+        self.description = description
+        self.answer = answer

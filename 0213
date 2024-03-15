@@ -1,0 +1,116 @@
+
+
+#for 迴圈
+#for 變數 in 字串or列表:
+    # 要重複執行的程式碼
+
+#for letter in "小白你好"     
+ #  print(letter)  一個個字呈現直行
+
+
+
+
+
+#for num in[0,1,2,3,4]
+   #   print(num)
+0
+1
+2
+3
+4
+
+#for num in range(5):
+  #  print(num)
+
+#for num in range [2,3,4,5,6]
+
+2
+3
+4
+5
+6
+
+#for num in range(2,7):
+   # print(num)
+
+#練習
+
+
+#def power(base_num, pow_num):
+#    result = base_num
+#    for index in range(pow_num - 1):
+#   result = result * base_num
+#    return result
+
+#print(power(4, 2))
+
+
+
+
+
+#二為列表及巢狀迴圈
+#row=行
+#column=列
+
+
+#nums   =  [
+ #     [0,1,2],
+ #     [3,4,5],
+ #     [6,7,8],
+  #    [9]
+#]
+#第一個中括號表示在第幾行，第二個中括號表示在第幾列
+#print(nums[3][0])
+#巢狀for迴圈
+#for row in nums:
+ #   for col in row:
+   #     print(col)
+
+
+#檔案讀取、寫入
+
+#open("檔案路徑", mode="絕對路徑")
+
+
+#絕對路徑 C:/Users/wesle/Desktop/python/123.txt
+#相對路徑 以程式位置作延伸 123.txt
+
+
+
+#mode="r" 讀取
+#mode="w" 複寫
+#mode="a"在原先的資料後寫東西
+
+#file=open("C:/Users/wesle/Desktop/python/123.txt",mode= "r")
+#print(file.read())
+#關閉減少緩存空間
+#file.close
+
+
+
+
+
+#file=open("C:/Users/wesle/Desktop/python/123.txt",mode= "r")
+#for line in file:
+#    print(line)
+
+
+#file.close
+
+
+
+
+
+#file=open("C:/Users/wesle/Desktop/python/123.txt",mode= "w")
+#file.write("hi")
+
+#file.close
+
+
+
+#支援中文
+
+#file=open("C:/Users/wesle/Desktop/python/123.txt",mode= "w",encoding="utf-8")
+#file.write("hi")
+
+#file.close
