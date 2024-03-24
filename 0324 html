@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+
+<!--!tab可以快速生成-->
+<html lanf="zh-TW">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>xxx角色管理</title>
+    <link rel="stylesheet" href="專題-1.css">
+    <script src="https://kit.fontawesome.com/a08d126f5f.js" crossorigin="anonymous"></script>
+    <style>
+       
+
+
+/*title  */
+
+
+
+h1 {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+            width: 100%;
+            margin: 0;
+            padding: 30px 0px;
+        }
+
+
+
+  
+
+
+
+     .fa-house{
+      font-size:5em;
+      position:fixed;
+      top:20px;
+      right: 20px;
+      color:blue;
+
+
+     }
+/* 新增角色 */
+
+     .addrole{
+      margin-left:300px;
+      margin-top:100px ;
+
+
+
+
+     }
+
+
+
+               
+
+
+
+
+      
+   /*
+     角色名稱
+              */
+
+
+  .container{
+    margin-left:300px;
+      margin-top:100px ;
+
+
+
+
+  }
+ /*
+     角色狀態
+              */
+              
+  
+
+  .container2 h2 {
+  margin-top: -120px;
+}
+.container2{
+
+  margin-top:-60px;
+
+}
+
+   
+  
+/*用戶數  */
+
+
+      </style>
+</head>
+
+
+
+<body>
+
+  <!-- hamburger menu -->
+
+
+
+
+
+
+
+  <button class="burger" onclick="toggleMenu()"></button>
+  <div class="menu">
+      <nav>
+          <a href="#" style="animation-delay: 0,2s;">儀表板管理</a>
+          <a href="#" style="animation-delay: 0,3s;">用戶管理</a>
+          <a href="#" style="animation-delay: 0,4s;">角色管理</a>
+          <a href="#" style="animation-delay: 0,5s;">歷史紀錄</a>
+      </nav>
+  </div>
+  <script>
+      const toggleMenu = () => document.body.classList.toggle("open");
+  </script>
+<!-- 
+    <div style="background-color:rgb(51,125,244);">
+      <text-align:right> -->
+
+      <p>
+    
+ 
+      <i  class="fa-solid fa-house"></i>
+
+      
+    </p>
+  <!-- </text-align:right> -->
+
+    <h1 align="center">角色管理</h1>
+  </div>
+    
+      <!-- <ul>
+         
+        <li><a href="#">儀錶板管理</a></li>
+        <li><a href="#">用戶管理</a></li>
+        <li><a href="#">角色管理</a></li>
+        <li><a href="#">歷史紀錄</a></li>
+        
+  </ul> -->
+  <!-- 新增角色 -->
+  <main>
+    <div class="addrole">
+      <form action="">
+        <select name="" id="roleSelect">
+          <option value="file:///C:/Users/wesle/Desktop/%E6%96%B0%E5%A2%9E%E8%85%B3%E8%89%B2/%E6%96%B0%E5%A2%9E%E8%85%B3%E8%89%B2.html">新增角色</option>
+        </select>
+      </form>
+      <a id="roleLink" class="link-button" href="#">新增角色</a>
+    </div>
+  </main>
+  
+<!--  <option value="經理">經理</option>
+              <option value="店長">店長</option>
+              <option value="管理員">管理員</option> -->
+
+       
+
+   
+      <br>
+   
+<div class="container">
+  <div class="role-title">
+    <h2>角色名稱 </h2>
+  </div>
+
+  <div class="role-title">
+    <h3>經理 </h3>
+    <h3>店長</h3>
+    <h3>管理員</h3>
+    <!-- 添加更多角色名稱 -->
+  </div>
+  <div class="container2">
+    <div class="role-title">
+      <!-- 腳色狀態 -->
+      <h2>腳色狀態</h2>
+
+      <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>角色名稱</title>
+        <link rel="stylesheet" href="主介面2.css">
+        </head>
+    </div>
+  
+    <div class="container2">
+      <input type="checkbox" id="check1">
+      <label for="check1" class="button"></label>
+  
+      <input type="checkbox" id="check2">
+      <label for="check2" class="button"></label>
+  
+      <input type="checkbox" id="check3">
+      <label for="check3" class="button"></label>
+  </div>
+      <!-- 添加更多角色名稱 -->
+    </div>
+  
+
+    <!-- 用戶數 -->
+    <div class="container3">
+      <h2>用戶數</h2>
+      
+      <div class="roles-container3">
+        <div class="role-info" id="manager-info">
+          <h3>經理</h3>
+          <p id="manager-count">Loading...</p>
+          <div class="member-list" id="manager-member-list"></div>
+          <a class="member-button" href="#" id="manager-member-button">角色成員</a>
+        </div>
+    
+        <div class="role-info" id="supervisor-info">
+          <h3>店長</h3>
+          <p id="supervisor-count">Loading...</p>
+          <div class="member-list" id="supervisor-member-list"></div>
+          <a class="member-button" href="#" id="supervisor-member-button">角色成員</a>
+        </div>
+    
+        <div class="role-info" id="admin-info">
+          <h3>管理員</h3>
+          <p id="admin-count">Loading...</p>
+          <div class="member-list" id="admin-member-list"></div>
+          <a class="member-button" href="#" id="admin-member-button">角色成員</a>
+        </div>
+      </div>
+    </div>
+    
+   
+      <!-- 角色權限 -->
+      
+      <div class="container4">
+        <div class="role-title">
+          <h2>操作</h2>
+        </div>
+      
+        <div class="role-info" id="manager-info">
+          <h3></h3>
+          <a href="file:///C:/Users/wesle/Desktop/%E8%85%B3%E8%89%B2%E6%AC%8A%E9%99%90/%E8%85%B3%E8%89%B2%E6%AC%8A%E9%99%90.html">腳色權限</a>
+        </div>
+      
+        <div class="role-info" id="supervisor-info">
+          <h3></h3>
+          <a href="file:///C:/Users/wesle/Desktop/%E8%85%B3%E8%89%B2%E6%AC%8A%E9%99%90/%E8%85%B3%E8%89%B2%E6%AC%8A%E9%99%90.html">腳色權限</a>
+        </div>
+      
+        <div class="role-info" id="admin-info">
+          <h3></h3>
+          <a href="file:///C:/Users/wesle/Desktop/%E8%85%B3%E8%89%B2%E6%AC%8A%E9%99%90/%E8%85%B3%E8%89%B2%E6%AC%8A%E9%99%90.html">腳色權限</a>
+        </div>
+      </div>
+      
+      <script src="腳色權限.js"></script>
+      </body>
+      </html>
+      
+
+</body>
+</html>
+
+
