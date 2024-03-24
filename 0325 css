@@ -1,0 +1,339 @@
+/* 
+header網站logo頁首資訊
+nav放置網站導覽貨主選單
+main包含主要內容
+footer頁尾標註網站聲明
+section進行分類
+
+*/
+
+
+
+
+
+
+
+
+/*header a{
+  color:white;
+  text-decoration:none;
+}
+*/
+
+/*.center {
+  text-align: center;
+}*/
+
+form {
+  display: inline-block;
+  margin-right: 700px; /* 將表單向右移動20px，您可以根據需要調整此數值 */
+  transform: scale(2); /* 將按鈕大小放大三倍 */
+}
+
+/* hamburger menu */
+
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  color: #FFFFFF;
+  background-color: #FFFFFF;
+  background-size: 400%;
+  background-repeat: no-repeat;
+  background-position: 0% 10%;
+}
+
+button {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.burger,
+.menu {
+  position: fixed;
+}
+
+.burger {
+  z-index: 3;
+  top: 0;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 88px;
+  height: 88px;
+  background-image: url("images/menu.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+body.open .burger {
+  background-image: url("images/close.svg");
+}
+
+.menu {
+  z-index: 2;
+  top: 0;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 250px;
+  height: 100%;
+  background: #95979A;
+  translate: -100% 0;
+  transition: translate 0.375s cubic-bezier(0.175, 0.885, 0.32, 1);
+}
+
+.menu nav {
+  opacity: 0;
+}
+
+@keyframes menu-in {
+  0% {
+      clip-path: ellipse(60% 60% at 0% 50%);
+  }
+  100% {
+      clip-path: ellipse(120% 120% at 0% 50%);
+  }
+}
+
+body.open .menu {
+  opacity: 1;
+  visibility: visible;
+  translate: 0;
+  animation: menu-in 0.375s;
+}
+
+body.open .menu nav {
+  opacity: 1;
+}
+
+.menu nav:hover a {
+  opacity: 0.25;
+}
+
+.menu nav a:hover {
+  opacity: 1;
+}
+
+.menu nav {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.menu a {
+  position: relative;
+  color: #FFFFFF;
+  font-size: 32px;
+  padding: 20px 0;
+  width: 300px;
+  text-decoration: none;
+  transition: 0.4s;
+}
+
+.menu a::before,
+.menu a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 10px;
+  width: 100%;
+  height: 2px;
+  border-radius: 2px;
+  transition: 0.4s;
+}
+
+.menu a::after {
+  transform: scaleX(0);
+  transform-origin: 0% 50%;
+  background-color: #f7f7f7;
+}
+
+.menu a:hover::before {
+  opacity: 1;
+}
+
+.menu a:hover::after {
+  transform: scaleX(1);
+}
+
+body.open .menu a {
+  animation: appear 0.25s backwards;
+}
+
+@keyframes appear {
+  0% {
+      opacity: 0;
+      transition: -30px 0;
+  }
+  100% {
+      opacity: 1;
+  }
+}
+
+/* 新增角色 */
+
+.link-button {
+  display: inline-block;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  color: #fff;
+  background-color: #333;
+  border: 2px solid #333;
+  border-radius: 5px;
+}
+
+.link-button:hover {
+  background-color: #555;
+}
+
+.link-button:focus {
+  outline: none;
+}
+
+
+/*  按鈕   */
+.container2 {
+  width: 50%;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column; /* 垂直排列按钮 */
+}
+
+.button {
+  background-color: #d2d2d2;
+  width: 100px;
+  height: 50px;
+  border-radius: 100px;
+  cursor: pointer;
+  position: relative;
+  transition: 0.2s;
+  margin-bottom: 20px; /* 添加垂直间距 */
+}
+
+.button::before {
+  position: absolute;
+  content: '';
+  background-color: #fff;
+  width: 45px;
+  height: 45px;
+  border-radius: 100px;
+  margin: 5px;
+  transition: 0.2s;
+}
+
+input:checked + .button {
+  background-color: #20096d;
+}
+
+input:checked + .button::before {
+  transform: translateX(100px);
+}
+
+input {
+  display: none;
+}
+.button {
+  background-color: #d2d2d2;
+  width: 50px; /* 將按鈕寬度設為原來的一半 */
+  height: 25px; /* 將按鈕高度設為原來的一半 */
+  border-radius: 100px;
+  cursor: pointer;
+  position: relative;
+  transition: 0.2s;
+  margin-bottom: 20px; /* 添加垂直間距 */
+}
+
+.button::before {
+  position: absolute;
+  content: '';
+  background-color: #fff;
+  width: 22.5px; /* 將 ::before 偽元素的寬度設為原來的一半 */
+  height: 22.5px; /* 將 ::before 偽元素的高度設為原來的一半 */
+  border-radius: 100px;
+  margin: 5px;
+  transition: 0.2s;
+}
+
+
+
+/* 文字顏色 */
+
+.role-title h2,
+.role-title h3,
+#manager-count,
+#supervisor-count,
+#admin-count {
+  color: black; 
+}
+
+#manager-count,
+#supervisor-count,
+#admin-count {
+  visibility: visible; 
+}
+
+.container3 h2 {
+  color: black; 
+}
+
+#manager-count,
+#supervisor-count,
+#admin-count {
+  color: black; 
+}
+
+#manager-info h3,
+#admin-info h3,
+#supervisor-info h3,
+.expand-button {
+  color: black; 
+}
+
+
+  /* 用戶數 */
+/* 整個部分右移 */
+.container3 {
+  margin-left: 460px; /* 向右移動460px */
+  margin-top: -210px; /* 向上移動210px */
+}
+
+
+
+.member-button {
+  display: inline-block;
+  padding: 8px 12px;
+  background-color: #007bff;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+  margin-left: 80px; /* 左邊距離調整為80px */
+  margin-top: -50px; /* 上邊距調整為-30px，使其與角色名稱對齊 */
+}
+/* 腳色權限 */
+
+.container4 {
+  margin-top: -430px; /* 向上移動50px或更大的負值 */
+  margin-left: 700px; /* 向右移動20px */
+
+}
+
+
+
+
+.role-info a {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+}
