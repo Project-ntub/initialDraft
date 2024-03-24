@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+
+<!--!tab可以快速生成-->
+<html lanf="zh-TW">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>xxx角色管理</title>
+    <link rel="stylesheet" href="專題-1.css">
+    <script src="https://kit.fontawesome.com/a08d126f5f.js" crossorigin="anonymous"></script>
+    <style>
+       
+
+
+/*title  */
+
+
+
+h1 {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+            width: 100%;
+            margin: 0;
+            padding: 30px 0px;
+        }
+
+
+
+
+
+
+
+
+
+/*
+      
+      h1 {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+            width: 100%;
+            margin: 0;
+            padding: 30px 0px;
+        }
+      
+      
+      
+        .dropbtn{
+         color:white;
+         background: #3498db;
+         border:none;
+         padding:40px 50px;
+         cursor:pointer;
+      
+      }
+      
+      
+      
+      
+      
+      */
+      
+      /*.dropdown{
+      
+      position:relative;
+    }
+      .dropdown-content {
+       position:absolute;
+      
+    
+      
+      }*/
+      /*.dropdown-centent a{
+        display:block;
+        background:#ebebeb ;
+        padding:12px 16px ;
+        color:black;
+        text-decoration:none;
+      
+      }*/
+      
+
+
+
+  
+
+
+
+     .fa-house{
+      font-size:5em;
+      position:fixed;
+      top:20px;
+      right: 20px;
+      color:blue;
+
+
+     }
+      
+   /*
+     腳色名稱
+              */
+
+
+
+
+
+
+      </style>
+</head>
+
+
+
+<body>
+
+  <!-- hamburger menu -->
+
+
+
+
+
+
+
+  <button class="burger" onclick="toggleMenu()"></button>
+  <div class="menu">
+      <nav>
+          <a href="#" style="animation-delay: 0,2s;">儀表板管理</a>
+          <a href="#" style="animation-delay: 0,3s;">用戶管理</a>
+          <a href="#" style="animation-delay: 0,4s;">角色管理</a>
+          <a href="#" style="animation-delay: 0,5s;">歷史紀錄</a>
+      </nav>
+  </div>
+  <script>
+      const toggleMenu = () => document.body.classList.toggle("open");
+  </script>
+<!-- 
+    <div style="background-color:rgb(51,125,244);">
+      <text-align:right> -->
+
+      <p>
+    
+ 
+      <i  class="fa-solid fa-house"></i>
+
+      
+    </p>
+  <!-- </text-align:right> -->
+
+    <h1 align="center">角色管理</h1>
+  </div>
+    
+      <!-- <ul>
+         
+        <li><a href="#">儀錶板管理</a></li>
+        <li><a href="#">用戶管理</a></li>
+        <li><a href="#">角色管理</a></li>
+        <li><a href="#">歷史紀錄</a></li>
+        
+  </ul> -->
+
+      <main>
+        <div class="center">
+          <form action="">
+            <select name="" id="">
+              <option value="新增腳色">新增腳色</option>
+             
+            </select>
+          </form>
+        </div>
+        
+   
+<!--  <option value="經理">經理</option>
+              <option value="店長">店長</option>
+              <option value="管理員">管理員</option> -->
+
+       
+
+   
+      <br>
+   
+<div class="container">
+  <div class="role-title">
+    <h2>角色名稱 </h2>
+  </div>
+
+  <div class="role-title">
+    <h3>經理 </h3>
+    <h3>店長</h3>
+    <h3>管理員</h3>
+    <!-- 添加更多角色名稱 -->
+  </div>
+  <div class="container">
+    <div class="role-title">
+      <h2>腳色狀態</h2>
+
+      <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>角色名稱</title>
+        <link rel="stylesheet" href="主介面2.css">
+        </head>
+    </div>
+  
+    <div class="container2">
+      <input type="checkbox" id="check1">
+      <label for="check1" class="button"></label>
+  
+      <input type="checkbox" id="check2">
+      <label for="check2" class="button"></label>
+  
+      <input type="checkbox" id="check3">
+      <label for="check3" class="button"></label>
+  </div>
+      <!-- 添加更多角色名稱 -->
+    </div>
+  
+      
+  
+      </main>
+  
+    
+
+
+
+
+
+
+
+</body>
+</html>
+
+
+
