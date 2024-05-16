@@ -1,0 +1,153 @@
+
+#js負責網站功能
+
+// 基本資料型態 & 變數
+
+document.write("哈摟");
+document.write("<br/>");
+document.write("hello");
+document.write("<br/>")
+
+
+//字串
+"小白"
+
+//數字
+87
+
+160
+160.5
+//布林值
+true
+false
+//創建一個變數然後把後面那串放到變數中
+//只能是英文大小寫或是數字或是$或是_的
+//開頭不能是數字
+var my_name="小黃";
+var my_age="20";
+var is_male=true;
+document.wrire(is_male);
+document.write("有個人叫"+my_name)
+
+
+//如何使用字串
+
+var phase="hello\"Mr.White"
+document.write(phase);
+
+
+
+var phrase="hello Mr.White" +"haha";
+var text="哈哈";
+document.write(phase);
+
+//得知字串長度
+document.write(prhase.length);
+
+//大寫
+document.write(phrase.toUpperCase);
+
+//回傳遞幾位字
+var phrase="hello Mr.White" ;
+document.write(phrase.charAt(1));
+
+
+//從內容找第幾位
+var phrase="hello Mr.White";
+document.write(phrase.indexOF("l"));
+
+
+//回傳遞幾位到第幾位
+var phrase="hello Mr.White";
+document.write(phrase.substring(0,5));
+//數字運用
+var number = 6;
+document.write((2+3)*number);
+
+//取餘數
+
+
+var number = 6;
+document.write(8%5);
+
+//找最大
+
+
+
+var number = 6;
+document.write(Math.max(2,5,4,8,9,5,5,6));
+
+//找最小
+
+var number = 6;
+document.write(Math.min(2,5,4,8,9,5,5,6));
+
+
+//四捨五入
+
+
+
+var number = 6.8;
+document.write(Math.round(number));
+
+//次方
+
+var number = 6.8;
+document.write(Math.pow(4,8));
+
+
+//根號
+
+var number = 6.8;
+document.write(Math.sqrt(36));
+
+//隨機回傳
+
+
+
+
+var number = 6.8;
+document.write(Math.random());
+
+
+
+//基本計算機
+//名子輸入框
+var my_name=prompt("請輸入名子")
+document.write("哈摟"+my_name)
+
+//多個輸入框
+var my_name=prompt("請輸入名子")
+var my_age=prompt("請輸入年紀")
+document.write("哈摟"+my_name)
+document.write("你今年"+my_age+"歲")
+
+
+//加
+//預設會當字串
+//要轉換成數字
+//parseInt轉成整數
+//parseFloat轉成有小數
+var num1=prompt("請輸入數字1")
+var num2=prompt("請輸入數字2")
+num1=parseInt(num1);
+num2=parseInt(num2);
+document.write(num1+num2)
+
+//陣列array
+
+var scores=[80,60,40,30,20];
+var friends=["貓","狗"];
+var friends=[true,false,true];
+var friends=[true,20,"小黑"];
+//修改錯誤檔案
+score[0]=20;
+var score1=80;
+var score2=60;
+var score3=40;
+var score4=30;
+var score5=20;
+//取得第幾位
+document.write(scores[0]);
+document.write(friends.length);
+

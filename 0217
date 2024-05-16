@@ -1,0 +1,236 @@
+
+
+
+//函式function
+
+
+
+//function hello(name){
+           document.write("你好");
+
+}
+//呼叫函示
+hello();
+//名字加入字串
+hello(wesley);
+
+
+
+function hello(name,age){
+    document.write("你好"+name+"你今年"+age+"歲");
+
+}
+
+//名字及年齡
+hello("小白","82");
+
+
+//回傳
+//使的運算跟處理便方便
+//遇到return會跳出函式
+
+function add(num1,num2){
+
+    return num1+num2;
+
+
+}
+
+
+document.write(3,5);
+
+
+//遇到return會跳出函式
+
+
+
+function add(num1,num2){
+
+    return num1+num2;
+    document.write("你好");
+
+}
+
+
+document.write(3,5);
+
+
+//練習
+
+//換行代碼    document.write("<br/>");
+
+
+function add(num1,num2){
+    document.write(num1+num2);
+    document.write("<br/>");
+    return 10;
+    document.write("你好");
+
+}
+
+
+document.write(3,5);
+
+
+
+
+
+
+
+//if判斷
+
+/*1
+   如果肚子餓
+           我就去吃飯
+  */
+
+var hungry= true;
+if(hungry){
+           document.write("我就去吃飯");
+
+}
+
+
+
+/*2
+   如果今天下雨
+          我就開車去上班
+    否則
+         我就走路去上班
+  */
+ var rainy=true;
+if(rainy){
+      document.write("我就開車去上班");
+
+}
+else{
+    document.write("我就走路去上班");
+
+
+}
+
+
+
+/*3
+   如果你考100分
+          我就給你1000元
+    或是如果你考80分以上
+         我就給你500元
+    或是如果你考60分以上
+       我就給你100元
+    否則
+       你給我300元
+  */
+
+var score=100;
+if(score==100){
+       document.write("我給你1000元");
+}
+else if(score>=80){
+       document.write("我給你500元");
+}
+else if(score>=60){
+       document.write("我就給你100元");
+}
+else{
+    document.write("你給我300元");
+
+}
+
+
+
+/*4
+   如果你考100分且今天下雨
+         我給你1000元
+    否則
+       你給我100元
+  */
+var score=100;
+var rainy=true;
+//且&&
+if(score==100&&rainy){
+              document.write("我給你1000元");
+}
+else{
+      document.write("你給我100元");
+
+}
+/*5
+   如果你考100分或今天下雨
+         我給你1000元
+    否則
+       你給我100元
+  */
+       var score=90;
+       var rainy=true;
+       //shift+\  = |
+       if(score==100||rainy){
+                     document.write("我給你1000元");
+       }
+       else{
+             document.write("你給我100元");
+       
+       }
+
+
+
+
+/*6
+   如果你考100分或今天沒有下雨
+         我給你1000元
+    否則
+       你給我100元
+  */
+       var score=90;
+       var rainy=false;
+       //shift+\  = |
+       // !=負面，沒下雨    if(score==100||!rainy){
+       if(score==100||!rainy){
+                     document.write("我給你1000元")
+       }
+       else{
+             document.write("你給我100元")
+       
+       }
+//複習
+
+function max_num(num1,num2,num3){
+  if(num1>+num2 && num1>=num3){
+           return num1;
+        
+
+  }
+   else if (num2>=num1&& num2>=num3){
+         return num2;
+   }
+
+   else {
+      return num3;
+   }
+
+
+}
+document,write(max_num(10,88,35));
+
+//物件object
+
+//key value
+// 鍵   值
+
+
+
+//存放物件小白
+var person={
+      name:"小白",
+      age:23,
+      is_male:true,
+      print_name:function(){
+         document.write(this.name);
+      }
+};
+
+person.print_name();
+var phrase = "hello"
+
+phrase.indexOf()
+

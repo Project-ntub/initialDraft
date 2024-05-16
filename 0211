@@ -1,0 +1,434 @@
+
+position
+
+相對定位
+
+<!DOCTYPE html>
+<html>
+     <head>
+            <meta charset="UTF-8"/>
+            <title>W的網頁</title>
+     </head>
+     <body  style="height:1500px;">
+         <!--position-->
+         <hi>css教學</hi>
+         <div style="position:relative; top:10px; width:80px;height:80px; background-color:blue;"></div>
+         <div style="width:120px;height:120px;background-color:red;"></div>
+
+
+
+
+     </body>
+
+
+ 
+</html>
+
+
+
+
+絕對定位前
+
+
+
+<!DOCTYPE html>
+<html>
+     <head>
+            <meta charset="UTF-8"/>
+            <title>W的網頁</title>
+     </head>
+     <body  style="height:1500px;">
+         <!--position-->
+         <hi>css教學</hi>
+         <div style="position:relative; top:10px; width:80px;height:80px; background-color:blue;"></div>
+         <div style="width:120px;height:120px;background-color:red;"></div>
+
+
+         <br/>
+         <div style="padding:30px; border:5px solid red">
+              <div style="padding:30px; border:5px solid red;">
+                  <div style="width:40px; height:40px; background-color:blue;">
+               </div>
+              </div>
+     </body>
+
+
+ 
+</html>
+
+
+
+
+絕對定位後
+
+相對於獨立一層(飄起來
+(外層div設定定位後會根據外層做定位)
+
+       會不知道有這層      <div style=" position:absolute;width:40px; height:40px; background-color:blue;">
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+     <head>
+            <meta charset="UTF-8"/>
+            <title>W的網頁</title>
+     </head>
+     <body  style="height:1500px;">
+         <!--position-->
+         <hi>css教學</hi>
+         <div style="position:relative; top:10px; width:80px;height:80px; background-color:blue;"></div>
+         <div style="width:120px;height:120px;background-color:red;"></div>
+
+
+         <br/>
+         <div style="padding:30px; border:5px solid red">
+              <div style="padding:30px; border:5px solid red;">
+                  <div style=" position:absolute;width:40px; height:40px; background-color:blue;">
+               </div>
+              </div>
+     </body>
+
+
+ 
+</html>
+
+
+
+opacity& border-radius
+透明度調整
+
+
+<!DOCTYPE html>
+<html>
+     <head>
+            <meta charset="UTF-8"/>
+            <title>W的網頁</title>
+     </head>
+     <body  style="height:1500px;">
+         <!--opacity&border-radius-->
+         <hi>css教學</hi>
+         <p style="position:relative;top :65px: left:25px;>">你好</p>
+         <div style="opacity:0.5;width:80px;height:80px;background-color:rgb(27, 74, 194);"></div>
+
+
+        
+     </body>
+
+
+ 
+</html>
+
+
+
+
+
+
+border-radius
+
+
+
+圓弧度調整
+每個角都可以改
+20px 30px 40px 20px
+<!DOCTYPE html>
+<html>
+     <head>
+            <meta charset="UTF-8"/>
+            <title>W的網頁</title>
+     </head>
+     <body  style="height:1500px;">
+         <!--opacity&border-radius-->
+         <hi>css教學</hi>
+         <p style="position:relative;top :65px: left:25px;>">你好</p>
+         <div style="opacity:0.5;border-radius:10px;width:80px;height:80px;background-color:rgb(27, 74, 194);"></div>
+
+
+        
+     </body>
+
+
+ 
+</html>
+
+
+
+css顏色另一個寫法
+
+
+
+<!DOCTYPE html>
+<html>
+     <head>
+            <meta charset="UTF-8"/>
+            <title>W的網頁</title>
+            <style>
+             p{
+               color:blue;
+             }
+
+            </style>
+     </head>
+     <body 
+         <!--css另一種寫法-->
+         <hi>css教學</hi>
+         <p >新年快樂</p>
+         <p >新年快樂</p>
+         <p >新年快樂</p>
+         <p >新年快樂</p>
+         <p >新年快樂</p>
+         <p >新年快樂</p>
+
+
+        
+     </body>
+
+
+ 
+</html>
+
+
+
+
+如何引入css檔案
+
+
+
+
+好處是網頁頁面多可以直接套用
+<!DOCTYPE html>
+<html>
+     <head>
+            <meta charset="UTF-8"/>
+            <title>W的網頁</title>
+           <!--引入css檔案-->
+           <link rel="stylesheet" href="style.css"/>
+     </head>
+     <body>
+         
+         <h1>css教學</h1>
+         <p >新年快樂</p>
+         <p >新年快樂</p>
+         <p >新年快樂</p>
+         <p >新年快樂</p>
+         <p >新年快樂</p>
+         <p >新年快樂</p>
+
+
+        
+     </body>
+
+
+ 
+</html>
+
+
+
+
+p{
+    color:blue;
+    background-color:grey;
+  }
+  h1{
+     color:red;
+  }
+
+
+
+
+
+class&id
+class用.
+id用#
+
+標籤做分類
+
+<!DOCTYPE html>
+<html>
+     <head>
+            <meta charset="UTF-8"/>
+            <title>W的網頁</title>
+       
+           <link rel="stylesheet" href="style.css"/>
+     </head>
+     <body>
+         <!--class&id-->
+         <h1>css教學</h1>
+         <p class="food">壽司</p>
+         <p class="food background-grey">牛排</p>
+         <p class="food">拉麵</p>
+         <p class="language background-grey">英文</p>
+         <p class="language">中文</p>
+         <p class="language">拉丁文</p>
+
+
+        
+     </body>
+
+
+ 
+</html>
+
+.food{
+    color:red;
+}
+
+
+
+.language{
+    color:blue;
+}
+
+
+
+.background-grey{
+    background-color:grey;
+}
+
+
+id給唯一識別名稱
+
+id一個名字只能出現一次
+
+<!DOCTYPE html>
+<html>
+     <head>
+            <meta charset="UTF-8"/>
+            <title>W的網頁</title>
+       
+           <link rel="stylesheet" href="style.css"/>
+     </head>
+     <body>
+         <!--class&id-->
+         <h1 id="css-h1">css教學</h1>
+         <p class="food">壽司</p>
+         <p class="food background-grey">牛排</p>
+         <p class="food">拉麵</p>
+         <p class="language background-grey">英文</p>
+         <p class="language">中文</p>
+         <p class="language">拉丁文</p>
+
+
+        
+     </body>
+
+
+ 
+</html>
+
+.food{
+    color:red;
+}
+
+
+
+.language{
+    color:blue;
+}
+
+
+
+.background-grey{
+    background-color:grey;
+}
+
+
+
+#css-h1{
+    color:yellow;
+    background-color:grey;
+}
+
+
+
+
+
+css選擇器
+w3school selector
+
+
+ul li{
+    background-color: grey;
+}
+找尋ul中li類別更改
+
+
+ul a{
+    background-color: grey;
+}
+
+找尋ul中a類別更改
+
+
+
+
+
+#id-1, .class-1{
+    background-color: grey;
+}
+套用
+
+
+
+[type]{
+    background-color: grey;
+}
+套用在有type屬性的標籤上
+
+
+[href]{
+    background-color: grey;
+}
+
+套用在有href屬性的標籤上
+
+
+
+h1:hover{
+    background-color: grey;
+}
+
+滑鼠滑過h1標籤時背景就會變成灰色
+
+
+
+[type]:hover{
+    background-color: grey;
+}
+
+
+<!DOCTYPE html>
+<html>
+     <head>
+            <meta charset="UTF-8"/>
+            <title>W的網頁</title>
+       
+           <link rel="stylesheet" href="style.css"/>
+     </head>
+     <body>
+         <!--更多套用css方法-->
+         <h1 >css教學</h1>
+         <p class="class-1">這是一個段落</p>
+         <p class="class-1">這是第二個段落</p>
+         <h2 id="id-1">你好啊 </h2>
+         <h2> 安安你好啊</h2>
+         <ul>
+               <li><a href="https://www.google.com.tw/">google</a></li>
+               <li>facebook</li>
+               <li>ig</li>
+
+         </ul>
+         <input type="text"/>
+         <br/>
+         <input type="password" />
+
+        
+     </body>
+
+
+ 
+</html>

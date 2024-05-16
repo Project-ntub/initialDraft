@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Statistics</title>
+<link rel="stylesheet" href="用戶數.css">
+</head>
+<body>
+
+<div class="container">
+  <div class="role-title">
+    <h2>User Statistics</h2>
+  </div>
+
+  <div class="role-info" id="manager-info">
+    <h3>Manager</h3>
+    <p id="manager-count">Loading...</p>
+    <div class="expand-button" id="manager-expand">View Members</div>
+    <div class="member-list" id="manager-member-list"></div>
+  </div>
+
+  <div class="role-info" id="supervisor-info">
+    <h3>Supervisor</h3>
+    <p id="supervisor-count">Loading...</p>
+    <div class="expand-button" id="supervisor-expand">View Members</div>
+    <div class="member-list" id="supervisor-member-list"></div>
+  </div>
+
+  <div class="role-info" id="admin-info">
+    <h3>Administrator</h3>
+    <p id="admin-count">Loading...</p>
+    <div class="expand-button" id="admin-expand">View Members</div>
+    <div class="member-list" id="admin-member-list"></div>
+  </div>
+</div>
+
+<script src="用戶數.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+  }
+  
+  .container {
+    margin: 20px auto;
+    padding: 20px;
+    width: 80%;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .role-title {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .role-info {
+    margin-bottom: 20px;
+    position: relative; /* 添加相对定位 */
+  }
+  
+  .role-info h3 {
+    margin-bottom: 10px;
+  }
+  
+  .expand-button {
+    position: absolute;
+    right: 10px;
+    top: 0;
+    cursor: pointer;
+    color: #007bff;
+  }
+  
+  .member-list {
+    display: none; /* 默认隐藏 */
+    margin-top: 10px;
+  }
+  
+  .member-list-item {
+    margin-bottom: 5px;
+  }
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+window.onload = function() {
+    // Fetch manager count
+    fetchUserData('manager', 'manager-count');
+  
+    // Fetch supervisor count
+    fetchUserData('supervisor', 'supervisor-count');
+  
+    // Fetch admin count
+    fetchUserData('admin', 'admin-count');
+  
+    // Add event listeners to expand buttons
+    document.getElementById('manager-expand').addEventListener('click', function() {
+      toggleMemberList('manager');
+    });
+  
+    document.getElementById('supervisor-expand').addEventListener('click', function() {
+      toggleMemberList('supervisor');
+    });
+  
+    document.getElementById('admin-expand').addEventListener('click', function() {
+      toggleMemberList('admin');
+    });
+  }
+  
+  function fetchUserData(role, elementId) {
+    fetch(`/api/users/${role}`)
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById(elementId).textContent = data.count;
+      })
+      .catch(error => {
+        console.error('Error fetching user data:', error);
+      });
+  }
+  
+  function toggleMemberList(role) {
+    const memberList = document.getElementById(`${role}-member-list`);
+    memberList.style.display = memberList.style.display === 'none' ? 'block' : 'none';
+    if (memberList.style.display === 'block') {
+      fetch(`/api/users/${role}/members`)
+        .then(response => response.json())
+        .then(data => {
+          renderMemberList(memberList, data.members);
+        })
+        .catch(error => {
+          console.error(`Error fetching ${role} members:`, error);
+        });
+    }
+  }
+  
+  function renderMemberList(container, members) {
+    container.innerHTML = '';
+    members.forEach(member => {
+      const listItem = document.createElement('div');
+      listItem.classList.add('member-list-item');
+      listItem.textContent = member.name;
+      container.appendChild(listItem);
+    });
+  }
+  
