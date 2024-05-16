@@ -1,0 +1,85 @@
+用戶數
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Statistics</title>
+<link rel="stylesheet" href="用戶數.css">
+</head>
+<body>
+
+<div class="container">
+  <div class="role-title">
+    <h2>User Statistics</h2>
+  </div>
+
+  <div class="role-info" id="manager-info">
+    <h3>Manager</h3>
+    <p id="manager-count">Loading...</p>
+  </div>
+
+  <div class="role-info" id="supervisor-info">
+    <h3>Supervisor</h3>
+    <p id="supervisor-count">Loading...</p>
+  </div>
+
+  <div class="role-info" id="admin-info">
+    <h3>Administrator</h3>
+    <p id="admin-count">Loading...</p>
+  </div>
+</div>
+
+<script src="用戶數.js"></script>
+</body>
+</html>
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+}
+
+.container {
+  margin: 20px auto;
+  padding: 20px;
+  width: 80%;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.role-title {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.role-info {
+  margin-bottom: 20px;
+}
+
+.role-info h3 {
+  margin-bottom: 10px;
+}
+window.onload = function() {
+  // Fetch manager count
+  fetchUserData('manager', 'manager-count');
+
+  // Fetch supervisor count
+  fetchUserData('supervisor', 'supervisor-count');
+
+  // Fetch admin count
+  fetchUserData('admin', 'admin-count');
+}
+
+function fetchUserData(role, elementId) {
+  fetch(`/api/users/${role}`)
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById(elementId).textContent = data.count;
+    })
+    .catch(error => {
+      console.error('Error fetching user data:', error);
+    });
+}
