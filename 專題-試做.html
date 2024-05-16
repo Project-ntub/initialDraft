@@ -1,0 +1,79 @@
+按鈕
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>角色名稱</title>
+<link rel="stylesheet" href="主介面2.css">
+</head>
+<body>
+
+<div class="container2">
+    <input type="checkbox" id="check1">
+    <label for="check1" class="button"></label>
+
+    <input type="checkbox" id="check2">
+    <label for="check2" class="button"></label>
+
+    <input type="checkbox" id="check3">
+    <label for="check3" class="button"></label>
+</div>
+
+</body>
+</html>
+
+
+
+
+* {
+    padding: 0;
+    margin: 0;
+}
+
+.container2 {
+    width: 50%;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column; /* 垂直排列按钮 */
+}
+
+.button {
+    background-color: #d2d2d2;
+    width: 100px;
+    height: 50px;
+    border-radius: 100px;
+    cursor: pointer;
+    position: relative;
+    transition: 0.2s;
+    margin-bottom: 20px; /* 添加垂直间距 */
+}
+
+.button::before {
+    position: absolute;
+    content: '';
+    background-color: #fff;
+    width: 45px;
+    height: 45px;
+    border-radius: 100px;
+    margin: 5px;
+    transition: 0.2s;
+}
+
+input:checked + .button {
+    background-color: #20096d;
+}
+
+input:checked + .button::before {
+    transform: translateX(100px);
+}
+
+input {
+    display: none;
+}
