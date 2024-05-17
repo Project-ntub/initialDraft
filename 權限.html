@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>權限</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    th, td {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+  <h2>權限</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>編號</th>
+        <th>帳號</th>
+        <th>是否合格</th>
+        <th>目前權限</th>
+        <th>登入型號</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>User1</td>
+        <td>是</td>
+        <td>Admin</td>
+        <td>Web</td>
+        <td>
+          <button onclick="editUser()">編輯</button>
+          <button onclick="deleteUser()">刪除</button>
+        </td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>User2</td>
+        <td>是</td>
+        <td>Guest</td>
+        <td>Mobile</td>
+        <td>
+          <button onclick="editUser()">編輯</button>
+          <button onclick="deleteUser()">刪除</button>
+        </td>
+      </tr>
+      <!-- 更多用戶行 -->
+    </tbody>
+  </table>
+
+  <h2>新增用戶</h2>
+  <form>
+    <label for="username">帳號：</label>
+    <input type="text" id="username" name="username" required><br><br>
+    <label for="password">密碼：</label>
+    <input type="password" id="password" name="password" required><br><br>
+    <label for="qualification">是否合格：</label>
+    <input type="checkbox" id="qualification" name="qualification"><br><br>
+    <label for="permission">目前權限：</label>
+    <select id="permission" name="permission">
+      <option value="Admin">Admin</option>
+      <option value="Guest">Guest</option>
+      <!-- 其他權限選項 -->
+    </select><br><br>
+    <label for="loginType">登入型號：</label>
+    <input type="text" id="loginType" name="loginType" required><br><br>
+    <button type="submit">新增用戶</button>
+  </form>
+
+  <script>
+    function editUser() {
+      // 編輯用戶的操作
+      alert("編輯用戶");
+    }
+
+    function deleteUser() {
+      // 刪除用戶的操作
+      alert("刪除用戶");
+    }
+  </script>
+</body>
+</html>

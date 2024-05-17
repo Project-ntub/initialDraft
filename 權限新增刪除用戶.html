@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>權限管理系統</title>
+  <style>
+    /* CSS樣式 */
+  </style>
+</head>
+<body>
+  <h2>權限管理系統</h2>
+
+  <h3>用戶列表</h3>
+  <ul id="userList">
+    <!-- 用戶列表將由JavaScript動態生成 -->
+  </ul>
+
+  <h3>新增用戶</h3>
+  <form id="addUserForm">
+    <label for="newUsername">帳號：</label>
+    <input type="text" id="newUsername" name="newUsername" required><br><br>
+    <label for="newUserPermission">權限：</label>
+    <select id="newUserPermission" name="newUserPermission">
+      <option value="Admin">Admin</option>
+      <option value="Guest">Guest</option>
+      <!-- 其他權限選項 -->
+    </select><br><br>
+    <button type="submit">新增用戶</button>
+  </form>
+
+  <h3>刪除用戶</h3>
+  <form id="deleteUserForm">
+    <label for="deleteUsername">帳號：</label>
+    <input type="text" id="deleteUsername" name="deleteUsername" required><br><br>
+    <button type="submit">刪除用戶</button>
+  </form>
+
+  <script>
+    // 模擬用戶數據，實際情況中需由後端提供
+    let users = [
+      { username: "User1", permission: "Admin" },
+      { username: "User2", permission: "Guest" },
+      // 更多用戶
+    ];
+
+    // 顯示用戶列表
+    function displayUserList() {
+      const userListElement = document.getElementById("userList");
+      userListElement.innerHTML = "";
+      users.forEach(user => {
+        const listItem = document.createElement("li");
+        listItem.textContent = `${user.username} (${user.permission})`;
+        userListElement.appendChild(listItem);
+      });
+    }
+
+    // 新增用戶
+    document.getElementById("addUserForm").addEventListener("submit", function(event) {
+      event.preventDefault(); // 防止表單提交刷新頁面
+      const newUsername = document.getElementById("newUsername").value;
+      const newUserPermission = document.getElementById("newUserPermission").value;
+      users.push({ username: newUsername, permission: newUserPermission });
+      displayUserList();
+      // 清空輸入框
+      document.getElementById("newUsername").value = "";
+    });
+
+    // 刪除用戶
+    document.getElementById("deleteUserForm").addEventListener("submit", function(event) {
+      event.preventDefault(); // 防止表單提交刷新頁面
+      const deleteUsername = document.getElementById("deleteUsername").value;
+      users = users.filter(user => user.username !== deleteUsername);
+      displayUserList();
+      // 清空輸入框
+      document.getElementById("deleteUsername").value = "";
+    });
+
+    // 初始顯示用戶列表
+    displayUserList();
+  </script>
+</body>
+</html>

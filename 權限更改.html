@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>權限更改</title>
+</head>
+<body>
+  <h2>權限更改</h2>
+
+  <form>
+    <label for="permission">選擇權限：</label>
+    <select id="permission" name="permission">
+      <option value="TotalInventoryChart">總庫存圖表</option>
+      <option value="TotalRevenue">總營業額</option>
+      <option value="StoreRevenue">店營業額</option>
+      <option value="StoreInventoryChart">店庫存圖表</option>
+    </select><br><br>
+
+    <button type="submit">更改權限</button>
+  </form>
+
+  <!-- JavaScript代碼 -->
+  <script>
+    // 在這裡添加JavaScript代碼，根據選擇的權限執行相應的操作
+    document.querySelector('form').addEventListener('submit', function(event) {
+      event.preventDefault(); // 防止表單提交
+      const selectedPermission = document.getElementById('permission').value;
+      switch (selectedPermission) {
+        case 'TotalInventoryChart':
+          // 執行顯示總庫存圖表的操作
+          alert('顯示總庫存圖表');
+          break;
+        case 'TotalRevenue':
+          // 執行顯示總營業額的操作
+          alert('顯示總營業額');
+          break;
+        case 'StoreRevenue':
+          // 執行顯示店營業額的操作
+          alert('顯示店營業額');
+          break;
+        case 'StoreInventoryChart':
+          // 執行顯示店庫存圖表的操作
+          alert('顯示店庫存圖表');
+          break;
+        default:
+          break;
+      }
+    });
+  </script>
+</body>
+</html>
