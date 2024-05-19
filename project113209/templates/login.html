@@ -1,0 +1,35 @@
+{% load static %}  <!-- 加載 static 標籤以便在此模板中使用 -->
+
+<!-- login.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登入</title>
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">  <!-- 確保 CSS 正確引入 -->
+</head>
+<body>
+    <div class="container">
+        <h2>登入</h2>
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_username">帳號:</label>
+                <input type="text" id="id_username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="id_password">密碼:</label>
+                <input type="password" id="id_password" name="password" required>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" id="remember_me" name="remember_me">
+                <label for="remember_me">記住我</label>
+            </div>
+            <input type="submit" value="登入" class="btn-login">
+        </form>
+        <p>還未擁有帳號? <a href="{% url 'register' %}">註冊</a></p>
+        <p>忘記密碼? <a href="{% url 'password_reset' %}">重置密碼</a></p>
+    </div>
+</body>
+</html>
