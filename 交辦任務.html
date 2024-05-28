@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>交辦任務</title>
+  <style>
+    .task-container {
+      border: 1px solid #ccc;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h2>交辦任務</h2>
+
+  <div class="task-container">
+    <h3>營業額</h3>
+    <!-- 顯示營業額相關內容 -->
+
+    <button onclick="openDialog()">顯示對話框</button>
+  </div>
+
+  <dialog id="dialogBox">
+    <h3>提示訊息</h3>
+    <p>營業額已達到預期目標。</p>
+    <button onclick="closeDialog()">關閉</button>
+  </dialog>
+
+  <script>
+    function openDialog() {
+      var dialogBox = document.getElementById('dialogBox');
+      dialogBox.showModal();
+    }
+
+    function closeDialog() {
+      var dialogBox = document.getElementById('dialogBox');
+      dialogBox.close();
+    }
+  </script>
+</body>
+</html>

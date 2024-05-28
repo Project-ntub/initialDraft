@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>角色管理</title>
+    <link rel="stylesheet" href="styles4.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <label for="add-role-select">新增角色:</label>
+            <select id="add-role-select">
+                <option value="manager">經理</option>
+                <option value="store-manager">店長</option>
+                <option value="system-admin">系統管理員</option>
+            </select>
+            <label for="chart-module-select">圖表模組編輯:</label>
+            <select id="chart-module-select">
+                <option value="module1">模組1</option>
+                <option value="module2">模組2</option>
+                <option value="module3">模組3</option>
+            </select>
+        </div>
+        <table class="role-table">
+            <thead>
+                <tr>
+                    <th>角色名稱</th>
+                    <th>角色狀態</th>
+                    <th>用戶數</th>
+                    <th>角色成員</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>經理</td>
+                    <td><button class="status-btn">開啟</button></td>
+                    <td>10</td>
+                    <td>
+                        <select>
+                            <option value="user1">張三</option>
+                            <option value="user2">李四</option>
+                        </select>
+                    </td>
+                    <td>
+                        <button class="permissions-btn">角色權限</button>
+                        <button class="delete-btn">刪除</button>
+                    </td>
+                </tr>
+                <!-- 更多角色資料 -->
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

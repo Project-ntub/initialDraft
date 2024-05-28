@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>個人資訊</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+    }
+    .info-container {
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .info-container h3 {
+      margin-top: 0;
+    }
+    .info-container p {
+      margin: 5px 0;
+    }
+    .button-container {
+      text-align: center;
+    }
+    .button-container button {
+      padding: 10px 20px;
+      margin: 0 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .button-container button.edit {
+      background-color: #4CAF50;
+      color: white;
+    }
+    .button-container button.logout {
+      background-color: #f44336;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <h2>個人資訊</h2>
+
+  <div class="info-container">
+    <h3>個人資訊</h3>
+    <p>姓名：John Doe</p>
+    <p>帳號：johndoe123</p>
+    <p>部門：行銷部</p>
+    <p>職位：經理</p>
+    <p>電話：123-456-7890</p>
+    <p>電子郵件：johndoe@example.com</p>
+    <p>建立時間：2024-05-18 10:00:00</p>
+  </div>
+
+  <div class="button-container">
+    <button class="edit" onclick="editProfile()">編輯</button>
+    <button class="logout" onclick="logout()">登出</button>
+  </div>
+
+  <script>
+    function editProfile() {
+      // 在此處添加編輯個人資訊的功能
+      alert('您點擊了編輯按鈕');
+    }
+
+    function logout() {
+      // 在此處添加登出功能
+      alert('您已登出');
+    }
+  </script>
+</body>
+</html>

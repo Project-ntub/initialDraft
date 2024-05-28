@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>問題歷史列表</title>
+</head>
+<body>
+  <h2>問題歷史列表</h2>
+
+  <label for="statusSelect">選擇狀態：</label>
+  <select id="statusSelect" onchange="changeStatus()">
+    <option value="all">全部</option>
+    <option value="solved">已解決</option>
+    <option value="processing">處理中</option>
+    <option value="unsolved">未處理</option>
+  </select>
+
+  <table id="issueTable">
+    <thead>
+      <tr>
+        <th>編號</th>
+        <th>狀態</th>
+        <th>時間</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- 顯示問題資料的列表 -->
+    </tbody>
+  </table>
+
+  <script>
+    function changeStatus() {
+      var selectBox = document.getElementById("statusSelect");
+      var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+
+      // 隱藏所有狀態的div
+      var allDivs = document.querySelectorAll('div[id^="status"]');
+      allDivs.forEach(function(div) {
+        div.style.display = "none";
+      });
+
+      // 顯示選擇的狀態的div
+      var selectedDiv = document.getElementById(selectedValue);
+      if (selectedDiv) {
+        selectedDiv.style.display = "block";
+      }
+    }
+  </script>
+</body>
+</html>
