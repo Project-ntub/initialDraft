@@ -1,0 +1,13 @@
+CREATE TABLE `charts`(
+    `id` INT PRIMARY KEY,
+    `chart_type` VARCHAR(50), 
+    `chart_name` VARCHAR(100),
+    `chart_data` TEXT,
+    `available` BOOLEAN,
+    `create_id` INT,
+    `modify_id` INT,
+    `create_date` DATETIME,
+    `modify_date` DATETIME
+
+);
+DESCRIBE `charts`;
