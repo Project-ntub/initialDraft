@@ -67,9 +67,10 @@
                 <input type="checkbox" id="remember_me" name="remember_me">
                 <label for="remember_me">記住我</label>
             </div>
-            <input type="submit" value="登入" class="btn-login">
+            <input type="submit" value="登入" class="btn-login" onclick="window.location.href='儀錶板管理.html';">
+           <!--<input type="submit" value="登入" class="btn-login" onclick="RegisterCheck();">--> 
         </form>
-        <p>還未擁有帳號? <a href="register.php">註冊</a></p>
+        <p>還未擁有帳號? <u><a type="submit" onclick="window.location.href='使用者註冊.html';">註冊</a></u></p>
         <p>忘記密碼? <a href="forgot_password.php"></a></p>
     </div>
 </body>
