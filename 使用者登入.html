@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大九九大賣場</title>
+    <style>
+        /* 這裡可以放置一些CSS來美化您的介面 */
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .form-group input[type="checkbox"] {
+            width: auto;
+            display: inline;
+        }
+        .btn-login {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn-login:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>大九九大賣場</h2>
+        <form action="login.php" method="post">
+            <div class="form-group">
+                <label for="username">帳號:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">密碼:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" id="remember_me" name="remember_me">
+                <label for="remember_me">記住我</label>
+            </div>
+            <input type="submit" value="登入" class="btn-login" onclick="window.location.href='管理介面.html';">
+           <!--<input type="submit" value="登入" class="btn-login" onclick="RegisterCheck();">--> 
+        </form>
+        <p>還未擁有帳號? <u><a type="submit" onclick="window.location.href='使用者註冊.html';">註冊</a></u></p>
+        <p>忘記密碼? <a href="忘記密碼.html">點此重設密碼</a></p>
+    </div>
+</body>
+</html>

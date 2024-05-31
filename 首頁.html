@@ -30,38 +30,137 @@
       text-decoration: none;
       color: #333;
     }
+    .chart-container {
+      width: 80%;
+      margin: 0 auto;
+    }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <h2>首頁 - 分店查詢</h2>
 
   <div class="menu">
     <ul>
-      <li><a href="#">個人資訊</a></li>
-      <li><a href="#">帳號設定</a></li>
-      <li><a href="#">歷史紀錄</a></li>
+      <li><a href="個人資訊.html">個人資訊</a></li>
+      <li><a href="帳號設定.html">帳號設定</a></li>
+      <li><a href="歷史紀錄.html">歷史紀錄</a></li>
     </ul>
   </div>
 
-  <div class="store-info">
-    <h3>分店A</h3>
-    <p>營業額：$100,000</p>
-    <p>銷售趨勢：上升</p>
-    <p>庫存量：1000</p>
+  <div>
+    <label for="storeSelect">選擇分店:</label>
+    <select id="storeSelect">
+      <option value="A">分店A</option>
+      <option value="B">分店B</option>
+      <option value="C">分店C</option>
+    </select>
   </div>
 
-  <div class="store-info">
-    <h3>分店B</h3>
-    <p>營業額：$80,000</p>
-    <p>銷售趨勢：下降</p>
-    <p>庫存量：800</p>
+  <div class="chart-container">
+    <canvas id="revenueChart"></canvas>
+  </div>
+  <div class="chart-container">
+    <canvas id="trendChart"></canvas>
+  </div>
+  <div class="chart-container">
+    <canvas id="inventoryChart"></canvas>
   </div>
 
-  <div class="store-info">
-    <h3>分店C</h3>
-    <p>營業額：$120,000</p>
-    <p>銷售趨勢：持平</p>
-    <p>庫存量：1200</p>
-  </div>
+  <script>
+    const storeData = {
+      'A': { revenue: 100000, trend: '上升', inventory: 1000 },
+      'B': { revenue: 80000, trend: '下降', inventory: 800 },
+      'C': { revenue: 120000, trend: '持平', inventory: 1200 }
+    };
+
+    const revenueChartCtx = document.getElementById('revenueChart').getContext('2d');
+    const trendChartCtx = document.getElementById('trendChart').getContext('2d');
+    const inventoryChartCtx = document.getElementById('inventoryChart').getContext('2d');
+
+    let revenueChart = new Chart(revenueChartCtx, {
+      type: 'bar',
+      data: {
+        labels: ['營業額'],
+        datasets: [{
+          label: '營業額',
+          data: [storeData['A'].revenue],
+          backgroundColor: ['rgba(75, 192, 192, 0.2)'],
+          borderColor: ['rgba(75, 192, 192, 1)'],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+
+    let trendChart = new Chart(trendChartCtx, {
+      type: 'pie',
+      data: {
+        labels: ['上升', '持平', '下降'],
+        datasets: [{
+          label: '銷售趨勢',
+          data: [storeData['A'].trend === '上升' ? 1 : 0, storeData['A'].trend === '持平' ? 1 : 0, storeData['A'].trend === '下降' ? 1 : 0],
+          backgroundColor: [
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(255, 99, 132, 0.2)'
+          ],
+          borderColor: [
+            'rgba(75, 192, 192, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(255, 99, 132, 1)'
+          ],
+          borderWidth: 1
+        }]
+      }
+    });
+
+    let inventoryChart = new Chart(inventoryChartCtx, {
+      type: 'bar',
+      data: {
+        labels: ['庫存量'],
+        datasets: [{
+          label: '庫存量',
+          data: [storeData['A'].inventory],
+          backgroundColor: ['rgba(153, 102, 255, 0.2)'],
+          borderColor: ['rgba(153, 102, 255, 1)'],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+
+    document.getElementById('storeSelect').addEventListener('change', function() {
+      const selectedStore = this.value;
+
+      // 更新營業額圖表
+      revenueChart.data.datasets[0].data = [storeData[selectedStore].revenue];
+      revenueChart.update();
+
+      // 更新銷售趨勢圖表
+      trendChart.data.datasets[0].data = [
+        storeData[selectedStore].trend === '上升' ? 1 : 0,
+        storeData[selectedStore].trend === '持平' ? 1 : 0,
+        storeData[selectedStore].trend === '下降' ? 1 : 0
+      ];
+      trendChart.update();
+
+      // 更新庫存量圖表
+      inventoryChart.data.datasets[0].data = [storeData[selectedStore].inventory];
+      inventoryChart.update();
+    });
+  </script>
 </body>
 </html>
