@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>顯示畫面範例</title>
+    <style>
+        #myDiv {
+            display: none; /* 預設隱藏 */
+            width: 300px;
+            height: 200px;
+            background-color: lightblue;
+            border: 1px solid #000;
+            padding: 10px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<button id="myButton">顯示畫面</button>
+
+<div id="myDiv">
+    這是顯示的畫面內容。
+</div>
+
+<script>
+    document.getElementById('myButton').addEventListener('click', function() {
+        var myDiv = document.getElementById('myDiv');
+        if (myDiv.style.display === 'none' || myDiv.style.display === '') {
+            myDiv.style.display = 'block'; // 顯示
+        } else {
+            myDiv.style.display = 'none'; // 隱藏
+        }
+    });
+</script>
+
+</body>
+</html>
