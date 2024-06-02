@@ -46,7 +46,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     class Meta:
         db_table = 'user'  # 这应该与实际表名匹配
-        # managed = False  # 如果不希望 Django 管理数据库表，请取消注释这行
 
     def __str__(self):
         return self.email

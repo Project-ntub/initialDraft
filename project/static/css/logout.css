@@ -18,7 +18,7 @@ body {
 .message h1 {
     margin: 0 0 10px;
     font-size: 2.5em;
-    color: #007bff; /* 綠色標題文字 */
+    color: #4CAF50; /* 綠色標題文字 */
 }
 .message p {
     margin: 0 0 20px;
@@ -28,11 +28,11 @@ body {
     padding: 10px 20px;
     font-size: 1em;
     color: #fff;
-    background-color: #007bff; /* 綠色按鈕 */
+    background-color: #4CAF50; /* 綠色按鈕 */
     border: none;
     border-radius: 5px;
     cursor: pointer;
 }
 .message button:hover {
-    background-color: #0069d9; /* 深綠色按鈕 */
+    background-color: #45a049; /* 深綠色按鈕 */
 }

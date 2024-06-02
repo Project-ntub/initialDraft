@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登出成功</title>
+    <link rel="stylesheet" href="{% static 'css/logout.css' %}">
+</head>
+<body>
+
+<div class="message">
+    <h1>登出成功</h1>
+    <p>您已成功登出。感謝您的使用。</p>
+    <button onclick="window.location.href='使用者登入.html'">返回登入頁面</button>
+</div>
+
+<script>
+    // 3秒后自动跳转到登录页面
+    setTimeout(function() {
+        window.location.href = "{% url 'login' %}";
+    }, 3000);
+</script>
+
+</body>
+</html>

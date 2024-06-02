@@ -14,7 +14,7 @@ SECRET_KEY = 'django-insecure-y&%10_w2a%0v)(jqe46d2)mevjv0f^ro8!#+pu#67d%md8k8vr
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['140.131.114.158', 'localhost']
 
 
 # Application definition
@@ -38,6 +38,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'app113209.middleware.allow_iframe.AllowIframeMiddleware'
 ]
 
 ROOT_URLCONF = 'project113209.urls'
@@ -123,8 +124,8 @@ STATICFILES_DIRS =[
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # login
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/login'
+LOGIN_REDIRECT_URL = 'management'
+LOGOUT_REDIRECT_URL = 'login'
 
 AUTH_USER_MODEL = 'app113209.User'
 
@@ -133,7 +134,7 @@ logging.basicConfig(
     format='%(asctime)s %(levelname)s %(message)s',
 )
 
-
+LOGIN_URL = '/login/'
 #forget password 
 # settings.py
 

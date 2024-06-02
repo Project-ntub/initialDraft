@@ -27,7 +27,10 @@
             <input type="submit" value="登入" class="btn-login">
         </form>
         <p>還未擁有帳號? <a href="{% url 'register' %}">註冊</a></p>
-        <p>忘記密碼? <a href="{% url 'forgot_password' %}">重置密碼</a></p> <!-- 確保這裡的URL名稱正確 -->
+        <p>忘記密碼? <a href="{% url 'forgot_password' %}">重置密碼</a></p>
+        {% if error %}
+        <p>{{ error }}</p>
+        {% endif %}
     </div>
 </body>
 </html>
