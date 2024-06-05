@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>歷史紀錄</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+    }
+    .history-form {
+      max-width: 400px;
+      margin: 0 auto;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 20px;
+    }
+    .input-container {
+      margin-bottom: 10px;
+    }
+    .input-container label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    .input-container select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .button-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .button-container button {
+      padding: 10px 20px;
+      margin: 0 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: #007bff;
+      color: white;
+    }
+    .button-container a {
+      display: inline-block;
+      text-decoration: none;
+      padding: 10px 20px;
+      margin: 0 10px;
+      border-radius: 5px;
+      background-color: #28a745;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <h2>歷史紀錄</h2>
+
+  <form class="history-form">
+    <div class="input-container">
+      <label for="year">年：</label>
+      <select id="year" name="year" onchange="updateDays()">
+        <option value="2024">2024</option>
+        <option value="2023">2023</option>
+        <option value="2022">2022</option>
+        <!-- 根據需要添加更多年份 -->
+      </select>
+    </div>
+    <div class="input-container">
+      <label for="month">月：</label>
+      <select id="month" name="month" onchange="updateDays()">
+        <option value="1">1月</option>
+        <option value="2">2月</option>
+        <option value="3">3月</option>
+        <option value="4">4月</option>
+        <option value="5">5月</option>
+        <option value="6">6月</option>
+        <option value="7">7月</option>
+        <option value="8">8月</option>
+        <option value="9">9月</option>
+        <option value="10">10月</option>
+        <option value="11">11月</option>
+        <option value="12">12月</option>
+      </select>
+    </div>
+    <div class="input-container">
+      <label for="day">日：</label>
+      <select id="day" name="day">
+        <!-- 日期選項將動態更新 -->
+      </select>
+    </div>
+    <div class="input-container">
+      <label for="time">時間：</label>
+      <input type="time" id="time" name="time">
+    </div>
+
+    <div class="button-container">
+      <button type="submit">查詢</button>
+      <button type="button" class="cancel" onclick="cancelChanges()">取消</button>
+    </div>
+  </form>
+
+  <div class="button-container">
+    <a href="儀錶板管理.html">回首頁</a> <!-- Link to the main management interface -->
+  </div>
+
+  <script> 
+    function cancelChanges() {
+      alert('您取消了變更歷史紀錄');
+    }
+
+    function updateDays() {
+      const year = document.getElementById('year').value;
+      const month = document.getElementById('month').value;
+      const daySelect = document.getElementById('day');
+
+      const daysInMonth = new Date(year, month, 0).getDate();
+
+      daySelect.innerHTML = '';
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        const option = document.createElement('option');
+        option.value = day;
+        option.text = day + '日';
+        daySelect.appendChild(option);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', updateDays);
+  </script>
+</body>
+</html>
