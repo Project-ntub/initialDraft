@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用戶註冊</title>
+    <link rel="stylesheet" href="{% static 'css/register.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h2>註冊</h2>
+        <form action="{% url 'register' %}" method="post">
+            {% csrf_token %}
+            <label for="username">用戶名:</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="email">電子郵件:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="password">密碼:</label>
+            <input type="password" id="password" name="password" required>
+
+            <label for="confirm_password">確認密碼:</label>
+            <input type="password" id="confirm_password" name="confirm_password" required>
+
+            <label for="phone">手機號碼:</label>
+            <input type="text" id="phone" name="phone" required>
+
+            <input type="submit" value="註冊">
+
+            <p class="terms">點擊「註冊」表示您同意我們的 <a href="#">服務條款</a> 和 <a href="#">隱私政策</a></p>
+        </form>
+    </div>
+</body>
+</html>

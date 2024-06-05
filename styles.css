@@ -1,0 +1,34 @@
+/* 基本的圖表容器樣式 */
+.chart-container {
+    width: 80%;
+    margin: 20px auto;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background-color: #ffffff;
+}
+
+/* 銷售趨勢圖表樣式 */
+#sales-trend-chart {
+    width: 100%;
+    height: 400px;
+}
+
+/* 庫存量圖表樣式 */
+#inventory-chart {
+    width: 100%;
+    height: 400px;
+}
+
+/* 營業額折線圖表樣式 */
+#revenue-line-chart {
+    width: 100%;
+    height: 400px;
+}
+
+/* 圖表的通用樣式 */
+canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>營運問題回報</title>
+</head>
+<body>
+  <h2>營運問題回報</h2>
+
+  <form>
+    <label for="reportDate">日期：</label>
+    <input type="date" id="reportDate" name="reportDate"><br><br>
+
+    <label for="operationType">類型：</label>
+    <select id="operationType" name="operationType">
+      <option value="inventory">庫存量</option>
+      <option value="revenue">營業額</option>
+      <option value="order">叫貨</option>
+      <option value="other">其他</option>
+    </select><br><br>
+
+    <label for="title">標題：</label><br>
+    <input type="text" id="title" name="title" style="width: 100%;"><br><br>
+
+    <label for="description">描述：</label><br>
+    <textarea id="description" name="description" rows="4" style="width: 100%;"></textarea><br><br>
+
+    <label for="attachment">附加檔案：</label><br>
+    <input type="file" id="attachment" name="attachment" accept=".pdf, .jpg, .jpeg, .png, .doc, .docx, .xls, .xlsx"><br><br>
+
+    <input type="submit" value="提交">
+  </form>
+</body>
+</html>

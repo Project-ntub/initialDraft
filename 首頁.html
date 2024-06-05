@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>首頁 - 分店查詢</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+    }
+    .menu {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+    }
+    .menu ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+    .menu li {
+      display: inline;
+      margin-right: 10px;
+    }
+    .menu li a {
+      text-decoration: none;
+      color: #333;
+    }
+    .chart-container {
+      width: 80%;
+      margin: 20px auto;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <h2>首頁 - 分店查詢</h2>
+
+  <div class="menu">
+    <ul>
+      <li><a href="個人資訊.html">個人資訊</a></li>
+      <li><a href="帳號設定.html">帳號設定</a></li>
+      <li><a href="歷史紀錄.html">歷史紀錄</a></li>
+    </ul>
+  </div>
+
+  <div>
+    <label for="storeSelect">選擇分店:</label>
+    <select id="storeSelect">
+      <option value="A">分店A</option>
+      <option value="B">分店B</option>
+      <option value="C">分店C</option>
+    </select>
+  </div>
+
+  <div>
+    <label for="chartSelect">新增圖表:</label>
+    <select id="chartSelect">
+      <option value="revenue">營業額</option>
+      <option value="trend">銷售趨勢</option>
+      <option value="inventory">庫存量</option>
+    </select>
+  </div>
+
+  <div class="chart-container">
+    <canvas id="chartCanvas"></canvas>
+  </div>
+
+  <script>
+    const storeData = {
+      'A': { revenue: 100000, trend: '上升', inventory: 1000 },
+      'B': { revenue: 80000, trend: '下降', inventory: 800 },
+      'C': { revenue: 120000, trend: '持平', inventory: 1200 }
+    };
+
+    const chartCanvas = document.getElementById('chartCanvas').getContext('2d');
+    let currentChart = null;
+
+    function getRandomInt(max) {
+      return Math.floor(Math.random() * max);
+    }
+
+    function updateChart(chartType, store) {
+      if (currentChart) {
+        currentChart.destroy();
+      }
+
+      if (chartType === 'revenue') {
+        currentChart = new Chart(chartCanvas, {
+          type: 'bar',
+          data: {
+            labels: ['營業額'],
+            datasets: [{
+              label: '營業額',
+              data: [storeData[store].revenue],
+              backgroundColor: ['rgba(75, 192, 192, 0.2)'],
+              borderColor: ['rgba(75, 192, 192, 1)'],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+      } else if (chartType === 'trend') {
+        currentChart = new Chart(chartCanvas, {
+          type: 'pie',
+          data: {
+            labels: ['上升', '持平', '下降'],
+            datasets: [{
+              label: '銷售趨勢',
+              data: [
+                storeData[store].trend === '上升' ? 1 : 0,
+                storeData[store].trend === '持平' ? 1 : 0,
+                storeData[store].trend === '下降' ? 1 : 0
+              ],
+              backgroundColor: [
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(255, 99, 132, 0.2)'
+              ],
+              borderColor: [
+                'rgba(75, 192, 192, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(255, 99, 132, 1)'
+              ],
+              borderWidth: 1
+            }]
+          }
+        });
+      } else if (chartType === 'inventory') {
+        currentChart = new Chart(chartCanvas, {
+          type: 'bar',
+          data: {
+            labels: ['庫存量'],
+            datasets: [{
+              label: '庫存量',
+              data: [storeData[store].inventory],
+              backgroundColor: ['rgba(153, 102, 255, 0.2)'],
+              borderColor: ['rgba(153, 102, 255, 1)'],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+      }
+    }
+
+    document.getElementById('storeSelect').addEventListener('change', function() {
+      const selectedStore = this.value;
+      const selectedChart = document.getElementById('chartSelect').value;
+      updateChart(selectedChart, selectedStore);
+    });
+
+    document.getElementById('chartSelect').addEventListener('change', function() {
+      const selectedChart = this.value;
+      const selectedStore = document.getElementById('storeSelect').value;
+      updateChart(selectedChart, selectedStore);
+    });
+
+    // Initial chart display
+    const initialCharts = ['revenue', 'trend', 'inventory'];
+    const randomChart = initialCharts[getRandomInt(initialCharts.length)];
+    updateChart(randomChart, 'A');
+  </script>
+</body>
+</html>

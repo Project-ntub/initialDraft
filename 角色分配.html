@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>角色分配</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #333;
+            color: #fff;
+        }
+        .save-btn {
+            padding: 6px 12px;
+            background-color: #28a745;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            cursor: pointer;
+        }
+        .save-btn:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <h1>角色分配</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>User ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Department</th>
+                <th>Creation Date</th>
+                <th>Last Login Date</th>
+                <th>Role</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>張三</td>
+                <td>zhangsan@example.com</td>
+                <td>IT</td>
+                <td>2022-01-01</td>
+                <td>2023-05-20</td>
+                <td>
+                    <select>
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                        <option value="moderator">Moderator</option>
+                    </select>
+                </td>
+                <td><button class="save-btn">Save</button></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>李四</td>
+                <td>lisi@example.com</td>
+                <td>HR</td>
+                <td>2022-02-15</td>
+                <td>2023-05-18</td>
+                <td>
+                    <select>
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                        <option value="moderator">Moderator</option>
+                    </select>
+                </td>
+                <td><button class="save-btn">Save</button></td>
+            </tr>
+            <!-- 你可以根據需要添加更多行 -->
+        </tbody>
+    </table>
+</body>
+</html>

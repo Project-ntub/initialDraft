@@ -1,0 +1,12 @@
+
+#不須寫close
+
+
+#file=open("C:/Users/wesle/Desktop/python/123.txt",mode= "w",encoding="utf-8")
+#file.write("hi")
+
+#file.close
+
+#with open("C:/Users/wesle/Desktop/python/123.txt",mode="a",encoding="utf-8")as file:
+ #         file.write("\n哈哈")
+#\n換行

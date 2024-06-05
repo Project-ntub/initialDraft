@@ -1,0 +1,180 @@
+#4
+# 如果 你考100分 且 今天下雨
+#我就給你1000元
+#否則
+#你給我100
+
+
+#score=100
+#rainy= True 
+#if score==100 and rainy:
+#    print("我給你1000元")
+#else:
+ #   print("你給我100元")
+
+#一邊false的話就會算else
+
+
+
+
+#5
+
+# 如果 你考100分 或 今天下雨
+#我就給你1000元
+#否則
+#你給我100
+
+
+#score=100
+#rainy= True 
+#if score==100 or rainy:
+#    print("我給你1000元")
+#else:
+ #   print("你給我100元")
+
+#一邊false的話就會算else
+
+#6
+# 如果 你考100分 或 沒有下雨
+#我就給你1000元
+#否則
+#你給我100
+#score=100
+#rainy=True
+#if score==100 or not(rainy):
+ #   print("我給你1000元")
+#else:
+#    print("你給我100元")
+
+
+
+# 如果 你沒有考100分 或 沒有下雨
+#我就給你1000元
+#否則
+#你給我100
+#score=90
+#rainy=True
+#if score!==100 or not(rainy):
+ #   print("我給你1000元")
+#else:
+ #   print("你給我100元")
+
+#def max_num(num1,num2,num3):
+#    if num1>=num2 and num1>=num3:
+#        return num1
+ #   elif num2>=num1 and num2>=num3
+ #       return num2
+ #   else:
+  #      return num3
+
+#定義函式
+#print(max_num)(2,3,5)
+
+
+#建立計算機
+#input("請輸入比一個數:")
+#num1=float(input("請輸入第二倒數"))
+#op:imput("請輸入運算符號:")
+#num2=float(input("請輸入第二倒數:"))
+
+#if op=="+":
+#   print(num1+num2)
+#elif op=="-":
+   #print(num+num2)
+#elif op==:
+  # print(num1+num2)
+#elif op=="/":
+  # print(num1+num2)
+#else:
+ #print("不支援的運算")
+
+#字典dictionary
+# key value
+#鍵       值
+#dic = (0"蘋果":apple,1"香蕉":"banana, ""3貓眼,dog")
+#print(dic[3])
+
+
+
+#while迴圈
+#i=1
+#while i<=5:
+#    print(1)
+#i=i+1
+
+#print("迴圈結束")
+
+
+
+#猜數字遊戲
+
+#secret_num  = 80 謎底
+#guess = None  猜測值
+#guess_count=0 次數
+#guess_limit=3  最多猜次數
+#out_of_limit=false  布林值
+
+
+
+#while secret_num !=guess and not(out_of_limit):
+#guess_count +=1
+#  if guess_count<=guess_limit:
+ #   guess= int(input("請輸入數字:"))
+ #   if guess>secret_num:
+ #      print("小一點")
+  #  elif guess>secret_num:
+ #      print("大一點")
+#    else:
+#       out_of_limit=True
+ #     print("抱歉你輸了")
+#print("恭喜贏了")
+
+
+
+
+
+
+#for 迴圈
+#for 變數 in 字串or列表:
+    # 要重複執行的程式碼
+
+#for letter in "小白你好"     
+ #  print(letter)  一個個字呈現直行
+
+
+
+
+
+#for num in[0,1,2,3,4]
+   #   print(num)
+0
+1
+2
+3
+4
+
+#for num in range(5):
+  #  print(num)
+
+#for num in range [2,3,4,5,6]
+
+2
+3
+4
+5
+6
+
+#for num in range(2,7):
+   # print(num)
+
+#練習
+
+
+def power(base_num, pow_num):
+    result = base_num
+    for index in range(pow_num - 1):
+        result = result * base_num
+    return result
+
+print(power(4, 2))
+

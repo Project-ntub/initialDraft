@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新增角色</title>
+    <link rel="stylesheet" href="styles5.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <label for="add-role-select">新增角色:</label>
+            <select id="add-role-select">
+                <option value="manager">經理</option>
+                <option value="store-manager">店長</option>
+                <option value="system-admin">系統管理員</option>
+            </select>
+            <label for="chart-module-select">圖表模組編輯:</label>
+            <select id="chart-module-select">
+                <option value="module1">模組1</option>
+                <option value="module2">模組2</option>
+                <option value="module3">模組3</option>
+            </select>
+        </div>
+        <div class="add-role-form">
+            <label for="role-name">角色名稱:</label>
+            <input type="text" id="role-name" placeholder="輸入角色名稱">
+
+            <label for="module-select">模組選擇:</label>
+            <select id="module-select">
+                <option value="revenue-analysis">營業額模組</option>
+                <option value="inventory-management">庫存管理模組</option>
+                <option value="sales-management">銷售額模組</option>
+            </select>
+
+            <div class="functions">
+                <label>功能:</label>
+                <div>
+                    <input type="checkbox" id="daily-revenue-report" value="daily-revenue-report">
+                    <label for="daily-revenue-report">查看日營業額報告</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="monthly-trend" value="monthly-trend">
+                    <label for="monthly-trend">查看月度趨勢</label>
+                </div>
+            </div>
+
+            <div class="permissions">
+                <label>權限:</label>
+                <div>
+                    <input type="checkbox" id="view" value="view">
+                    <label for="view">查看</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="export" value="export">
+                    <label for="export">匯出</label>
+                </div>
+            </div>
+
+            <div class="form-buttons">
+                <button class="submit-btn">提交</button>
+                <button class="cancel-btn">取消</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

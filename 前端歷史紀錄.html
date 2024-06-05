@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>歷史紀錄</title>
+    <link rel="stylesheet" href="styles4.css">
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+            padding-top: 60px;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .history-table th, .history-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .history-table th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <!-- Search Box -->
+    <div class="search-container">
+        <input type="text" id="search-input" placeholder="搜尋歷史紀錄...">
+        <button onclick="searchHistory()">搜尋</button>
+        <button onclick="refreshPage()">重整</button>
+    </div>
+
+    <!-- Modal for adding roles -->
+    <div id="roleModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>新增角色</h2>
+            <button onclick="window.location.href='新增角色.html'">進入新增角色</button>
+        </div>
+    </div>
+
+    <!-- Modal for role permissions -->
+    <div id="permissionsModal" class="modal">
+        <div class="modal-content">
+            <span class="close-permissions">&times;</span>
+            <h2>角色權限</h2>
+            <form id="permissionsForm">
+                <label for="permissions">設置權限:</label>
+                <input type="text" id="permissions" name="permissions" placeholder="輸入權限，用逗號分隔"><br><br>
+                <button type="submit">保存</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- History Records Section -->
+    <div class="history-container">
+        <h2>歷史紀錄</h2>
+        <table class="history-table">
+            <thead>
+                <tr>
+                    <th>編號</th>
+                    <th>用戶</th>
+                    <th>歷史操作</th>
+                    <th>電子郵件</th>
+                    <th>操作時間</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>張三</td>
+                    <td>新增角色</td>
+                    <td>zhangsan@example.com</td>
+                    <td>2024-05-30 10:00</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>李四</td>
+                    <td>刪除角色</td>
+                    <td>lisi@example.com</td>
+                    <td>2024-05-30 11:00</td>
+                </tr>
+                <!-- 更多歷史紀錄 -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Get modal elements
+        var roleModal = document.getElementById("roleModal");
+        var permissionsModal = document.getElementById("permissionsModal");
+
+        // Get <span> elements that close the modals
+        var spanRole = document.getElementsByClassName("close")[0];
+        var spanPermissions = document.getElementsByClassName("close-permissions")[0];
+
+        // When the user selects a role from the dropdown
+        document.getElementById('add-role-select').addEventListener('change', function() {
+            roleModal.style.display = "block";
+        });
+
+        // When the user clicks on <span> (x), close the modals
+        spanRole.onclick = function() {
+            roleModal.style.display = "none";
+        }
+
+        spanPermissions.onclick = function() {
+            permissionsModal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == roleModal) {
+                roleModal.style.display = "none";
+            }
+            if (event.target == permissionsModal) {
+                permissionsModal.style.display = "none";
+            }
+        }
+
+        // When the user clicks on "角色權限" button, open the permissions modal
+        var permissionsButtons = document.getElementsByClassName('permissions-btn');
+        for (var i = 0; i < permissionsButtons.length; i++) {
+            permissionsButtons[i].addEventListener('click', function() {
+                permissionsModal.style.display = "block";
+            });
+        }
+
+        // Handle form submission
+        document.getElementById('permissionsForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            // Logic to save permissions goes here
+
+            // Close the modal after form submission
+            permissionsModal.style.display = "none";
+        });
+
+        // Search history function
+        function searchHistory() {
+            var input = document.getElementById('search-input').value.toLowerCase();
+            var table = document.querySelector('.history-table tbody');
+            var rows = table.getElementsByTagName('tr');
+
+            for (var i = 0; i < rows.length; i++) {
+                var cells = rows[i].getElementsByTagName('td');
+                var match = false;
+
+                for (var j = 0; j < cells.length; j++) {
+                    if (cells[j].innerText.toLowerCase().includes(input)) {
+                        match = true;
+                        break;
+                    }
+                }
+
+                if (match) {
+                    rows[i].style.display = '';
+                } else {
+                    rows[i].style.display = 'none';
+                }
+            }
+        }
+
+        // Refresh page function
+        function refreshPage() {
+            window.location.reload();
+        }
+    </script>
+</body>
+</html>
