@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>待審核名單</title>
+    <link rel="stylesheet" href="{% static 'css/pending_list.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <label for="sort-select">排序:</label>
+            <select id="sort-select">
+                <option value="name">姓名</option>
+                <option value="email">電子郵件</option>
+                <option value="department">部門</option>
+                <option value="title">職稱</option>
+                <option value="application-time">申請時間</option>
+            </select>
+            <input type="text" id="search-box" placeholder="搜尋...">
+        </div>
+        <table class="pending-table">
+            <thead>
+                <tr>
+                    <th>帳號</th>
+                    <th>姓名</th>
+                    <th>電子郵件</th>
+                    <th>部門</th>
+                    <th>職稱</th>
+                    <th>申請時間</th>
+                    <th>審核</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>user1</td>
+                    <td>張三</td>
+                    <td>zhangsan@example.com</td>
+                    <td>資訊技術部</td>
+                    <td>工程師</td>
+                    <td>2024-05-01</td>
+                    <td>
+                        <button class="approve-btn">開通</button>
+                    </td>
+                </tr>
+                <!-- 更多待審核用戶資料 -->
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

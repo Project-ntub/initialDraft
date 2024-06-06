@@ -1,0 +1,81 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>歷史紀錄</title>
+    <link rel="stylesheet" href="{% static 'css/history.css' %}">
+</head>
+<body>
+    <!-- Search Box -->
+    <div class="search-container">
+        <input type="text" id="search-input" placeholder="搜尋歷史紀錄...">
+        <button onclick="searchHistory()">搜尋</button>
+        <button onclick="refreshPage()">重整</button>
+    </div>
+    <div class="history-container">
+        <h2>歷史紀錄</h2>
+        <table class="history-table">
+            <thead>
+                <tr>
+                    <th>編號</th>
+                    <th>用戶</th>
+                    <th>歷史操作</th>
+                    <th>電子郵件</th>
+                    <th>操作時間</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>張三</td>
+                    <td>新增角色</td>
+                    <td>zhangsan@example.com</td>
+                    <td>2024-05-30 10:00</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>李四</td>
+                    <td>刪除角色</td>
+                    <td>lisi@example.com</td>
+                    <td>2024-05-30 11:00</td>
+                </tr>
+                <!-- 更多歷史紀錄 -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Search history function
+        function searchHistory() {
+            var input = document.getElementById('search-input').value.toLowerCase();
+            var table = document.querySelector('.history-table tbody');
+            var rows = table.getElementsByTagName('tr');
+
+            for (var i = 0; i < rows.length; i++) {
+                var cells = rows[i].getElementsByTagName('td');
+                var match = false;
+
+                for (var j = 0; j < cells.length; j++) {
+                    if (cells[j].innerText.toLowerCase().includes(input)) {
+                        match = true;
+                        break;
+                    }
+                }
+
+                if (match) {
+                    rows[i].style.display = '';
+                } else {
+                    rows[i].style.display = 'none';
+                }
+            }
+        }
+
+        // Refresh page function
+        function refreshPage() {
+            window.location.reload();
+        }
+    </script>
+</body>
+</html>
