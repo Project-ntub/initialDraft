@@ -12,6 +12,11 @@
         <h2>註冊</h2>
         <form action="{% url 'register' %}" method="post">
             {% csrf_token %}
+            {% if error %}
+            <div class="error">
+                <p>{{ error }}</p>
+            </div>
+            {% endif %}
             <label for="username">用戶名:</label>
             <input type="text" id="username" name="username" required>
 

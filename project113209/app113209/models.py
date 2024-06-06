@@ -27,7 +27,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=100, unique=True)
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=100)
-    phone = models.CharField(max_length=15, null=False, blank=False, default='0000000000')
+    phone = models.CharField(max_length=15, unique=True, null=False, blank=False, default='0000000000')
     verification_code = models.UUIDField(default=uuid.uuid4, editable=False)
     is_verified = models.BooleanField(default=False)
     is_approved = models.BooleanField(default=False)
@@ -45,7 +45,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['username']
 
     class Meta:
-        db_table = 'user'  # 这应该与实际表名匹配
+        db_table = 'user'  # 這應該與實際資料表名匹配
 
     def __str__(self):
         return self.email

@@ -9,6 +9,9 @@ from .models import User
 from django.core.mail import send_mail
 from django.conf import settings
 import uuid
+from django.core.exceptions import ValidationError
+from .validators import CustomPasswordValidator
+
 
 class CustomLoginView(LoginView):
     template_name = 'login.html'
@@ -61,13 +64,20 @@ def register(request):
         phone = request.POST.get('phone')
 
         if password != confirm_password:
-            return render(request, 'register.html', {'error': 'Passwords do not match'})
+            return render(request, 'register.html', {'error': '密碼不匹配'})
 
         if User.objects.filter(username=username).exists():
-            return render(request, 'register.html', {'error': 'Username already exists'})
+            return render(request, 'register.html', {'error': '用戶名已存在'})
 
         if User.objects.filter(email=email).exists():
-            return render(request, 'register.html', {'error': 'Email already exists'})
+            return render(request, 'register.html', {'error': '電子郵件已存在'})
+
+        password_validator = CustomPasswordValidator()
+        try:
+            password_validator.validate(password)
+        except ValidationError as e:
+            error_message = '; '.join(e.messages)
+            return render(request, 'register.html', {'error': error_message})
 
         verification_code = uuid.uuid4()
         user = User(
