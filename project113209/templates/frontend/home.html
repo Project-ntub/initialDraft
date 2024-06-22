@@ -5,51 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>首頁 - 分店查詢</title>
+  <link rel="stylesheet" href="{% static 'frontend/css/home.css' %}">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
-  <h2>首頁 - 分店查詢</h2>
-
-  <div class="menu">
-    <ul>
-      <li><a href="個人資訊.html">個人資訊</a></li>
-      <li><a href="帳號設定.html">帳號設定</a></li>
-      <li><a href="歷史紀錄動態日期.html">歷史紀錄</a></li>
-    </ul>
-  </div>
-
-  <div class="controls">
-    <button onclick="showChart('revenueChart')">營業額</button>
-    <button onclick="showChart('salesTrendChart')">銷售額</button>
-    <button onclick="showChart('inventoryChart')">庫存量</button>
-    <button onclick="showModal()">新增圖表</button>
-  </div>
-
-  <div class="chart-container" id="revenueChartContainer">
-    <canvas id="revenueChart"></canvas>
-  </div>
-  <div class="chart-container" id="salesTrendChartContainer">
-    <canvas id="salesTrendChart"></canvas>
-  </div>
-  <div class="chart-container" id="inventoryChartContainer">
-    <canvas id="inventoryChart"></canvas>
-  </div>
-
-  <div class="modal" id="chartModal">
-    <div class="modal-content">
-      <span onclick="closeModal()" style="float:right;cursor:pointer;">&times;</span>
-      <label for="newChartTypeSelect">選擇圖表類型:</label>
-      <select id="newChartTypeSelect">
-        <option value="line">直線圖</option>
-        <option value="bar">長條圖</option>
-        <option value="pie">圓餅圖</option>
-        <option value="scatter">散佈圖</option>
-        <option value="horizontalBar">橫條圖</option>
-      </select>
-      <button onclick="addNewChart()">確認新增</button>
-    </div>
-  </div>
-
   <script>
     const storeData = {
       'A': { revenue: 100000, trend: [10, 20, 30, 40, 50], inventory: 1000 },
@@ -107,7 +64,7 @@
 
     function addNewChart() {
       const chartType = document.getElementById('newChartTypeSelect').value;
-      const newChartId = newChart${Object.keys(charts).length + 1};
+      const newChartId = `newChart${Object.keys(charts).length + 1}`;
       const newCanvas = document.createElement('canvas');
       newCanvas.id = newChartId;
       newCanvas.classList.add('chart-container');
@@ -125,8 +82,53 @@
       charts.inventoryChart = createChart('inventoryChart', 'line', ['January', 'February', 'March', 'April', 'May'], storeData['C'].trend, '庫存量', 'rgba(255, 159, 64, 0.2)', 'rgba(255, 159, 64, 1)');
     }
 
-    initDefaultCharts();
-    showChart('revenueChart'); // Show the initial chart
+    window.onload = function() {
+      initDefaultCharts();
+      showChart('revenueChart'); // Show the initial chart
+    }
   </script>
+</head>
+<body>
+  <h2>首頁 - 分店查詢</h2>
+
+  <div class="menu">
+    <ul>
+      <li><a href="*">個人資訊</a></li>
+      <li><a href="*">帳號設定</a></li>
+      <li><a href="*">歷史紀錄</a></li>
+    </ul>
+  </div>
+
+  <div class="controls">
+    <button onclick="showChart('revenueChart')">營業額</button>
+    <button onclick="showChart('salesTrendChart')">銷售額</button>
+    <button onclick="showChart('inventoryChart')">庫存量</button>
+    <button onclick="showModal()">新增圖表</button>
+  </div>
+
+  <div class="chart-container" id="revenueChartContainer" style="display: none;">
+    <canvas id="revenueChart"></canvas>
+  </div>
+  <div class="chart-container" id="salesTrendChartContainer" style="display: none;">
+    <canvas id="salesTrendChart"></canvas>
+  </div>
+  <div class="chart-container" id="inventoryChartContainer" style="display: none;">
+    <canvas id="inventoryChart"></canvas>
+  </div>
+
+  <div class="modal" id="chartModal">
+    <div class="modal-content">
+      <span onclick="closeModal()" style="float:right;cursor:pointer;">&times;</span>
+      <label for="newChartTypeSelect">選擇圖表類型:</label>
+      <select id="newChartTypeSelect">
+        <option value="line">直線圖</option>
+        <option value="bar">長條圖</option>
+        <option value="pie">圓餅圖</option>
+        <option value="scatter">散佈圖</option>
+        <option value="horizontalBar">橫條圖</option>
+      </select>
+      <button onclick="addNewChart()">確認新增</button>
+    </div>
+  </div>
 </body>
 </html>
