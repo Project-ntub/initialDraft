@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>偏好設定</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+    }
+    .preferences-form {
+      max-width: 400px;
+      margin: 0 auto;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 20px;
+    }
+    .input-container {
+      margin-bottom: 10px;
+    }
+    .input-container label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    .input-container select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .button-container {
+      text-align: center;
+    }
+    .button-container button {
+      padding: 10px 20px;
+      margin: 0 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: #007bff;
+      color: white;
+    }
+    .button-container button.cancel {
+      background-color: #6c757d;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+    }
+    .back-home {
+      display: flex;
+      justify-content: center;
+      margin: 20px;
+    }
+    .back-home button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #1404f6; /* Green background */
+      color: white; /* White text */
+      border: none;
+      border-radius: 5px;
+    }
+    .back-home button:hover {
+      background-color: #0a24eb;
+    }
+    /* Other existing styles */
+  </style>
+</head>
+<body>
+  <h2>偏好設定</h2>
+
+  <form class="preferences-form">
+    <div class="input-container">
+      <label for="fontSize">字體大小：</label>
+      <select id="fontSize" name="fontSize">
+        <option value="small">小</option>
+        <option value="medium" selected>中</option>
+        <option value="large">大</option>
+      </select>
+    </div>
+    <div class="input-container">
+      <label for="notification">通知設定：</label>
+      <select id="notification" name="notification">
+        <option value="on" selected>開啟</option>
+        <option value="off">關閉</option>
+      </select>
+    </div>
+    <div class="input-container">
+      <label for="autoLogin">自動登入：</label>
+      <select id="autoLogin" name="autoLogin">
+        <option value="on">開啟</option>
+        <option value="off" selected>關閉</option>
+      </select>
+    </div>
+
+    <div class="button-container">
+      <button type="submit">更改</button>
+      <button type="button" class="cancel" onclick="cancelChanges()">取消變更</button>
+    </div>
+  </form>
+
+  <div class="back-home">
+    <button onclick="goHome()">返回首頁</button>
+  </div>
+
+  <script>
+    function goHome() {
+      window.location.href = '首頁.html';
+    }
+  </script>
+
+  <script>
+    function cancelChanges() {
+      // 在此處添加取消變更的功能
+      alert('您取消了變更偏好設定');
+    }
+  </script>
+</body>
+</html>
