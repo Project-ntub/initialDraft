@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>角色管理</title>
-    <link rel="stylesheet" href="{% static 'css/role_management.css' %}">
+    <link rel="stylesheet" href="{% static 'backend/css/role_management.css' %}">
 </head>
 <body>
     <div class="container">
@@ -59,7 +59,7 @@
     <div id="permissionsModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            {% include 'role_permissions.html' %}
+            {% include 'backend/role_permissions.html' %}
         </div>
     </div>
 
@@ -67,7 +67,7 @@
     <div id="roleModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            {% include 'add_role.html' %}
+            {% include 'backend/add_role.html' %}
         </div>
     </div>
 
