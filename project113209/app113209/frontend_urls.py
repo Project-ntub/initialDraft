@@ -4,5 +4,4 @@ from . import frontend_views
 urlpatterns = [
     path('login/', frontend_views.FrontendLoginView.as_view(), name='frontend-login'),
     path('home/', frontend_views.home, name='frontend-home'),
-    # 添加更多前台视图的URL
 ]
