@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>首頁</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+    }
+    .navbar {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+    }
+    .dropdown {
+      display: inline-block;
+    }
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+      left: 0;
+    }
+    .dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+    .dropdown-content a:hover {
+      background-color: #f1f1f1;
+    }
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+    .dropdown .dropbtn {
+      background-color: #007bff;
+      color: white;
+      padding: 10px 16px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+    }
+    .controls {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .controls button {
+      margin: 5px;
+    }
+    .chart-container {
+      width: 80%;
+      margin: 20px auto;
+      display: none;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgb(0,0,0);
+      background-color: rgba(0,0,0,0.4);
+    }
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 40%;
+    }
+    .modal-content label, .modal-content select, .modal-content button {
+      display: block;
+      margin: 10px 0;
+    }
+    .selection {
+      text-align: center;
+      margin: 20px;
+    }
+    .gauge-container {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 20px;
+    }
+    .bar-chart-container {
+      width: 80%;
+      margin: 20px auto;
+    }
+    .chart-label {
+      text-align: center;
+      margin-top: 10px;
+    }
+    .date-select {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .date-select select {
+      margin: 0 5px;
+      padding: 5px;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gaugeJS/dist/gauge.min.js"></script>
+  <script src="scripts2.js"></script>
+  
+</head>
+<body>
+  <h2>首頁</h2>
+
+  <div class="navbar">
+    <div class="dropdown">
+      <button class="dropbtn">選單</button>
+      <div class="dropdown-content">
+        <a href="首頁.html">首頁</a>
+        <a href="個人資訊.html">個人資訊</a>
+        <a href="帳號設定.html">帳號設定</a>
+        <a href="歷史紀錄.html">歷史紀錄</a>
+        <a href="前台登出成功.html" onclick="logout()">登出</a> <!-- 新增登出按鈕 -->
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button onclick="showChart('sales')">銷售額</button>
+    <button onclick="showChart('revenue')">營業額</button>
+    <button onclick="showChart('inventory')">庫存量</button>
+  </div>
+
+  <div class="date-select">
+    <label for="yearSelect">選擇年份：</label>
+    <select id="yearSelect"></select>
+    
+    <label for="monthSelect">選擇月份：</label>
+    <select id="monthSelect"></select>
+    
+    <label for="daySelect">選擇日期：</label>
+    <select id="daySelect"></select>
+
+    <button id="queryButton">查詢</button> <!-- 新增的查詢按鈕 -->
+  </div>
+
+  <div class="chart-container" id="salesChartContainer">
+    <div class="chart-controls">
+      <div class="control-box">
+        <button onclick="changeDataset('sales', 'salesBarChart')">銷售額</button>
+        <button onclick="changeDataset('cost', 'salesBarChart')">銷售成本</button>
+        <button onclick="changeDataset('profit', 'salesBarChart')">銷售毛利</button>
+      </div>
+      <canvas id="salesBarChart"></canvas>
+    </div>
+    <div class="gauge-container">
+      <div>
+        <canvas id="salesGauge"></canvas>
+        <div class="chart-label">銷售額評估</div>
+      </div>
+      <div>
+        <canvas id="salesCostGauge"></canvas>
+        <div class="chart-label">銷售成本評估</div>
+      </div>
+      <div>
+        <canvas id="salesProfitGauge"></canvas>
+        <div class="chart-label">銷售毛利評估</div>
+      </div>
+    </div>
+    <div class="bar-chart-container">
+      <canvas id="salesBarChart"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-container" id="revenueChartContainer">
+    <div class="chart-controls">
+      <div class="control-box">
+        <button onclick="changeDataset('revenue', 'revenueBarChart')">營業收入</button>
+        <button onclick="changeDataset('cost', 'revenueBarChart')">營業成本</button>
+        <button onclick="changeDataset('profit', 'revenueBarChart')">營業毛利</button>
+      </div>
+      <canvas id="revenueBarChart"></canvas>
+    </div>
+    <div class="gauge-container">
+      <div>
+        <canvas id="revenueGauge"></canvas>
+        <div class="chart-label">營業額評估</div>
+      </div>
+      <div>
+        <canvas id="revenueCostGauge"></canvas>
+        <div class="chart-label">營業成本評估</div>
+      </div>
+      <div>
+        <canvas id="revenueProfitGauge"></canvas>
+        <div class="chart-label">營業毛利評估</div>
+      </div>
+    </div>
+    <div class="bar-chart-container">
+      <canvas id="revenueBarChart"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-container" id="inventoryChartContainer">
+    <div class="chart-controls">
+    <div class="control-box">
+      <button onclick="changeDataset('inventory', 'inventoryBarChart')">庫存量</button>
+      <button onclick="changeDataset('cost', 'inventoryBarChart')">庫存成本</button>
+      <button onclick="changeDataset('profit', 'inventoryBarChart')">庫存毛利</button>
+    </div>
+    <canvas id="inventoryBarChart"></canvas>
+  </div>
+    <div class="gauge-container">
+      <div>
+        <canvas id="inventoryGauge"></canvas>
+        <div class="chart-label">庫存量評估</div>
+      </div>
+      <div>
+        <canvas id="inventoryCostGauge"></canvas>
+        <div class="chart-label">庫存成本評估</div>
+      </div>
+      <div>
+        <canvas id="inventoryProfitGauge"></canvas>
+        <div class="chart-label">庫存毛利評估</div>
+      </div>
+    </div>
+    <div class="bar-chart-container">
+      <canvas id="inventoryBarChart"></canvas>
+    </div>
+
+    
+    
+  </div>
+
+  <script>
+    const storeData = {
+      sales: {
+        value: 1300000,
+        cost: 1000000,
+        profit: 400000,
+        barData: [200000, 180000, 160000, 140000, 120000]
+      },
+      revenue: {
+        value: 1242089,
+        cost: 900887,
+        profit: 341201963,
+        barData: [300000, 250000, 200000, 150000, 100000]
+      },
+      inventory: {
+        value: 1400000,
+        cost: 1100000,
+        profit: 300000,
+        barData: [250000, 220000, 200000, 170000, 150000]
+      }
+    };
+
+    const gaugeOptions = {
+      angle: -0.25,
+      lineWidth: 0.1,
+      radiusScale: 1,
+      pointer: {
+        length: 0.6,
+        strokeWidth: 0.035,
+        color: '#000000'
+      },
+      limitMax: false,
+      limitMin: false,
+      highDpiSupport: true,
+      staticZones: [
+        {strokeStyle: "#F03E3E", min: 0, max: 30},
+        {strokeStyle: "#FFDD00", min: 30, max: 70},
+        {strokeStyle: "#30B32D", min: 70, max: 100}
+      ]
+    };
+
+    function createGauge(canvasId, max, value) {
+      const target = document.getElementById(canvasId);
+      const gauge = new Gauge(target).setOptions(gaugeOptions);
+      gauge.maxValue = max;
+      gauge.setMinValue(0);
+      gauge.animationSpeed = 32;
+      gauge.set(value);
+    }
+
+    function createBarChart(canvasId, labels, data) {
+      const ctx = document.getElementById(canvasId).getContext('2d');
+      const chartConfig = {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: '數量',
+            data: data,
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      };
+      new Chart(ctx, chartConfig);
+    }
+
+    function showChart(type) {
+      document.getElementById('salesChartContainer').style.display = 'none';
+      document.getElementById('revenueChartContainer').style.display = 'none';
+      document.getElementById('inventoryChartContainer').style.display = 'none';
+
+      
+
+      const chartContainerId = type + 'ChartContainer';
+      document.getElementById(chartContainerId).style.display = 'block';
+
+      if (type === 'sales') {
+        initSalesCharts();
+      } else if (type === 'revenue') {
+        initRevenueCharts();
+      } else if (type === 'inventory') {
+        initInventoryCharts();
+      }
+    }
+
+    function initSalesCharts() {
+      createGauge('salesGauge', 2000000, storeData.sales.value);
+      createGauge('salesCostGauge', 2000000, storeData.sales.cost);
+      createGauge('salesProfitGauge', 500000000, storeData.sales.profit);
+      createBarChart('salesBarChart', ['肥料產品A', '肥料產品B', '肥料產品C', '肥料產品D', '肥料產品E'], storeData.sales.barData);
+    }
+
+    function initRevenueCharts() {
+      createGauge('revenueGauge', 2000000, storeData.revenue.value);
+      createGauge('revenueCostGauge', 2000000, storeData.revenue.cost);
+      createGauge('revenueProfitGauge', 500000000, storeData.revenue.profit);
+      createBarChart('revenueBarChart', ['肥料產品A', '肥料產品B', '肥料產品C', '肥料產品D', '肥料產品E'], storeData.revenue.barData);
+    }
+
+    function initInventoryCharts() {
+      createGauge('inventoryGauge', 2000000, storeData.inventory.value);
+      createGauge('inventoryCostGauge', 2000000, storeData.inventory.cost);
+      createGauge('inventoryProfitGauge', 500000000, storeData.inventory.profit);
+      createBarChart('inventoryBarChart', ['肥料產品A', '肥料產品B', '肥料產品C', '肥料產品D', '肥料產品E'], storeData.inventory.barData);
+    }
+
+    function populateDateSelects() {
+      const yearSelect = document.getElementById('yearSelect');
+      const monthSelect = document.getElementById('monthSelect');
+      const daySelect = document.getElementById('daySelect');
+
+      // 填充年份
+      for (let year = 2015; year <= 2025; year++) {
+        const option = document.createElement('option');
+        option.value = year;
+        option.textContent = year;
+        yearSelect.appendChild(option);
+      }
+
+      // 填充月份
+      for (let month = 1; month <= 12; month++) {
+        const option = document.createElement('option');
+        option.value = month;
+        option.textContent = month;
+        monthSelect.appendChild(option);
+      }
+
+      // 填充日期
+      function updateDays() {
+        const year = parseInt(yearSelect.value);
+        const month = parseInt(monthSelect.value);
+        const daysInMonth = new Date(year, month, 0).getDate();
+        daySelect.innerHTML = ''; // 清空之前的選項
+        for (let day = 1; day <= daysInMonth; day++) {
+          const option = document.createElement('option');
+          option.value = day;
+          option.textContent = day;
+          daySelect.appendChild(option);
+        }
+      }
+
+      yearSelect.addEventListener('change', updateDays);
+      monthSelect.addEventListener('change', updateDays);
+      updateDays(); // 初始化日期選項
+    }
+
+    function updateChartsByDate() {
+      const year = document.getElementById('yearSelect').value;
+      const month = document.getElementById('monthSelect').value;
+      const day = document.getElementById('daySelect').value;
+
+      console.log(`Selected date: ${year}-${month}-${day}`);
+      // 在這裡根據選擇的日期更新圖表數據，這裡假設有一個 fetchDataByDate 函數
+      // fetchDataByDate(year, month, day);
+    }
+
+    window.onload = function() {
+      showChart('sales'); // 預設顯示銷售額圖表
+      populateDateSelects(); // 初始化日期選擇器
+    }
+
+    document.getElementById('yearSelect').addEventListener('change', updateChartsByDate);
+    document.getElementById('monthSelect').addEventListener('change', updateChartsByDate);
+    document.getElementById('daySelect').addEventListener('change', updateChartsByDate);
+   
+  </script>
+</body>
+</html>
