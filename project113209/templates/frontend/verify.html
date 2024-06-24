@@ -1,0 +1,25 @@
+{ % load static % }
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Email</title>
+    <link rel="stylesheet" href="{% static 'frontend/css/verify.css' %}">
+   
+</head>
+<body>
+    <div class="container">
+        <h2>Verify Your Email</h2>
+        <form method="post" action="{% url 'verify' %}">
+            {% csrf_token %}
+            <label for="verification_code">Enter your verification code:</label>
+            <input type="text" id="verification_code" name="verification_code" required>
+            <input type="submit" value="Verify">
+            {% if error %}
+            <p class="error">{{ error }}</p>
+            {% endif %}
+        </form>
+    </div>
+</body>
+</html>

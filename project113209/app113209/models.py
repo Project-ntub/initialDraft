@@ -28,7 +28,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=100)
     phone = models.CharField(max_length=15, unique=True, null=False, blank=False, default='0000000000')
-    verification_code = models.UUIDField(default=uuid.uuid4, editable=False)
+    verification_code = models.UUIDField(default=uuid.uuid4, unique=True, null=True, blank=True)
     is_verified = models.BooleanField(default=False)
     is_approved = models.BooleanField(default=False)
     department_id = models.CharField(max_length=50, blank=True, null=True)
@@ -37,7 +37,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     module = models.CharField(max_length=100, blank=True, null=True)
     gender = models.CharField(max_length=10, blank=True, null=True)
     is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
 
     objects = CustomUserManager()
 

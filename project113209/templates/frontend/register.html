@@ -1,0 +1,61 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用戶註冊</title>
+    <link rel="stylesheet" href="{% static 'frontend/css/register.css' %}">
+    <script>
+        function getVerificationCode() {
+            const email = document.getElementById('email').value;
+            fetch(`/send_verification_code/?email=${email}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('驗證碼已發送到您的電子郵件。');
+                    } else {
+                        alert('發送驗證碼失敗。');
+                    }
+                });
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h2>註冊</h2>
+        <form action="{% url 'frontend-register' %}" method="post">
+            {% csrf_token %}
+            {% if error %}
+            <div class="error">
+                <p>{{ error }}</p>
+            </div>
+            {% endif %}
+            <label for="username">用戶名:</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="email">電子郵件:</label>
+            <input type="email" id="email" name="email" required>
+            <button type="button" onclick="getVerificationCode()">獲取驗證碼</button>
+
+            <label for="verification_code">驗證碼:</label>
+            <input type="text" id="verification_code" name="verification_code" required>
+
+            <label for="password">密碼:</label>
+            <input type="password" id="password" name="password" required>
+
+            <label for="confirm_password">確認密碼:</label>
+            <input type="password" id="confirm_password" name="confirm_password" required>
+
+            <label for="phone">手機號碼:</label>
+            <input type="text" id="phone" name="phone" required>
+
+            
+
+            <input type="submit" value="註冊">
+
+            <p class="terms">點擊「註冊」表示您同意我們的 <a href="#">服務條款</a> 和 <a href="#">隱私政策</a></p>
+        </form>
+    </div>
+</body>
+</html>

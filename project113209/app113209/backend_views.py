@@ -90,9 +90,17 @@ def register(request):
         )
         user.set_password(password)
         user.save()
+        send_verification_email(user)
         # send_verification_email(user)  # Pass the user object
         return redirect('backend/registration_success')
     return render(request, 'backend/register.html')
+
+def send_verification_email(user):
+    subject = 'Please verify your email'
+    message = f'Click the link to verify your email: http://yourdomain.com/verify/{user.verification_code}'
+    email_from = settings.EMAIL_HOST_USER
+    recipient_list = [user.email]
+    send_mail(subject, message, email_from, recipient_list)
 
 def verify(request, verification_code):
     try:
@@ -112,12 +120,6 @@ def approve_user(request, user_id):
     except User.DoesNotExist:
         return redirect('approval_failure')
 
-# def send_verification_email(user):
-#     subject = 'Your verification code'
-#     message = f'Please verify your account using the following code: {user.verification_code}'
-#     email_from = settings.EMAIL_HOST_USER
-#     recipient_list = [user.email]
-#     send_mail(subject, message, email_from, recipient_list)
 
 def registration_success(request):
     return render(request, 'backend/registration_success.html')

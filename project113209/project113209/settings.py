@@ -148,8 +148,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = '11236017@ntub.edu.tw'  # 替换为您的 Gmail 地址
-EMAIL_HOST_PASSWORD = 'N2266582'  # 替换为您的 Gmail 密码或应用专用密码
+EMAIL_HOST_USER = '11236017@ntub.edu.tw'
+EMAIL_HOST_PASSWORD = 'cxur tzpv jiwm yytp'
 
 # Session settings
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
