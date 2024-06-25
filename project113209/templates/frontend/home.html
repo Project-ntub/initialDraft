@@ -4,131 +4,137 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>首頁 - 分店查詢</title>
+  <title>首頁</title>
   <link rel="stylesheet" href="{% static 'frontend/css/home.css' %}">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script>
-    const storeData = {
-      'A': { revenue: 100000, trend: [10, 20, 30, 40, 50], inventory: 1000 },
-      'B': { revenue: 80000, trend: [15, 25, 35, 45, 55], inventory: 800 },
-      'C': { revenue: 120000, trend: [20, 30, 40, 50, 60], inventory: 1200 }
-    };
-
-    const charts = {};
-
-    function createChart(canvasId, type, labels, data, label, backgroundColor, borderColor) {
-      const ctx = document.getElementById(canvasId).getContext('2d');
-      const chartConfig = {
-        type: type,
-        data: {
-          labels: labels,
-          datasets: [{
-            label: label,
-            data: data,
-            backgroundColor: backgroundColor,
-            borderColor: borderColor,
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            y: {
-              beginAtZero: true
-            }
-          }
-        }
-      };
-
-      if (type === 'horizontalBar') {
-        chartConfig.type = 'bar';
-        chartConfig.options.indexAxis = 'y';
-      }
-
-      return new Chart(ctx, chartConfig);
-    }
-
-    function showChart(chartId) {
-      document.querySelectorAll('.chart-container').forEach(container => container.style.display = 'none');
-      document.getElementById(chartId + 'Container').style.display = 'block';
-    }
-
-    function showModal() {
-      document.getElementById('chartModal').style.display = 'block';
-    }
-
-    function closeModal() {
-      document.getElementById('chartModal').style.display = 'none';
-    }
-
-    function addNewChart() {
-      const chartType = document.getElementById('newChartTypeSelect').value;
-      const newChartId = `newChart${Object.keys(charts).length + 1}`;
-      const newCanvas = document.createElement('canvas');
-      newCanvas.id = newChartId;
-      newCanvas.classList.add('chart-container');
-      document.body.appendChild(newCanvas);
-
-      const newChart = createChart(newChartId, chartType, ['January', 'February', 'March', 'April', 'May'], [12, 19, 3, 5, 2, 3], '新圖表', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 1)');
-      charts[newChartId] = newChart;
-
-      closeModal();
-    }
-
-    function initDefaultCharts() {
-      charts.revenueChart = createChart('revenueChart', 'line', ['January', 'February', 'March', 'April', 'May'], storeData['A'].trend, '營業額', 'rgba(75, 192, 192, 0.2)', 'rgba(75, 192, 192, 1)');
-      charts.salesTrendChart = createChart('salesTrendChart', 'line', ['January', 'February', 'March', 'April', 'May'], storeData['B'].trend, '銷售趨勢', 'rgba(153, 102, 255, 0.2)', 'rgba(153, 102, 255, 1)');
-      charts.inventoryChart = createChart('inventoryChart', 'line', ['January', 'February', 'March', 'April', 'May'], storeData['C'].trend, '庫存量', 'rgba(255, 159, 64, 0.2)', 'rgba(255, 159, 64, 1)');
-    }
-
-    window.onload = function() {
-      initDefaultCharts();
-      showChart('revenueChart'); // Show the initial chart
-    }
-  </script>
+  <script src="https://cdn.jsdelivr.net/npm/gaugeJS/dist/gauge.min.js"></script>
+  <script src="{% static 'frontend/js/home.js' %}"></script>
+  
 </head>
 <body>
-  <h2>首頁 - 分店查詢</h2>
+  <h2>首頁</h2>
 
-  <div class="menu">
-    <ul>
-      <li><a href="*">個人資訊</a></li>
-      <li><a href="*">帳號設定</a></li>
-      <li><a href="*">歷史紀錄</a></li>
-    </ul>
+  <div class="navbar">
+    <div class="dropdown">
+      <button class="dropbtn">選單</button>
+      <div class="dropdown-content">
+        <a href="首頁.html">首頁</a>
+        <a href="個人資訊.html">個人資訊</a>
+        <a href="帳號設定.html">帳號設定</a>
+        <a href="歷史紀錄.html">歷史紀錄</a>
+        <a href="前台登出成功.html" onclick="logout()">登出</a> <!-- 新增登出按鈕 -->
+      </div>
+    </div>
   </div>
 
   <div class="controls">
-    <button onclick="showChart('revenueChart')">營業額</button>
-    <button onclick="showChart('salesTrendChart')">銷售額</button>
-    <button onclick="showChart('inventoryChart')">庫存量</button>
-    <button onclick="showModal()">新增圖表</button>
+    <button onclick="showChart('sales')">銷售額</button>
+    <button onclick="showChart('revenue')">營業額</button>
+    <button onclick="showChart('inventory')">庫存量</button>
   </div>
 
-  <div class="chart-container" id="revenueChartContainer" style="display: none;">
-    <canvas id="revenueChart"></canvas>
-  </div>
-  <div class="chart-container" id="salesTrendChartContainer" style="display: none;">
-    <canvas id="salesTrendChart"></canvas>
-  </div>
-  <div class="chart-container" id="inventoryChartContainer" style="display: none;">
-    <canvas id="inventoryChart"></canvas>
+  <div class="date-select">
+    <label for="yearSelect">選擇年份：</label>
+    <select id="yearSelect"></select>
+    
+    <label for="monthSelect">選擇月份：</label>
+    <select id="monthSelect"></select>
+    
+    <label for="daySelect">選擇日期：</label>
+    <select id="daySelect"></select>
+
+    <button id="queryButton">查詢</button> <!-- 新增的查詢按鈕 -->
   </div>
 
-  <div class="modal" id="chartModal">
-    <div class="modal-content">
-      <span onclick="closeModal()" style="float:right;cursor:pointer;">&times;</span>
-      <label for="newChartTypeSelect">選擇圖表類型:</label>
-      <select id="newChartTypeSelect">
-        <option value="line">直線圖</option>
-        <option value="bar">長條圖</option>
-        <option value="pie">圓餅圖</option>
-        <option value="scatter">散佈圖</option>
-        <option value="horizontalBar">橫條圖</option>
-      </select>
-      <button onclick="addNewChart()">確認新增</button>
+  <div class="chart-container" id="salesChartContainer">
+    <div class="chart-controls">
+      <div class="control-box">
+        <button onclick="changeDataset('sales', 'salesBarChart')">銷售額</button>
+        <button onclick="changeDataset('cost', 'salesBarChart')">銷售成本</button>
+        <button onclick="changeDataset('profit', 'salesBarChart')">銷售毛利</button>
+      </div>
+      <canvas id="salesBarChart"></canvas>
+    </div>
+    <div class="gauge-container">
+      <div>
+        <canvas id="salesGauge"></canvas>
+        <div class="chart-label">銷售額評估</div>
+      </div>
+      <div>
+        <canvas id="salesCostGauge"></canvas>
+        <div class="chart-label">銷售成本評估</div>
+      </div>
+      <div>
+        <canvas id="salesProfitGauge"></canvas>
+        <div class="chart-label">銷售毛利評估</div>
+      </div>
+    </div>
+    <div class="bar-chart-container">
+      <canvas id="salesBarChart"></canvas>
     </div>
   </div>
+
+  <div class="chart-container" id="revenueChartContainer">
+    <div class="chart-controls">
+      <div class="control-box">
+        <button onclick="changeDataset('revenue', 'revenueBarChart')">營業收入</button>
+        <button onclick="changeDataset('cost', 'revenueBarChart')">營業成本</button>
+        <button onclick="changeDataset('profit', 'revenueBarChart')">營業毛利</button>
+      </div>
+      <canvas id="revenueBarChart"></canvas>
+    </div>
+    <div class="gauge-container">
+      <div>
+        <canvas id="revenueGauge"></canvas>
+        <div class="chart-label">營業額評估</div>
+      </div>
+      <div>
+        <canvas id="revenueCostGauge"></canvas>
+        <div class="chart-label">營業成本評估</div>
+      </div>
+      <div>
+        <canvas id="revenueProfitGauge"></canvas>
+        <div class="chart-label">營業毛利評估</div>
+      </div>
+    </div>
+    <div class="bar-chart-container">
+      <canvas id="revenueBarChart"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-container" id="inventoryChartContainer">
+    <div class="chart-controls">
+    <div class="control-box">
+      <button onclick="changeDataset('inventory', 'inventoryBarChart')">庫存量</button>
+      <button onclick="changeDataset('cost', 'inventoryBarChart')">庫存成本</button>
+      <button onclick="changeDataset('profit', 'inventoryBarChart')">庫存毛利</button>
+    </div>
+    <canvas id="inventoryBarChart"></canvas>
+  </div>
+    <div class="gauge-container">
+      <div>
+        <canvas id="inventoryGauge"></canvas>
+        <div class="chart-label">庫存量評估</div>
+      </div>
+      <div>
+        <canvas id="inventoryCostGauge"></canvas>
+        <div class="chart-label">庫存成本評估</div>
+      </div>
+      <div>
+        <canvas id="inventoryProfitGauge"></canvas>
+        <div class="chart-label">庫存毛利評估</div>
+      </div>
+    </div>
+    <div class="bar-chart-container">
+      <canvas id="inventoryBarChart"></canvas>
+    </div>
+
+    
+    
+  </div>
+
+  <script>
+    
+  </script>
 </body>
 </html>
