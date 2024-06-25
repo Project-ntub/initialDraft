@@ -47,7 +47,7 @@
         }
 
         fetch(
-          `/frontend/validate_verification_code/?email=${encodeURIComponent(
+          `/frontend/verify_code/?email=${encodeURIComponent(
             email
           )}&code=${encodeURIComponent(verificationCode)}`
         )

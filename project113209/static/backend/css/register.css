@@ -24,7 +24,8 @@ label {
 input[type="text"],
 input[type="email"],
 input[type="password"],
-input[type="submit"] {
+input[type="submit"],
+button {
     width: 100%;
     padding: 10px;
     margin-bottom: 20px;
@@ -32,14 +33,23 @@ input[type="submit"] {
     border: 1px solid #ccc;
     box-sizing: border-box;
 }
-input[type="submit"] {
+button {
     background-color: #007bff;
     color: #fff;
     border: none;
     cursor: pointer;
 }
-input[type="submit"]:hover {
+button:hover {
     background-color: #0056b3;
+}
+input[type="submit"] {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+input[type="submit"]:hover {
+    background-color: #218838;
 }
 .terms {
     font-size: 12px;
@@ -48,4 +58,10 @@ input[type="submit"]:hover {
 .terms a {
     color: #007bff;
     text-decoration: none;
+}
+.error {
+    color: red;
+    margin-top: -15px;
+    margin-bottom: 20px;
+    text-align: center;
 }

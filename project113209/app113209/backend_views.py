@@ -1,17 +1,21 @@
-from django.shortcuts import render, redirect
+import logging
 from django.contrib.auth.views import LoginView, LogoutView
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
-from django.urls import reverse_lazy
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login, logout
-from .models import User
-from django.core.mail import send_mail
-from django.conf import settings
-import uuid
+from django.contrib.auth import authenticate, login
+from django.shortcuts import render, redirect
 from django.core.exceptions import ValidationError
+from .models import User
 from .validators import CustomPasswordValidator
+from django.utils import timezone
+from datetime import timedelta
+import uuid
+from django.http import JsonResponse
+from django.core.mail import send_mail
+from django.contrib.auth.decorators import login_required
+from django.conf import settings
 
+logger = logging.getLogger(__name__)
 
 class BackendLoginView(LoginView):
     template_name = 'backend/login.html'
@@ -20,12 +24,12 @@ class BackendLoginView(LoginView):
     def post(self, request, *args, **kwargs):
         username = request.POST.get('username')
         password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)  # 使用 username 进行认证
+        user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
             return redirect('management')  # 成功登录后重定向到仪表板
         else:
-            return render(request, 'backend/login.html', {'error': 'Invalid username or password'})
+            return render(request, self.template_name, {'error': 'Invalid username or password'})
 
 @login_required
 def management(request):
@@ -54,62 +58,104 @@ class BackendLogoutView(LogoutView):
 def logout_success(request):
     return render(request, 'backend/logout_success.html')
 
+def send_verification_code_backend(request):
+    email = request.GET.get('email')
+    if not email:
+        logger.error("Email is required")
+        return JsonResponse({'success': False, 'message': '電子郵件是必填項'}, status=400)
+
+    try:
+        verification_code = str(uuid.uuid4())[:6]
+        expiry_time = timezone.now() + timedelta(minutes=5)
+        user, created = User.objects.get_or_create(email=email, defaults={
+            'verification_code': verification_code,
+            'expiry_time': expiry_time
+        })
+        if not created:
+            user.verification_code = verification_code
+            user.expiry_time = expiry_time
+            user.save()
+        send_verification_email(email, verification_code)
+        logger.info(f"Verification code {verification_code} sent to {email} with expiry time {expiry_time}")
+        return JsonResponse({'success': True, 'message': '驗證碼已發送'})
+    except Exception as e:
+        logger.error(f"Failed to send verification code to {email}: {e}")
+        return JsonResponse({'success': False, 'message': '發送驗證碼失敗,請重試'}, status=500)
+
+def send_verification_email(email, verification_code):
+    subject = '請驗證您的電子郵件'
+    message = f'您的驗證碼是 {verification_code}'
+    email_from = settings.EMAIL_HOST_USER
+    recipient_list = [email]
+    try:
+        send_mail(subject, message, email_from, recipient_list)
+    except Exception as e:
+        logger.error(f"Failed to send verification email to {email}: {e}")
+        return JsonResponse({'success': False, 'message': '發送驗證碼失敗,請重試'}, status=500)
+
+def validate_verification_code_backend(request):
+    email = request.GET.get('email')
+    code = request.GET.get('code')
+    if not email or not code:
+        logger.error("Email and code are required")
+        return JsonResponse({'success': False, 'message': '電子郵件和驗證碼是必填項'}, status=400)
+
+    try:
+        user = User.objects.get(email=email, verification_code=code)
+        if user.expiry_time < timezone.now():
+            logger.warning(f"Verification code for {email} expired at {user.expiry_time}")
+            return JsonResponse({'success': False, 'message': '驗證碼已過期'}, status=400)
+        logger.info(f"Verification code for {email} is valid")
+        return JsonResponse({'success': True})
+    except User.DoesNotExist:
+        logger.error(f"Invalid verification code for {email}")
+        return JsonResponse({'success': False, 'message': '驗證碼無效'}, status=400)
 
 def register(request):
     if request.method == 'POST':
         username = request.POST.get('username')
+        if not username:
+            username = f"user_{User.objects.count() + 1}"
         email = request.POST.get('email')
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
         phone = request.POST.get('phone')
+        verification_code = request.POST.get('verification_code')
 
         if password != confirm_password:
+            logger.error("Passwords do not match")
             return render(request, 'backend/register.html', {'error': '密碼不匹配'})
 
-        if User.objects.filter(username=username).exists():
-            return render(request, 'backend/register.html', {'error': '用戶名已存在'})
-
-        if User.objects.filter(email=email).exists():
-            return render(request, 'backend/register.html', {'error': '電子郵件已存在'})
-
-        password_validator = CustomPasswordValidator()
         try:
-            password_validator.validate(password)
-        except ValidationError as e:
-            error_message = '; '.join(e.messages)
-            return render(request, 'backend/register.html', {'error': error_message})
+            user = User.objects.get(email=email)
+            if user.verification_code != verification_code:
+                logger.error(f"Verification code for email {email} is incorrect")
+                return render(request, 'backend/register.html', {'error': '驗證碼不正確'})
+            if user.expiry_time < timezone.now():
+                logger.error(f"Verification code for email {email} expired")
+                return render(request, 'backend/register.html', {'error': '驗證碼已過期,請重新獲取'})
+            user.username = username
+            user.phone = phone
+            user.set_password(password)
+            user.is_verified = True
+            user.verification_code = None
+            user.expiry_time = None
+            user.save()
+            login(request, user)
+            logger.info(f"User {username} registered successfully")
+            return redirect('registration_success')  # 重定向到註冊成功頁面
+        except User.DoesNotExist:
+            # 如果用戶不存在,則創建一個新用戶
+            user = User.objects.create(email=email, username=username, phone=phone)
+            user.set_password(password)
+            user.verification_code = verification_code
+            user.expiry_time = timezone.now() + timedelta(minutes=5)
+            user.save()
+            login(request, user)
+            logger.info(f"User {username} registered successfully")
+            return redirect('registration_success')  # 重定向到註冊成功頁面
 
-        verification_code = uuid.uuid4()
-        user = User(
-            username=username,
-            email=email,
-            phone=phone,
-            verification_code=verification_code,
-            is_verified=False,
-            is_approved=False
-        )
-        user.set_password(password)
-        user.save()
-        send_verification_email(user)
-        # send_verification_email(user)  # Pass the user object
-        return redirect('backend/registration_success')
     return render(request, 'backend/register.html')
-
-def send_verification_email(user):
-    subject = 'Please verify your email'
-    message = f'Click the link to verify your email: http://yourdomain.com/verify/{user.verification_code}'
-    email_from = settings.EMAIL_HOST_USER
-    recipient_list = [user.email]
-    send_mail(subject, message, email_from, recipient_list)
-
-def verify(request, verification_code):
-    try:
-        user = User.objects.get(verification_code=verification_code)
-        user.is_verified = True
-        user.save()
-        return redirect('verification_success')
-    except User.DoesNotExist:
-        return redirect('verification_failure')
 
 def approve_user(request, user_id):
     try:
@@ -119,7 +165,6 @@ def approve_user(request, user_id):
         return redirect('approval_success')
     except User.DoesNotExist:
         return redirect('approval_failure')
-
 
 def registration_success(request):
     return render(request, 'backend/registration_success.html')
@@ -155,6 +200,6 @@ class AllowIframeMiddleware:
         response = self.get_response(request)
         response["X-Frame-Options"] = "ALLOWALL"
         return response
-    
+
 def pending_list(request):
     return render(request, 'backend/pending_list.html')
