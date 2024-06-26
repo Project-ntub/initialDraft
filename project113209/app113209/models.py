@@ -1,6 +1,6 @@
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
-import uuid
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+import pyotp
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, username, password=None, **extra_fields):
@@ -39,6 +39,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     gender = models.CharField(max_length=10, blank=True, null=True)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
+    otp_secret = models.CharField(max_length=32, blank=True, null=True)
+
+
+
+
 
     objects = CustomUserManager()
 
@@ -46,7 +51,16 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['username']
 
     class Meta:
-        db_table = 'user'  # 這應該與實際資料表名匹配
+        db_table = 'user'
 
     def __str__(self):
         return self.email
+
+    def generate_otp_secret(self):
+        if not self.otp_secret:
+            self.otp_secret = pyotp.random_base32()
+            self.save()
+
+    def verify_otp(self, otp):
+        totp = pyotp.TOTP(self.otp_secret)
+        return totp.verify(otp)

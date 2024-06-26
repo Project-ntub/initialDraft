@@ -5,7 +5,6 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -15,10 +14,10 @@ SECRET_KEY = 'django-insecure-y&%10_w2a%0v)(jqe46d2)mevjv0f^ro8!#+pu#67d%md8k8vr
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# settings.py
-
 ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost', '140.131.114.158']
 
+# Two-Factor Authentication settings
+TWO_FACTOR_REMEMBER_COOKIE_AGE = 30 * 24 * 60 * 60  # 30天有效期
 
 # Application definition
 
@@ -29,6 +28,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_otp',
+    'django_otp.plugins.otp_totp',
+    'two_factor',
     'app113209',
 ]
 
@@ -41,7 +43,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'app113209.middleware.allow_iframe.AllowIframeMiddleware'
+    'django_otp.middleware.OTPMiddleware',
+    'app113209.middleware.allow_iframe.AllowIframeMiddleware',
 ]
 
 ROOT_URLCONF = 'project113209.urls'
@@ -64,7 +67,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'project113209.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
@@ -79,28 +81,14 @@ DATABASES = {
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    # {
-    #     'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    # },
-    # {
-    #     'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    # },
-    # {
-    #     'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    # },
-    # {
-    #     'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    # },
     {
-        'NAME': 'app113209.validators.CustomPasswordValidator',  
+        'NAME': 'app113209.validators.CustomPasswordValidator',
     },
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
@@ -115,15 +103,13 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS =[
+STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
-STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -131,8 +117,15 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # login
-LOGIN_REDIRECT_URL = 'frontend-home'
-LOGOUT_REDIRECT_URL = 'login'
+# 對於前台
+LOGIN_URL = '/frontend/login/'
+LOGIN_REDIRECT_URL = '/frontend/home/'
+LOGOUT_REDIRECT_URL = '/frontend/login/'
+
+# 對於後台
+BACKEND_LOGIN_URL = '/backend/login/'
+BACKEND_LOGIN_REDIRECT_URL = '/backend/dashboard/'
+BACKEND_LOGOUT_REDIRECT_URL = '/backend/login/'
 
 AUTH_USER_MODEL = 'app113209.User'
 
@@ -142,9 +135,8 @@ logging.basicConfig(
 )
 
 LOGIN_URL = '/login/'
-#forget password 
-# settings.py
 
+# Email settings for password reset and verification
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
@@ -165,6 +157,9 @@ CACHES = {
     }
 }
 
-
-
+# 認證後端
+AUTHENTICATION_BACKENDS = (
+    'two_factor.auth_backend.TwoFactorBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
 

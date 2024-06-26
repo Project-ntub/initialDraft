@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <title>OTP 驗證</title>
+  </head>
+  <body>
+    <h1>OTP 驗證</h1>
+    <form method="post">
+      {% csrf_token %}
+      <label for="otp">OTP:</label>
+      <input type="text" id="otp" name="otp" required />
+      <button type="submit">驗證</button>
+    </form>
+  </body>
+</html>

@@ -1,0 +1,9 @@
+{
+    "python.analysis.extraPaths": [
+        "C:/Users/user/OneDrive/桌面/project113209/venv/Lib/site-packages"
+    ],
+    "python.pythonPath": "C:/Users/user/OneDrive/桌面/project113209/venv/Scripts/python.exe",
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportMissingImports": "none"
+    }
+}

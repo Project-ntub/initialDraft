@@ -27,9 +27,9 @@ class BackendLoginView(LoginView):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('management')  # 成功登录后重定向到仪表板
+            return redirect(settings.BACKEND_LOGIN_REDIRECT_URL)
         else:
-            return render(request, self.template_name, {'error': 'Invalid username or password'})
+            return render(request, self.template_name, {'error': '用戶名或密碼錯誤'})
 
 @login_required
 def management(request):
@@ -143,7 +143,7 @@ def register(request):
             user.save()
             login(request, user)
             logger.info(f"User {username} registered successfully")
-            return redirect('registration_success')  # 重定向到註冊成功頁面
+            return redirect('backend-registration_success')  # 重定向到註冊成功頁面
         except User.DoesNotExist:
             # 如果用戶不存在,則創建一個新用戶
             user = User.objects.create(email=email, username=username, phone=phone)
@@ -153,7 +153,7 @@ def register(request):
             user.save()
             login(request, user)
             logger.info(f"User {username} registered successfully")
-            return redirect('registration_success')  # 重定向到註冊成功頁面
+            return redirect('backend-registration_success')  # 重定向到註冊成功頁面
 
     return render(request, 'backend/register.html')
 

@@ -1,36 +1,36 @@
-{% load static %}
+{% comment %} frontend/css/login.html {% endcomment %} {% load static %}
 <!DOCTYPE html>
 <html lang="zh-Hant">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>登入</title>
-    <link rel="stylesheet" href="{% static 'frontend/css/login.css' %}">
-</head>
-<body>
+    <link rel="stylesheet" href="{% static 'frontend/css/login.css' %}" />
+  </head>
+  <body>
     <div class="container">
-        <h2>登入</h2>
-        <form method="post" action="{% url 'frontend-login' %}">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="id_username">帳號:</label>
-                <input type="text" id="id_username" name="username" required>
-            </div>
-            <div class="form-group">
-                <label for="id_password">密碼:</label>
-                <input type="password" id="id_password" name="password" required>
-            </div>
-            <div class="form-group">
-                <input type="checkbox" id="remember_me" name="remember_me">
-                <label for="remember_me">記住我</label>
-            </div>
-            <input type="submit" value="登入" class="btn-login">
-        </form>
-        <p>還未擁有帳號? <a href="{% url 'frontend-register' %}">註冊</a></p>
-        <p>忘記密碼? <a href="{% url 'forgot_password' %}">重置密碼</a></p>
-        {% if error %}
-        <p>{{ error }}</p>
-        {% endif %}
+      <h2>登入</h2>
+      <form method="post" action="{% url 'frontend-login' %}">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="id_username">帳號:</label>
+          <input type="text" id="id_username" name="username" required />
+        </div>
+        <div class="form-group">
+          <label for="id_password">密碼:</label>
+          <input type="password" id="id_password" name="password" required />
+        </div>
+        <div class="form-group">
+          <input type="checkbox" id="remember_me" name="remember_me" />
+          <label for="remember_me">記住我</label>
+        </div>
+        <input type="submit" value="登入" class="btn-login" />
+      </form>
+      <p>還未擁有帳號? <a href="{% url 'frontend-register' %}">註冊</a></p>
+      <p>忘記密碼? <a href="{% url 'forgot_password' %}">重置密碼</a></p>
+      {% if error %}
+      <p>{{ error }}</p>
+      {% endif %}
     </div>
-</body>
+  </body>
 </html>
