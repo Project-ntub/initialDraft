@@ -1,21 +1,18 @@
-#frontend_views.py
+# frontend_views.py
 import logging
 import uuid
 import pyotp
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.views import LoginView
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
-from django.core.exceptions import ValidationError
 from .models import User
-from .validators import CustomPasswordValidator
 from django.utils import timezone
 from datetime import timedelta
-from django.http import JsonResponse
 from django.core.mail import send_mail
 from django.conf import settings
+from django.http import JsonResponse
 
 logger = logging.getLogger(__name__)
 
@@ -29,9 +26,15 @@ class FrontendLoginView(LoginView):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             # 生成 OTP
-            user.generate_otp_secret()
+            if not user.otp_secret:
+                user.generate_otp_secret()  # 確保只生成一次 OTP secret
             totp = pyotp.TOTP(user.otp_secret)
             otp = totp.now()
+            
+            # 新增日誌記錄
+            logger.debug(f"Generated OTP: {otp} for user: {user.email}")
+            logger.debug(f"User's OTP secret: {user.otp_secret}")
+            
             user.otp_expiry = timezone.now() + timedelta(minutes=5)
             user.save()
             send_mail(
@@ -41,23 +44,40 @@ class FrontendLoginView(LoginView):
                 [user.email],
             )
             request.session['user_id'] = user.id
-            return redirect('frontend-verify_otp')  # 重定向到驗證 OTP 的頁面
+            return redirect('frontend:frontend-verify_otp')  # 使用命名空間
         else:
             return render(request, self.template_name, {'error': '用戶名或密碼錯誤'})
 
-@login_required
+
+@csrf_protect
 def verify_otp(request):
     if request.method == 'POST':
         otp = request.POST.get('otp')
         user_id = request.session.get('user_id')
         if not user_id:
-            return redirect(settings.LOGIN_URL)
+            return redirect('frontend:frontend-login')
         user = User.objects.get(id=user_id)
-        if user.verify_otp(otp):
-            login(request, user)
+        
+        # 新增日誌記錄以調試 OTP 相關問題
+        logger.debug(f"Verifying OTP for user: {user.email}")
+        logger.debug(f"User's OTP secret: {user.otp_secret}")
+        logger.debug(f"Submitted OTP: {otp}")
+        
+        totp = pyotp.TOTP(user.otp_secret)
+        if totp.verify(otp):
+            user.backend = 'django.contrib.auth.backends.ModelBackend'  # 設置backend屬性
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')  # 傳遞backend參數
             del request.session['user_id']
-            return redirect(settings.LOGIN_REDIRECT_URL)
+            next_url = request.GET.get('next', 'frontend:frontend-home')
+            response = redirect(next_url)
+            response.set_cookie(
+                'remember_me', 'true',
+                max_age=settings.TWO_FACTOR_REMEMBER_COOKIE_AGE,
+                httponly=True,
+            )
+            return response
         else:
+            logger.error(f"Invalid OTP for user: {user.email}")
             return render(request, 'frontend/verify_otp.html', {'error': 'Invalid OTP'})
     return render(request, 'frontend/verify_otp.html')
 
@@ -167,3 +187,10 @@ def registration_success(request):
 
 def home(request):
     return render(request, 'frontend/home.html')
+
+def forgot_password(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        # 在這裡處理忘記密碼邏輯，例如發送重置密碼的電子郵件
+        return render(request, 'frontend/forgot_password_done.html', {'message': '重置密碼的連結已發送到您的電子郵件'})
+    return render(request, 'frontend/forgot_password.html')

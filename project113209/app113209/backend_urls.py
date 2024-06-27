@@ -3,6 +3,8 @@ from django.urls import path
 from . import backend_views
 from django.views.generic import TemplateView
 
+app_name = 'backend'
+
 urlpatterns = [
     path('login/', backend_views.BackendLoginView.as_view(), name='backend-login'),
     path('logout/', backend_views.BackendLogoutView.as_view(), name='backend-logout'),

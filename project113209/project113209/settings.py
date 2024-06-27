@@ -1,6 +1,6 @@
-from pathlib import Path
 import logging
 import os
+from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_otp',
     'django_otp.plugins.otp_totp',
+    'django_otp.plugins.otp_static',
     'two_factor',
     'app113209',
 ]
@@ -42,7 +43,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
     'django_otp.middleware.OTPMiddleware',
     'app113209.middleware.allow_iframe.AllowIframeMiddleware',
 ]
@@ -134,7 +134,6 @@ logging.basicConfig(
     format='%(asctime)s %(levelname)s %(message)s',
 )
 
-LOGIN_URL = '/login/'
 
 # Email settings for password reset and verification
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -146,8 +145,8 @@ EMAIL_HOST_PASSWORD = 'cxur tzpv jiwm yytp'
 
 # Session settings
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-SESSION_COOKIE_AGE = 60 * 30  # 30 分钟
-SESSION_COOKIE_SECURE = True  # 确保仅在 HTTPS 上发送 cookie
+SESSION_COOKIE_AGE = 60 * 30  # 30 分鐘
+SESSION_COOKIE_SECURE = False  # 在本地開發時可以設定為 False，生產環境應設定為 True
 
 # Cache settings
 CACHES = {
@@ -162,4 +161,3 @@ AUTHENTICATION_BACKENDS = (
     'two_factor.auth_backend.TwoFactorBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
-
