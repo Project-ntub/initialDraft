@@ -1,0 +1,21 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登出成功</title>
+    <link rel="stylesheet" href="{% static 'backend/css/logout_success.css' %}">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+</head>
+<body>
+
+<div class="message">
+    <h1>登出成功</h1>
+    <p>您已成功登出。感謝您的使用。</p>
+    <button onclick="window.location.href='{% url 'login' %}'">返回登入頁面</button>
+</div>
+</body>
+</html>

@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>註冊成功</title>
+    <link
+      rel="stylesheet"
+      href="{% static 'frontend/css/registration_success.css' %}"
+    />
+  </head>
+  <body>
+    <div class="message">
+      <h1>註冊成功</h1>
+      <p>您已成功註冊。感謝您的使用。</p>
+      <button onclick="window.location.href='{% url 'frontend-login' %}'">
+        返回登入頁面
+      </button>
+    </div>
+  </body>
+</html>

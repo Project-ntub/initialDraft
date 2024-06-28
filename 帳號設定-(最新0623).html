@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>帳號設定</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+    }
+    .option-container {
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .option-container h3 {
+      margin-top: 0;
+    }
+    .option-container p {
+      margin: 5px 0;
+    }
+    .button-container {
+      text-align: center;
+    }
+    .button-container button {
+      padding: 10px 20px;
+      margin: 0 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .button-container button.password {
+      background-color: #4CAF50;
+      color: white;
+    }
+    .button-container button.preferences {
+      background-color: #008CBA;
+      color: white;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+    }
+    .back-home {
+      display: flex;
+      justify-content: center;
+      margin: 20px;
+    }
+    .back-home button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #1404f6; /* Green background */
+      color: white; /* White text */
+      border: none;
+      border-radius: 5px;
+    }
+    .back-home button:hover {
+      background-color: #0a24eb;
+    }
+    /* Other existing styles */
+  </style>
+</head>
+<body>
+  <h2>帳號設定</h2>
+
+  <div class="option-container">
+    <h3>修改密碼</h3>
+    <p>在這裡您可以修改您的密碼。</p>
+    <button onclick="window.location.href='帳號設定-修改密碼.html'">進入修改密碼</button>
+  </div>
+
+  <div class="option-container">
+    <h3>偏好設定</h3>
+    <p>在這裡您可以設定您的偏好。</p>
+    <button onclick="window.location.href='帳號設定-偏好設定.html'">進入偏好設定</button>
+  </div>
+
+  <div class="back-home">
+    <button onclick="goHome()">返回首頁</button>
+  </div>
+
+  <script>
+    function goHome() {
+      window.location.href = '首頁.html';
+    }
+  </script>
+
+  <script>
+    function changePassword() {
+      // 在此處添加修改密碼的功能
+      alert('您點擊了修改密碼按鈕');
+    }
+
+    function changePreferences() {
+      // 在此處添加偏好設定的功能
+      alert('您點擊了偏好設定按鈕');
+    }
+  </script>
+</body>
+</html>

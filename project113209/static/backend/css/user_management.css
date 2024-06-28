@@ -1,0 +1,110 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 90%;
+    margin: 20px auto;
+    background-color: #ffffff;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.header button, .header select, .header input {
+    margin-right: 10px;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.header button {
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+}
+
+.header button:hover {
+    background-color: #45a049;
+}
+
+.header input {
+    flex-grow: 1;
+}
+
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.user-table th, .user-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.user-table th {
+    background-color: #f2f2f2;
+}
+
+.user-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.user-table tr:hover {
+    background-color: #ddd;
+}
+
+.edit-btn, .delete-btn, .Assigning-Roles-btn, .approve-btn {
+    padding: 5px 10px;
+    margin-right: 5px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+}
+
+.edit-btn {
+    background-color: #ffa500;
+}
+
+.edit-btn:hover {
+    background-color: #e59400;
+}
+
+.delete-btn {
+    background-color: #f44336;
+}
+
+.delete-btn:hover {
+    background-color: #d32f2f;
+}
+
+.Assigning-Roles-btn {
+    background-color: #2196F3;
+}
+
+.Assigning-Roles-btn:hover {
+    background-color: #1976D2;
+}
+
+.approve-btn {
+    background-color: #4CAF50;
+}
+
+.approve-btn:hover {
+    background-color: #45a049;
+}
+

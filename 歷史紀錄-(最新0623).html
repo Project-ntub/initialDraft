@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>歷史紀錄</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+    }
+    .timeline {
+      max-width: 600px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      width: 2px;
+      background-color: #ccc;
+      top: 0;
+      bottom: 0;
+      left: 20px;
+      margin-left: -1.5px;
+    }
+    .entry {
+      margin: 20px 0;
+      padding-left: 40px;
+      position: relative;
+    }
+    .entry::before {
+      content: '';
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: white;
+      border: 2px solid #007bff;
+      top: 5px;
+      left: 14px;
+    }
+    .date {
+      font-weight: bold;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+    }
+    .back-home {
+      display: flex;
+      justify-content: center;
+      margin: 20px;
+    }
+    .back-home button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #1404f6; /* Green background */
+      color: white; /* White text */
+      border: none;
+      border-radius: 5px;
+    }
+    .back-home button:hover {
+      background-color: #0a24eb;
+    }
+    /* Other existing styles */
+  </style>
+</head>
+<body>
+  <h2>歷史紀錄</h2>
+  <div class="timeline">
+    <div class="entry">
+      <div class="date">2024/1/22 16:22:39</div>
+      <div>編輯個人資訊</div>
+    </div>
+    <div class="entry">
+      <div class="date">2024/1/22 16:00:21</div>
+      <div>查看首頁</div>
+    </div>
+    <div class="entry">
+      <div class="date">2024/1/22 15:20:44</div>
+    </div>
+    <div class="entry">
+      <div class="date">2024/1/22 13:22:27</div>
+    </div>
+    <div class="entry">
+      <div class="date">2024/1/22 12:00:51</div>
+    </div>
+    <div class="entry">
+      <div class="date">2024/1/22 10:13:18</div>
+    </div>
+    <div class="entry">
+      <div class="date">2024/1/22 09:05:30</div>
+    </div>
+    <div class="entry">
+      <div class="date">2024/1/21 17:02:36</div>
+    </div>
+  </div>
+  <div class="back-home">
+    <button onclick="goHome()">返回首頁</button>
+  </div>
+  <script>
+    function goHome() {
+      window.location.href = '首頁.html';
+    }
+  </script>
+</body>
+</html>

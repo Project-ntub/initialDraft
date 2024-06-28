@@ -1,0 +1,27 @@
+<!-- verify_otp.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OTP 驗證</title>
+    <link rel="stylesheet" href="{% static 'frontend/css/verify_otp.css' %}" />
+  </head>
+  <body>
+    <div class="container">
+      <h2>OTP 驗證</h2>
+      {% if error %}
+      <div class="error">
+        <p>{{ error }}</p>
+      </div>
+      {% endif %}
+      <form method="post">
+        {% csrf_token %}
+        <label for="otp">OTP:</label>
+        <input type="text" id="otp" name="otp" required />
+        <input type="submit" value="驗證" />
+      </form>
+    </div>
+  </body>
+</html>
