@@ -1,0 +1,165 @@
+<template>
+  <!-- 主要的導航欄組件 -->
+  <nav
+    class="navbar navbar-expand-lg navbar-absolute"
+    :class="{ 'bg-white': showMenu, 'navbar-transparent': !showMenu }"
+  >
+    <div class="container-fluid">
+      <div class="navbar-wrapper">
+        <!-- 導航欄切換按鈕 -->
+        <div class="navbar-toggle d-inline" :class="{ toggled: $sidebar.showSidebar }">
+          <button type="button" class="navbar-toggler" @click="toggleSidebar">
+            <span class="navbar-toggler-bar bar1"></span>
+            <span class="navbar-toggler-bar bar2"></span>
+            <span class="navbar-toggler-bar bar3"></span>
+          </button>
+        </div>
+        <!-- 品牌標誌或名稱 -->
+        <a class="navbar-brand" href="#pablo">{{ routeName }}</a>
+      </div>
+      <!-- 手機版選單切換按鈕 -->
+      <button
+        class="navbar-toggler"
+        type="button"
+        @click="toggleMenu"
+        data-toggle="collapse"
+        data-target="#navigation"
+        aria-controls="navigation-index"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-bar navbar-kebab"></span>
+        <span class="navbar-toggler-bar navbar-kebab"></span>
+        <span class="navbar-toggler-bar navbar-kebab"></span>
+      </button>
+
+      <!-- 可折疊的導航菜單 -->
+      <collapse-transition>
+        <div class="collapse navbar-collapse show" v-show="showMenu">
+          <ul class="navbar-nav" :class="$rtl.isRTL ? 'mr-auto' : 'ml-auto'">
+            <!-- 搜索框 -->
+            <div class="search-bar input-group" @click="searchModalVisible = true">
+              <button
+                class="btn btn-link"
+                id="search-button"
+                data-toggle="modal"
+                data-target="#searchModal"
+              >
+                <i class="tim-icons icon-zoom-split"></i>
+              </button>
+            </div>
+            <!-- 搜索模態框組件 -->
+            <modal
+              :show.sync="searchModalVisible"
+              class="modal-search"
+              id="searchModal"
+              :centered="false"
+              :show-close="true"
+            >
+              <input
+                slot="header"
+                v-model="searchQuery"
+                type="text"
+                class="form-control"
+                id="inlineFormInputGroup"
+                placeholder="SEARCH"
+              />
+            </modal>
+            <!-- 下拉菜單 -->
+            <base-dropdown
+              tag="li"
+              :menu-on-right="!$rtl.isRTL"
+              title-tag="a"
+              class="nav-item"
+              menu-classes="dropdown-navbar"
+            >
+              <a
+                slot="title"
+                href="#"
+                class="dropdown-toggle nav-link"
+                data-toggle="dropdown"
+                aria-expanded="true"
+              >
+                <div class="photo">
+                  <img src="img/anime3.png" />
+                </div>
+                <b class="caret d-none d-lg-block d-xl-block"></b>
+                <p class="d-lg-none">Log out</p>
+              </a>
+              <!-- 下拉菜單項目 -->
+              <li class="nav-link">
+                <a href="#" class="nav-item dropdown-item">Profile</a>
+              </li>
+              <li class="nav-link">
+                <a href="#" class="nav-item dropdown-item">Settings</a>
+              </li>
+              <div class="dropdown-divider"></div>
+              <li class="nav-link">
+                <a href="#" class="nav-item dropdown-item">Log out</a>
+              </li>
+            </base-dropdown>
+          </ul>
+        </div>
+      </collapse-transition>
+    </div>
+  </nav>
+</template>
+
+<script>
+import { CollapseTransition } from "vue2-transitions";
+import Modal from "@/components/Modal";
+
+export default {
+  components: {
+    CollapseTransition,
+    Modal,
+  },
+  computed: {
+    // 計算當前路由名稱並將首字母大寫化
+    routeName() {
+      const { name } = this.$route;
+      return this.capitalizeFirstLetter(name);
+    },
+    // 檢查文字是否以右到左方式顯示
+    isRTL() {
+      return this.$rtl.isRTL;
+    },
+  },
+  data() {
+    return {
+      // 狀態變量
+      activeNotifications: false,
+      showMenu: false,
+      searchModalVisible: false,
+      searchQuery: "",
+    };
+  },
+  methods: {
+    // 將字符串的首字母轉為大寫
+    capitalizeFirstLetter(string) {
+      return string.charAt(0).toUpperCase() + string.slice(1);
+    },
+    // 切換通知下拉菜單的顯示狀態
+    toggleNotificationDropDown() {
+      this.activeNotifications = !this.activeNotifications;
+    },
+    // 關閉通知下拉菜單
+    closeDropDown() {
+      this.activeNotifications = false;
+    },
+    // 切換側邊欄的顯示狀態
+    toggleSidebar() {
+      this.$sidebar.displaySidebar(!this.$sidebar.showSidebar);
+    },
+    // 隱藏側邊欄
+    hideSidebar() {
+      this.$sidebar.displaySidebar(false);
+    },
+    // 切換主菜單的顯示狀態
+    toggleMenu() {
+      this.showMenu = !this.showMenu;
+    },
+  },
+};
+</script>
+
+<style></style>
