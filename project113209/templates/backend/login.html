@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,8 +10,13 @@
   <body>
     <div class="container">
       <h2>登入</h2>
-      <form method="post" action="{% url 'backend-login' %}">
+      <form method="post" action="{% url 'backend:backend-login' %}">
         {% csrf_token %}
+        <input
+          type="hidden"
+          name="next"
+          value="{% url 'backend:management' %}"
+        />
         <div class="form-group">
           <label for="id_username">帳號:</label>
           <input type="text" id="id_username" name="username" required />
@@ -26,8 +31,12 @@
         </div>
         <input type="submit" value="登入" class="btn-login" />
       </form>
-      <p>還未擁有帳號? <a href="{% url 'backend-register' %}">註冊</a></p>
-      <p>忘記密碼? <a href="{% url 'forgot_password' %}">重置密碼</a></p>
+      <p>
+        還未擁有帳號? <a href="{% url 'backend:backend-register' %}">註冊</a>
+      </p>
+      <p>
+        忘記密碼? <a href="{% url 'backend:forgot_password' %}">重置密碼</a>
+      </p>
       {% if error %}
       <p>{{ error }}</p>
       {% endif %}

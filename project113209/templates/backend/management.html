@@ -1,47 +1,68 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="zh-Hant">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>管理介面</title>
-    <link rel="stylesheet" href="{% static 'backend/css/management.css' %}">
-</head>
-<body>
+    <link rel="stylesheet" href="{% static 'backend/css/management.css' %}" />
+  </head>
+  <body>
     <div class="sidebar">
-        <h2>管理介面</h2>
-        <a href="{% url 'dashboard' %}" data-frame="dashboard">儀錶板管理</a>
-        <a href="{% url 'user_management' %}" data-frame="user-management">用戶管理</a>
-        <a href="{% url 'role_management' %}" data-frame="role-management">角色管理</a>
-        <a href="{% url 'history' %}" data-frame="history">歷史紀錄</a>
-        <button class="logout-btn">登出</button>
+      <h2>管理介面</h2>
+      <a href="{% url 'backend:dashboard' %}" data-frame="dashboard"
+        >儀錶板管理</a
+      >
+      <a href="{% url 'backend:user_management' %}" data-frame="user-management"
+        >用戶管理</a
+      >
+      <a href="{% url 'backend:role_management' %}" data-frame="role-management"
+        >角色管理</a
+      >
+      <a href="{% url 'backend:history' %}" data-frame="history">歷史紀錄</a>
+      <button class="logout-btn">登出</button>
     </div>
-    
-    <div class="main-content">
-        <h1>歡迎來到管理介面</h1>
-        <p>請選擇一個選項來管理。</p>
-        <iframe id="dashboard" src="{% url 'dashboard' %}" style="display:none;"></iframe>
-        <iframe id="user-management" src="{% url 'user_management' %}" style="display:none;"></iframe>
-        <iframe id="role-management" src="{% url 'role_management' %}" style="display:none;"></iframe>
-        <iframe id="history" src="{% url 'history' %}" style="display:none;"></iframe>
-    </div>
-    
-    <script>
-        document.querySelectorAll('.sidebar a').forEach(function(link) {
-            link.addEventListener('click', function(event) {
-                event.preventDefault();
-                document.querySelectorAll('.main-content iframe').forEach(function(iframe) {
-                    iframe.style.display = 'none'; // 隱藏所有iframe
-                });
-                var frameId = this.getAttribute('data-frame');
-                document.getElementById(frameId).style.display = 'block'; // 顯示對應的iframe
-            });
-        });
 
-        document.querySelector('.logout-btn').addEventListener('click', function() {
-            window.location.href = '{% url 'logout_success' %}'; // 跳轉到登出頁面
-        });
+    <div class="main-content">
+      <h1>歡迎來到管理介面</h1>
+      <p>請選擇一個選項來管理。</p>
+      <iframe
+        id="dashboard"
+        src="{% url 'backend:dashboard' %}"
+        style="display: none"
+      ></iframe>
+      <iframe
+        id="user-management"
+        src="{% url 'backend:user_management' %}"
+        style="display: none"
+      ></iframe>
+      <iframe
+        id="role-management"
+        src="{% url 'backend:role_management' %}"
+        style="display: none"
+      ></iframe>
+      <iframe
+        id="history"
+        src="{% url 'backend:history' %}"
+        style="display: none"
+      ></iframe>
+    </div>
+
+    <script>
+      document.querySelectorAll('.sidebar a').forEach(function(link) {
+          link.addEventListener('click', function(event) {
+              event.preventDefault();
+              document.querySelectorAll('.main-content iframe').forEach(function(iframe) {
+                  iframe.style.display = 'none'; // 隱藏所有iframe
+              });
+              var frameId = this.getAttribute('data-frame');
+              document.getElementById(frameId).style.display = 'block'; // 顯示對應的iframe
+          });
+      });
+
+      document.querySelector('.logout-btn').addEventListener('click', function() {
+          window.location.href = '{% url 'backend:logout_success' %}'; // 跳轉到登出頁面
+      });
     </script>
-    
-</body>
+  </body>
 </html>

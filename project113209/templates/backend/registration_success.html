@@ -14,7 +14,9 @@
     <div class="message">
       <h1>註冊成功</h1>
       <p>您已成功註冊。感謝您的使用。</p>
-      <button onclick="window.location.href='{% url 'backend-login' %}'">
+      <button
+        onclick="window.location.href='{% url 'backend:backend-login' %}'"
+      >
         返回登入頁面
       </button>
     </div>

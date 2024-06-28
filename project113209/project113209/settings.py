@@ -124,7 +124,7 @@ LOGOUT_REDIRECT_URL = '/frontend/login/'
 
 # 對於後台
 BACKEND_LOGIN_URL = '/backend/login/'
-BACKEND_LOGIN_REDIRECT_URL = '/backend/dashboard/'
+BACKEND_LOGIN_REDIRECT_URL = '/backend/management/'
 BACKEND_LOGOUT_REDIRECT_URL = '/backend/login/'
 
 AUTH_USER_MODEL = 'app113209.User'

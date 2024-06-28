@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.db import models
 import pyotp
 
 class CustomUserManager(BaseUserManager):
@@ -38,12 +38,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     module = models.CharField(max_length=100, blank=True, null=True)
     gender = models.CharField(max_length=10, blank=True, null=True)
     is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=False)  # 确保这里字段名正确
     otp_secret = models.CharField(max_length=32, blank=True, null=True)
-
-
-
-
 
     objects = CustomUserManager()
 

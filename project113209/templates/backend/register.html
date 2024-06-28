@@ -79,7 +79,7 @@
   <body>
     <div class="container">
       <h2>註冊</h2>
-      <form action="{% url 'backend-register' %}" method="post">
+      <form action="{% url 'backend:backend-register' %}" method="post">
         {% csrf_token %} {% if error %}
         <div class="error">
           <p>{{ error }}</p>

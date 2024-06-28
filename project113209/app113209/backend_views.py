@@ -3,7 +3,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth import authenticate, login
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.core.exceptions import ValidationError
 from .models import User
 from .validators import CustomPasswordValidator
@@ -12,10 +12,13 @@ from datetime import timedelta
 import uuid
 from django.http import JsonResponse
 from django.core.mail import send_mail
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.conf import settings
+from django.contrib.auth import get_user_model
 
 logger = logging.getLogger(__name__)
+
+User = get_user_model()
 
 class BackendLoginView(LoginView):
     template_name = 'backend/login.html'
@@ -26,31 +29,14 @@ class BackendLoginView(LoginView):
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
         if user is not None:
-            login(request, user)
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             return redirect(settings.BACKEND_LOGIN_REDIRECT_URL)
         else:
             return render(request, self.template_name, {'error': '用戶名或密碼錯誤'})
 
-@login_required
-def management(request):
-    return render(request, 'backend/management.html')
 
-@login_required
-def dashboard(request):
-    return render(request, 'backend/dashboard.html')
-
-@login_required
-def user_management(request):
-    return render(request, 'backend/user_management.html')
-
-@login_required
-def role_management(request):
-    return render(request, 'backend/role_management.html')
-
-@login_required
 def history(request):
     return render(request, 'backend/history.html')
-
 
 class BackendLogoutView(LogoutView):
     next_page = 'backend/logout_success'  # 登出后重定向到 logout_success 页面
@@ -141,9 +127,9 @@ def register(request):
             user.verification_code = None
             user.expiry_time = None
             user.save()
-            login(request, user)
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             logger.info(f"User {username} registered successfully")
-            return redirect('backend-registration_success')  # 重定向到註冊成功頁面
+            return redirect('backend:registration_success')  # 重定向到註冊成功頁面
         except User.DoesNotExist:
             # 如果用戶不存在,則創建一個新用戶
             user = User.objects.create(email=email, username=username, phone=phone)
@@ -151,9 +137,9 @@ def register(request):
             user.verification_code = verification_code
             user.expiry_time = timezone.now() + timedelta(minutes=5)
             user.save()
-            login(request, user)
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             logger.info(f"User {username} registered successfully")
-            return redirect('backend-registration_success')  # 重定向到註冊成功頁面
+            return redirect('backend:registration_success')  # 重定向到註冊成功頁面
 
     return render(request, 'backend/register.html')
 
@@ -201,5 +187,44 @@ class AllowIframeMiddleware:
         response["X-Frame-Options"] = "ALLOWALL"
         return response
 
+
+@user_passes_test(lambda u: u.is_staff)
 def pending_list(request):
-    return render(request, 'backend/pending_list.html')
+    pending_users = User.objects.filter(is_active=False)  # 確保欄位拼寫正確
+    return render(request, 'backend/pending_list.html', {'pending_users': pending_users})
+
+
+@user_passes_test(lambda u: u.is_staff)
+def approve_user(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    user.is_active = True  # 開通用户
+    user.save()
+    return redirect('backend:pending_list')
+
+def management(request):
+    return render(request, 'backend/management.html')
+
+
+def dashboard(request):
+    return render(request, 'backend/dashboard.html')
+
+
+@user_passes_test(lambda u: u.is_staff)
+def user_management(request):
+    active_users = User.objects.filter(is_active=True)
+    departments = ["銷售部", "人力資源部", "資訊部", "市場部", "財務部"]  # 部門選項
+    positions = ["經理", "主管", "店長"]  # 職位選項
+    return render(request, 'backend/user_management.html', {'active_users': active_users, 'departments': departments, 'positions': positions})
+
+
+@user_passes_test(lambda u: u.is_staff)
+def update_user_department_and_position(request, user_id):
+    if request.method == 'POST':
+        user = get_object_or_404(User, id=user_id)
+        user.department_id = request.POST.get('department')
+        user.position_id = request.POST.get('position')
+        user.save()
+        return redirect('backend:user_management')
+    return redirect('backend:user_management')
+def role_management(request):
+    return render(request, 'backend/role_management.html')

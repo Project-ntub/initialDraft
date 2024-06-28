@@ -14,27 +14,6 @@ body {
     border-radius: 8px;
 }
 
-.header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.header label {
-    margin-right: 10px;
-}
-
-.header select, .header input {
-    margin-right: 10px;
-    padding: 5px 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.header input {
-    flex-grow: 1;
-}
-
 .pending-table {
     width: 100%;
     border-collapse: collapse;
@@ -70,4 +49,21 @@ body {
 
 .approve-btn:hover {
     background-color: #0056b3;
+}
+
+.back-button {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: #007bff;
+    text-decoration: none;
+    margin-bottom: 20px;
+}
+
+.back-button:hover {
+    color: #0056b3;
+}
+
+.back-button svg {
+    margin-right: 8px;
 }
