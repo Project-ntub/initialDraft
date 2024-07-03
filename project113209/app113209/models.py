@@ -40,6 +40,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)  # 确保这里字段名正确
     otp_secret = models.CharField(max_length=32, blank=True, null=True)
+    date_joined = models.DateTimeField(auto_now_add=True)
 
     objects = CustomUserManager()
 
@@ -60,3 +61,25 @@ class User(AbstractBaseUser, PermissionsMixin):
     def verify_otp(self, otp):
         totp = pyotp.TOTP(self.otp_secret)
         return totp.verify(otp)
+    
+class Role(models.Model):
+    name = models.CharField(max_length=20, unique=True)
+    users = models.ManyToManyField(User, related_name='roles')
+
+    def __str__(self):
+        return self.name    
+    
+class RolePermission(models.Model):
+    role = models.ForeignKey(Role, on_delete=models.CASCADE)
+    permission_name = models.BooleanField(default=False)
+    can_add = models.BooleanField(default=False)
+    can_view = models.BooleanField(default=False)
+    can_edit = models.BooleanField(default=False)
+    can_delete = models.BooleanField(default=False)
+    can_print = models.BooleanField(default=False)
+    can_export = models.BooleanField(default=False)
+    can_maintain = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.role.name} - {self.permission_name}"
+    

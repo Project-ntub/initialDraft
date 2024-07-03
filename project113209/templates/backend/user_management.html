@@ -1,93 +1,88 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>用戶管理</title>
-    <link rel="stylesheet" href="{% static 'backend/css/user_management.css' %}">
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      href="{% static 'backend/css/user_management.css' %}"
+    />
+  </head>
+  <body>
     <div class="container">
-        <div class="header">
-            <button id="pending-approval-btn" class="btn" onclick="location.href='{% url 'backend:pending_list' %}'">
-                待審核
-            </button>
-            <label for="sort-select">排序:</label>
-            <select id="sort-select">
-                <option value="name">姓名</option>
-                <option value="email">電子郵件</option>
-                <option value="department">部門</option>
-                <option value="creation-time">建立時間</option>
-                <option value="last-login">最近登入時間</option>
-            </select>
-            <label for="department-select">部門:</label>
-            <select id="department-select">
-                <option value="all">全部</option>
-                <option value="sales">銷售部</option>
-                <option value="hr">人力資源部</option>
-                <option value="it">資訊部</option>
-                <option value="marketing">市場部</option>
-                <option value="Finance">財務部</option>
-            </select>
-            <input type="text" id="search-box" placeholder="搜尋...">
-        </div>
-        <table class="user-table">
-            <thead>
-                <tr>
-                    <th>姓名</th>
-                    <th>電子郵件</th>
-                    <th>電話號碼</th>
-                    <th>部門</th>
-                    <th>職位</th>
-                    <th>建立時間</th>
-                    <th>最近登入時間</th>
-                    <th>操作</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for user in active_users %}
-                <tr>
-                    <form method="post" action="{% url 'backend:update_user_department_and_position' user.id %}">
-                        {% csrf_token %}
-                        <td>{{ user.username }}</td>
-                        <td>{{ user.email }}</td>
-                        <td>{{ user.phone }}</td>
-                        <td>
-                            <select name="department">
-                                <option value="">選擇部門</option>
-                                {% for department in departments %}
-                                    <option value="{{ department }}" {% if user.department_id == department %}selected{% endif %}>{{ department }}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                        <td>
-                            <select name="position">
-                                <option value="">選擇職位</option>
-                                {% for position in positions %}
-                                    <option value="{{ position }}" {% if user.position_id == position %}selected{% endif %}>{{ position }}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                        <td>{{ user.date_joined }}</td>
-                        <td>{{ user.last_login }}</td>
-                        <td>
-                            <button type="button" class="Assigning-Roles-btn" onclick="showSaveButton(this)">分配角色</button>
-                            <button type="submit" class="edit-btn">編輯</button>
-                            <button type="button" class="delete-btn">刪除</button>
-                        </td>
-                    </form>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+      <div class="header">
+        <button
+          id="pending-approval-btn"
+          class="btn"
+          onclick="location.href='{% url 'backend:pending_list' %}'"
+        >
+          待審核
+        </button>
+        <label for="sort-select">排序:</label>
+        <select id="sort-select">
+          <option value="name">姓名</option>
+          <option value="email">電子郵件</option>
+          <option value="department">部門</option>
+          <option value="creation-time">建立時間</option>
+          <option value="last-login">最近登入時間</option>
+        </select>
+        <label for="department-select">部門:</label>
+        <select id="department-select">
+          <option value="all">全部</option>
+          <option value="sales">銷售部</option>
+          <option value="hr">人力資源部</option>
+          <option value="it">資訊技術部</option>
+          <option value="marketing">市場部</option>
+        </select>
+        <input type="text" id="search-box" placeholder="搜尋..." />
+      </div>
+      <table class="user-table">
+        <thead>
+          <tr>
+            <th>姓名</th>
+            <th>電子郵件</th>
+            <th>電話號碼</th>
+            <th>部門</th>
+            <th>建立時間</th>
+            <th>最近登入時間</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in active_users %}
+          <tr>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.phone }}</td>
+            <td>{{ user.department_id }}</td>
+            <td>{{ user.date_joined }}</td>
+            <td>{{ user.last_login }}</td>
+            <td>
+              <button
+                class="edit-btn"
+                onclick="location.href='{% url 'backend:edit_user' user.id %}'"
+              >
+                編輯
+              </button>
+              <button
+                class="delete-btn"
+                onclick="location.href='{% url 'backend:delete_user' user.id %}'"
+              >
+                刪除
+              </button>
+              <button
+                class="Assigning-Roles-btn"
+                onclick="location.href='{% url 'backend:assign_role' user.id %}'"
+              >
+                分配角色
+              </button>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
-    <script>
-        function showSaveButton(button) {
-            const row = button.closest('tr');
-            const saveButton = row.querySelector('.edit-btn');
-            saveButton.style.display = 'inline-block';
-        }
-    </script>
-</body>
+  </body>
 </html>

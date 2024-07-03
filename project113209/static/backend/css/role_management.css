@@ -20,7 +20,7 @@ body {
     margin-bottom: 20px;
 }
 
-.header label {
+.header label, .header button {
     margin-right: 10px;
 }
 
@@ -122,4 +122,20 @@ body {
     color: black;
     text-decoration: none;
     cursor: pointer;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input[type="text"], input[type="checkbox"], select {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
 }

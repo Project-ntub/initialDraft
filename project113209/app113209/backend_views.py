@@ -1,20 +1,23 @@
 import logging
+import uuid
+from .models import User, Role
+from .forms import UserForm, RoleForm
+from .validators import CustomPasswordValidator
+from datetime import timedelta
+from django.contrib.auth import get_user_model
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.views import LoginView, LogoutView
+from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
-from django.contrib.auth import authenticate, login
-from django.shortcuts import render, redirect, get_object_or_404
-from django.core.exceptions import ValidationError
-from .models import User
-from .validators import CustomPasswordValidator
-from django.utils import timezone
-from datetime import timedelta
-import uuid
-from django.http import JsonResponse
 from django.core.mail import send_mail
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.core.exceptions import ValidationError
 from django.conf import settings
-from django.contrib.auth import get_user_model
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse
+from django.db.models import Q
+
 
 logger = logging.getLogger(__name__)
 
@@ -188,18 +191,18 @@ class AllowIframeMiddleware:
         return response
 
 
-@user_passes_test(lambda u: u.is_staff)
+# 審核用戶列表
 def pending_list(request):
-    pending_users = User.objects.filter(is_active=False)  # 確保欄位拼寫正確
+    pending_users = User.objects.filter(is_active=False)
     return render(request, 'backend/pending_list.html', {'pending_users': pending_users})
 
-
-@user_passes_test(lambda u: u.is_staff)
+# 審核用戶
 def approve_user(request, user_id):
     user = get_object_or_404(User, id=user_id)
-    user.is_active = True  # 開通用户
+    user.is_active = True  # 開通用戶
     user.save()
     return redirect('backend:pending_list')
+
 
 def management(request):
     return render(request, 'backend/management.html')
@@ -209,15 +212,26 @@ def dashboard(request):
     return render(request, 'backend/dashboard.html')
 
 
-@user_passes_test(lambda u: u.is_staff)
+# 用戶管理
 def user_management(request):
-    active_users = User.objects.filter(is_active=True)
-    departments = ["銷售部", "人力資源部", "資訊部", "市場部", "財務部"]  # 部門選項
-    positions = ["經理", "主管", "店長"]  # 職位選項
+    query = request.GET.get('q')
+    if query:
+        active_users = User.objects.filter(is_active=True).filter(
+            Q(username__icontains=query) |
+            Q(email__icontains=query) |
+            Q(phone__icontains=query) |
+            Q(department_id__icontains=query) |
+            Q(position_id__icontains=query)
+        )
+    else:
+        active_users = User.objects.filter(is_active=True)
+
+    departments = ["銷售部", "人力資源部", "資訊技術部", "市場部", "財務部"]
+    positions = ["經理", "主管", "店長"]
+
     return render(request, 'backend/user_management.html', {'active_users': active_users, 'departments': departments, 'positions': positions})
 
-
-@user_passes_test(lambda u: u.is_staff)
+# 更新用戶部門和職位
 def update_user_department_and_position(request, user_id):
     if request.method == 'POST':
         user = get_object_or_404(User, id=user_id)
@@ -226,5 +240,89 @@ def update_user_department_and_position(request, user_id):
         user.save()
         return redirect('backend:user_management')
     return redirect('backend:user_management')
+
+# 刪除用戶
+def delete_user(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    user.delete()
+    return redirect('backend:user_management')
+
+# 編輯用戶
+def edit_user(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    if request.method == 'POST':
+        form = UserForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('backend:user_management')
+    else:
+        form = UserForm(instance=user)
+    return render(request, 'backend/edit_user.html', {'form': form, 'user': user})
+
+def get_user(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    data = {
+        'username': user.username,
+        'email': user.email,
+        'phone': user.phone,
+        'department_id': user.department_id,
+        'position_id': user.position_id 
+    }
+    return JsonResponse(data)
+
+def assign_role(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    if request.method == 'POST':
+        role_id = request.POST.get('role')
+        role = get_object_or_404(Role, id=role_id)
+        user.roles.clear()
+        user.roles.add(role)
+        return redirect('backend:user_management')
+    else:
+        roles = Role.objects.all()
+        return render(request, 'backend/assign_role.html', {'user': user, 'roles': roles})
+
+
+# 角色管理
 def role_management(request):
-    return render(request, 'backend/role_management.html')
+    roles = Role.objects.all()
+    return render(request, 'backend/role_management.html', {'roles': roles})
+
+# 創建新角色
+def create_role(request):
+    if request.method == 'POST':
+        form = RoleForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('backend:role_management')
+    else:
+        form = RoleForm()
+    return render(request, 'backend/role_form.html', {'form': form})
+
+# 編輯角色
+def edit_role(request, role_id):
+    role = get_object_or_404(Role, id=role_id)
+    if request.method == 'POST':
+        form = RoleForm(request.POST, instance=role)
+        if form.is_valid():
+            form.save()
+            for permission in role.rolepermission_set.all():
+                permission.can_add = request.POST.get(f'can_add_{permission.id}', False)
+                permission.can_view = request.POST.get(f'can_view_{permission.id}', False)
+                permission.can_edit = request.POST.get(f'can_edit_{permission.id}', False)
+                permission.can_delete = request.POST.get(f'can_delete_{permission.id}', False)
+                permission.can_print = request.POST.get(f'can_print_{permission.id}', False)
+                permission.can_export = request.POST.get(f'can_export_{permission.id}', False)
+                permission.can_maintain = request.POST.get(f'can_maintain_{permission.id}', False)
+                permission.save()
+            return redirect('backend:role_management')
+    else:
+        form = RoleForm(instance=role)
+        role_permissions = role.rolepermission_set.all()
+    return render(request, 'backend/role_form.html', {'form': form, 'role_permissions': role_permissions})
+
+# 刪除角色
+def delete_role(request, role_id):
+    role = get_object_or_404(Role, id=role_id)
+    role.delete()
+    return redirect('backend:role_management')

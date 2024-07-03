@@ -1,0 +1,143 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ is_edit|yesno:"編輯角色,新增角色" }}</title>
+    <link rel="stylesheet" href="{% static 'backend/css/role_form.css' %}" />
+  </head>
+  <body>
+    <div class="container">
+      <h2>{{ is_edit|yesno:"編輯角色,新增角色" }}</h2>
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="role-name">角色名稱</label>
+          {{ form.name }}
+        </div>
+        <div class="form-group">
+          <label for="role-users">角色成員</label>
+          {{ form.users }}
+        </div>
+        {% if is_edit %}
+        <div class="form-group">
+          <label>角色權限</label>
+          <table>
+            <thead>
+              <tr>
+                <th>功能</th>
+                <th>新增</th>
+                <th>查詢</th>
+                <th>修改</th>
+                <th>刪除</th>
+                <th>列印</th>
+                <th>匯出</th>
+                <th>檢視</th>
+                <th>維護</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for permission in role_permissions %}
+              <tr>
+                <td>{{ permission.permission_name }}</td>
+                <td>
+                  <input
+                    type="checkbox"
+                    name="can_add_{{ permission.id }}"
+                    {%
+                    if
+                    permission.can_add
+                    %}checked{%
+                    endif
+                    %}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="checkbox"
+                    name="can_view_{{ permission.id }}"
+                    {%
+                    if
+                    permission.can_view
+                    %}checked{%
+                    endif
+                    %}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="checkbox"
+                    name="can_edit_{{ permission.id }}"
+                    {%
+                    if
+                    permission.can_edit
+                    %}checked{%
+                    endif
+                    %}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="checkbox"
+                    name="can_delete_{{ permission.id }}"
+                    {%
+                    if
+                    permission.can_delete
+                    %}checked{%
+                    endif
+                    %}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="checkbox"
+                    name="can_print_{{ permission.id }}"
+                    {%
+                    if
+                    permission.can_print
+                    %}checked{%
+                    endif
+                    %}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="checkbox"
+                    name="can_export_{{ permission.id }}"
+                    {%
+                    if
+                    permission.can_export
+                    %}checked{%
+                    endif
+                    %}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="checkbox"
+                    name="can_maintain_{{ permission.id }}"
+                    {%
+                    if
+                    permission.can_maintain
+                    %}checked{%
+                    endif
+                    %}
+                  />
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% endif %}
+        <button type="submit" class="btn">
+          {{ is_edit|yesno:"保存變更,新增" }}
+        </button>
+        <button type="button" class="btn secondary" onclick="history.back()">
+          取消
+        </button>
+      </form>
+    </div>
+  </body>
+</html>

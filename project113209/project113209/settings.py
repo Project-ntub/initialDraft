@@ -32,6 +32,8 @@ INSTALLED_APPS = [
     'django_otp.plugins.otp_totp',
     'django_otp.plugins.otp_static',
     'two_factor',
+    # 'rest_framework',
+    # 'corsheaders'
     'app113209',
 ]
 
@@ -44,6 +46,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_otp.middleware.OTPMiddleware',
+    # 'corsheaders.middleware.CorsMiddleware',
     'app113209.middleware.allow_iframe.AllowIframeMiddleware',
 ]
 
@@ -161,3 +164,19 @@ AUTHENTICATION_BACKENDS = (
     'two_factor.auth_backend.TwoFactorBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
+
+# Django REST framework configuration
+# REST_FRAMEWORK = {
+#     'DEFAULT_PERMISSION_CLASSES':[
+#         'rest_framework.permission.AllowAny',
+#     ],
+#     'DEFAULT_AUTHENTICATION_CLASSES':[
+#         'rest_framework.authentication.SessionAuthentication',
+#         'rest_framework.authentication.BasicAuthentication'
+#     ]
+# }
+
+# # CORS configuration
+# CORS_ALLOWED_ORIGINS =  [
+#     "http://localhost:8000",
+# ]
