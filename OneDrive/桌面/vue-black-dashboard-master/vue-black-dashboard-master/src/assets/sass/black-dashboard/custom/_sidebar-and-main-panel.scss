@@ -1,0 +1,760 @@
+.wrapper {
+  position: relative; /* 設置相對位置 */
+  top: 0; /* 初始頂部位置 */
+  height: 100vh; /* 設置高度為視窗高度 */
+
+  &.wrapper-full-page {
+    min-height: 100vh; /* 最小高度為視窗高度 */
+    height: auto; /* 自動高度 */
+  }
+}
+
+.sidebar,
+.off-canvas-sidebar {
+  @include linear-gradient($primary-states, $primary); /* 包含線性漸變背景 */
+  height: calc(100vh - 90px); /* 計算高度為視窗高度減去固定高度 */
+  width: 230px; /* 固定寬度 */
+  position: fixed; /* 固定位置 */
+  top: 0; /* 頂部位置 */
+  left: 0; /* 左側位置 */
+  z-index: 1; /* 設置層級 */
+  background-size: cover; /* 背景大小 */
+  background-position: center center; /* 背景位置 */
+  display: block; /* 顯示為區塊 */
+  box-shadow: 0px 0px 45px 0px rgba(0, 0, 0, 0.6); /* 設置陰影 */
+  margin-top: 80px; /* 上邊距 */
+  margin-left: 20px; /* 左邊距 */
+  border-radius: 5px; /* 圓角 */
+
+  .sidebar-wrapper {
+    width: $full-width; /* 使用變數設置寬度 */
+    min-height: 100%; /* 最小高度為100% */
+    max-height: calc(100vh - 705px); /* 最大高度計算 */
+    z-index: 4; /* 設置層級 */
+    position: relative; /* 相對位置 */
+    overflow: auto; /* 滾動條 */
+
+    .dropdown .dropdown-backdrop {
+      display: none !important; /* 隱藏下拉遮罩 */
+    }
+
+    .navbar-form {
+      border: none; /* 清除表單邊框 */
+    }
+
+    > .nav,
+    .user .info {
+      [data-toggle="collapse"] ~ div > ul > li > a {
+        span {
+          display: inline-block; /* 行內塊顯示 */
+          // @extend .animation-transition-general; /* 擴展過渡動畫 */
+        }
+
+        .sidebar-normal {
+          margin: 0; /* 邊距 */
+          position: relative; /* 相對位置 */
+          transform: translateX(0px); /* X軸平移 */
+          opacity: 1; /* 不透明度 */
+          white-space: nowrap; /* 不換行 */
+          display: block; /* 顯示為區塊 */
+          line-height: 23px; /* 行高 */
+          z-index: 1; /* 設置層級 */
+          color: $opacity-8; /* 文字顏色 */
+          font-size: 20px;
+          
+        }
+
+        .sidebar-mini-icon {
+          text-transform: uppercase; /* 轉換為大寫 */
+          width: 34px; /* 寬度 */
+          margin-right: 10px; /* 右邊距 */
+          margin-left: 0px; /* 左邊距 */
+          font-size: 12px; /* 字體大小 */
+          text-align: center; /* 文字居中 */
+          line-height: 25px; /* 行高 */
+          position: relative; /* 相對位置 */
+          float: left; /* 左浮動 */
+          z-index: 1; /* 設置層級 */
+          display: inherit; /* 繼承顯示 */
+          line-height: 24px; /* 行高 */
+          color: $opacity-8; /* 文字顏色 */
+        }
+
+        i {
+          font-size: 17px; /* 字體大小 */
+          line-height: 20px; /* 行高 */
+          width: 26px; /* 寬度 */
+        }
+      }
+    }
+
+    [data-toggle="collapse"] ~ div > ul > li:hover > a {
+      .sidebar-mini-icon,
+      .sidebar-normal {
+        color: $white;
+      }
+    }
+
+    [data-toggle="collapse"] ~ div > ul > li:hover > a {
+      .sidebar-mini-icon,
+      .sidebar-normal {
+        color: $white; /* 文字顏色 */
+      }
+    }
+
+    .nav [data-toggle="collapse"] ~ div > ul > li > a .sidebar-mini-icon {
+      opacity: 0; /* 不透明度 */
+    }
+  }
+
+  .navbar-minimize {
+    position: absolute; /* 絕對位置 */
+    right: 20px; /* 右邊距 */
+    top: 2px; /* 上邊距 */
+    opacity: 1; /* 不透明度 */
+
+    // @extend .animation-transition-general; /* 擴展過渡動畫 */
+  }
+  .logo-tim {
+    border-radius: 50%; /* 圓角 */
+    border: 1px solid #333; /* 邊框 */
+    display: block; /* 顯示為區塊 */
+    height: 61px; /* 高度 */
+    width: 61px; /* 寬度 */
+    float: left; /* 左浮動 */
+    overflow: hidden; /* 隱藏溢出 */
+
+    img {
+      width: 60px; /* 寬度 */
+      height: 60px; /* 高度 */
+    }
+  }
+
+  .nav {
+    margin-top: 20px; /* 上邊距 */
+    display: block; /* 顯示為區塊 */
+
+    .caret {
+      top: 14px; /* 上邊距 */
+      position: absolute; /* 絕對位置 */
+      right: 10px; /* 右邊距 */
+    }
+
+    li {
+      > a + div .nav {
+        margin-top: 5px; /* 上邊距 */
+        li > a {
+          margin-top: 0px; /* 上邊距 */
+          padding: 8px 8px; /* 內邊距 */
+        }
+      }
+      // sidevar字體大小
+      > a {
+        margin: 10px 15px 0; /* 上右下邊距 */
+        border-radius: $btn-round-radius; /* 圓角 */
+        color: $white; /* 文字顏色 */
+        display: block; /* 顯示為區塊 */
+        text-decoration: none; /* 文字修飾 */
+        position: relative; /* 相對位置 */
+        text-transform: uppercase; /* 轉換為大寫 */
+        cursor: pointer; /* 光標類型 */
+        font-size:20px; /* 字體大小 */
+        padding: 10px 8px; /* 內邊距 */
+        line-height: $line-height-lg; /* 行高 */
+      }
+
+      &:first-child > a {
+        margin: 0 15px; /* 上下邊距 */
+      }
+
+      &:hover:not(.active) > a,
+      &:focus:not(.active) > a {
+        p,
+        i {
+          color: $white; /* 文字顏色 */
+        }
+      }
+
+      &:hover:not(.active) > a i,
+      &:focus:not(.active) > a i {
+        color: $white; /* 文字顏色 */
+      }
+
+      &.active > a:not([data-toggle="collapse"]) {
+        background: transparent; /* 背景透明 */
+
+        i,
+        p {
+          color: white; /* 文字顏色 */
+        }
+
+        &:before {
+          content: " "; /* 內容 */
+          position: absolute; /* 絕對位置 */
+          height: 6px; /* 高度 */
+          width: 6px; /* 寬度 */
+          top: 22px; /* 上邊距 */
+          left: -4px; /* 左邊距 */
+          background: $white; /* 背景顏色 */
+          border-radius: 50%; /* 圓角 */
+        }
+      }
+
+      &.active > a[data-toggle="collapse"] {
+        background: transparent;
+        box-shadow: none;
+        color: $white;
+
+        i {
+          color: $white;
+        }
+
+        & + div .nav .active a {
+          box-shadow: none;
+          .sidebar-mini-icon,
+          .sidebar-normal {
+            color: $white;
+            font-weight: $font-weight-normal;
+          }
+
+          &:before {
+            content: " ";
+            position: absolute;
+            height: 6px;
+            width: 6px;
+            top: 17px;
+            left: -4px;
+            background: $white;
+            border-radius: 50%;
+          }
+        }
+        &:before {
+          content: " ";
+          position: absolute;
+          height: 6px;
+          width: 6px;
+          top: 22px;
+          left: -4px;
+          background: rgba($white, 0.6);
+          border-radius: 50%;
+        }
+      }
+    }
+
+    p {
+      margin: 0;
+      font-weight: $font-weight-bold;
+      color: rgba($white, 0.8);
+      line-height: 30px;
+      position: relative;
+      display: block;
+      height: auto;
+      white-space: nowrap;
+      @extend .animation-transition-general;
+    }
+// sidebar icon大小
+    i {
+      font-size: 30px;
+      float: left;
+      margin-right: 12px;
+      line-height: 30px;
+      width: 34px;
+      text-align: center;
+      color: $opacity-8;
+      position: relative;
+    }
+  }
+
+  .logo {
+    position: relative;
+    padding: $padding-base-vertical $padding-base-horizontal;
+    z-index: 4;
+
+    a.logo-mini,
+    a.logo-normal {
+      @extend .animation-transition-general;
+    }
+
+    a.logo-mini {
+      opacity: 1;
+      float: left;
+      width: 34px;
+      text-align: center;
+      margin-left: 12px;
+      margin-right: 10px;
+    }
+
+    a.logo-mini .logo-img {
+      width: 32px;
+      display: inline-block;
+      height: 32px;
+      margin-left: 0;
+      margin-right: 15px;
+      background: #fff;
+      border-radius: 32px;
+      text-align: center;
+      img {
+        max-width: 21px;
+      }
+      &.logo-img-rtl {
+        margin-right: 0;
+      }
+    }
+
+    a.logo-normal {
+      display: block;
+      opacity: 1;
+      @include transform-translate-x(0px);
+    }
+
+    &:after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      right: 15px;
+      height: 1px;
+      width: calc(100% - 30px);
+      background: $opacity-5;
+    }
+
+    p {
+      float: left;
+      font-size: 20px;
+      margin: 10px 10px;
+      color: $white;
+      line-height: 20px;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+
+    .simple-text {
+      text-transform: uppercase;
+      padding: $padding-base-vertical 0;
+      display: block;
+      white-space: nowrap;
+      // font-size: $font-size-base;
+      color: $white;
+      text-decoration: none;
+      font-weight: $font-weight-normal;
+      line-height: 30px;
+      overflow: hidden;
+    }
+  }
+
+  .logo-tim {
+    border-radius: 50%;
+    border: 1px solid #333;
+    display: block;
+    height: 61px;
+    width: 61px;
+    float: left;
+    overflow: hidden;
+
+    img {
+      width: 60px;
+      height: 60px;
+    }
+  }
+
+  &[data="blue"] {
+    @include linear-gradient($info-states, $info);
+  }
+  &[data="green"] {
+    @include linear-gradient($success-states, $success);
+  }
+
+  &[data="vue"] {
+    @include linear-gradient($vue-states, $vue);
+  }
+
+  .user {
+    padding-bottom: 20px;
+    margin: 20px auto 0;
+    position: relative;
+
+    &:after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      right: 15px;
+      height: 1px;
+      width: calc(100% - 30px);
+      background: $opacity-5;
+    }
+
+    .photo {
+      width: 34px;
+      height: 34px;
+      overflow: hidden;
+      float: left;
+      z-index: 5;
+      margin-right: 10px;
+      border-radius: 50%;
+      margin-left: 23px;
+      box-shadow: $box-shadow-raised;
+      @extend .animation-transition-general;
+
+      img {
+        width: $full-width;
+      }
+    }
+
+    a {
+      color: $white;
+      text-decoration: none;
+      padding: $padding-base-vertical 15px;
+      white-space: nowrap;
+      @extend .animation-transition-general;
+    }
+
+    .info {
+      > a {
+        display: block;
+        line-height: 18px;
+
+        > span {
+          @extend .animation-transition-general;
+          display: block;
+          position: relative;
+          opacity: 1;
+        }
+      }
+
+      .caret {
+        position: absolute;
+        top: 8px;
+        right: 18px;
+      }
+    }
+  }
+
+  transition: 0.5s cubic-bezier(0.685, 0.0473, 0.346, 1);
+}
+
+.visible-on-sidebar-regular {
+  display: inline-block !important;
+}
+.visible-on-sidebar-mini {
+  display: none !important;
+}
+
+.off-canvas-sidebar {
+  .nav {
+    > li > a,
+    > li > a:hover {
+      color: $white;
+    }
+
+    > li > a:focus {
+      background: rgba(200, 200, 200, 0.2);
+    }
+  }
+}
+// 背景顏色更改
+.main-panel {
+  position: relative;
+  float: right;
+  width: $full-width;
+  min-height: 100vh;
+  border-top: 2px solid $primary;
+  background: linear-gradient($background-black, $background-states-black);
+
+  @include transitions(0.5s, cubic-bezier(0.685, 0.0473, 0.346, 1));
+
+  &[data="blue"] {
+    border-top: 2px solid $info;
+  }
+
+  &[data="green"] {
+    border-top: 2px solid $success;
+  }
+
+  &[data="purple"] {
+    border-top: 2px solid $purple;
+  }
+
+  &[data="primary"] {
+    border-top: 2px solid $primary;
+  }
+
+  > .content {
+    padding: 78px 30px 30px 280px;
+    min-height: calc(100vh - 70px);
+  }
+
+  > .navbar {
+    margin-bottom: 0;
+  }
+
+  .header {
+    margin-bottom: 50px;
+  }
+}
+
+.perfect-scrollbar-on {
+  .sidebar,
+  .main-panel {
+    height: 100%;
+    max-height: 100%;
+  }
+}
+
+@media (min-width: 991px) {
+  .sidebar,
+  .main-panel,
+  .sidebar-wrapper {
+    -webkit-transition-property: top, bottom, width;
+    transition-property: top, bottom, width;
+    -webkit-transition-duration: 0.2s, 0.2s, 0.35s;
+    transition-duration: 0.2s, 0.2s, 0.35s;
+    -webkit-transition-timing-function: linear, linear, ease;
+    transition-timing-function: linear, linear, ease;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .sidebar-mini {
+    .visible-on-sidebar-regular {
+      display: none !important;
+    }
+    .visible-on-sidebar-mini {
+      display: inline-block !important;
+    }
+
+    .sidebar {
+      width: 80px;
+
+      .sidebar-wrapper {
+        width: 100% !important;
+      }
+    }
+
+    .sidebar {
+      display: block;
+      z-index: 1030;
+      box-shadow: $sidebar-box-shadow;
+
+      .logo {
+        a.logo-normal {
+          opacity: 0;
+          @include transform-translate-x(-25px);
+        }
+      }
+
+      .sidebar-wrapper {
+        > .nav [data-toggle="collapse"] ~ div > ul > li > a .sidebar-normal,
+        .user
+          .info
+          [data-toggle="collapse"]
+          ~ div
+          > ul
+          > li
+          > a
+          .sidebar-normal,
+        .user .info > a > span,
+        > .nav li > a p {
+          @include transform-translate-x(-25px);
+          opacity: 0;
+        }
+      }
+
+      .nav [data-toggle="collapse"] ~ div > ul > li > a .sidebar-mini-icon {
+        opacity: 1;
+      }
+    }
+
+    .sidebar:hover {
+      width: 260px;
+
+      .logo {
+        a.logo-normal {
+          opacity: 1;
+          @include transform-translate-x(0);
+        }
+      }
+
+      .navbar-minimize {
+        opacity: 1;
+      }
+      .sidebar-wrapper {
+        width: 260px;
+
+        > .nav li > a p,
+        > .nav [data-toggle="collapse"] ~ div > ul > li > a .sidebar-normal,
+        .user
+          .info
+          [data-toggle="collapse"]
+          ~ div
+          > ul
+          > li
+          > a
+          .sidebar-normal,
+        .user .info > a > span {
+          @include transform-translate-x(0px);
+          opacity: 1;
+        }
+      }
+
+      .nav [data-toggle="collapse"] ~ div > ul > li > a .sidebar-mini-icon {
+        opacity: 0;
+      }
+    }
+
+    .main-panel {
+      > .content {
+        padding-left: 130px;
+      }
+    }
+
+    footer {
+      padding-left: 130px;
+    }
+  }
+
+  .navbar-minimize {
+    button {
+      margin-left: 10px;
+      i {
+        color: $white;
+        font-size: 20px;
+      }
+    }
+  }
+}
+
+.panel-header {
+  height: 26s0px;
+  padding-top: 80px;
+  padding-bottom: 45px;
+  background: #141e30; /* fallback for old browsers */
+  background: -webkit-gradient(
+    linear,
+    left top,
+    right top,
+    from(#0c2646),
+    color-stop(60%, #204065),
+    to(#2a5788)
+  );
+  background: linear-gradient(to right, #0c2646 0%, #204065 60%, #2a5788 100%);
+  position: relative;
+  overflow: hidden;
+
+  .header {
+    .title {
+      color: $white;
+    }
+    .category {
+      max-width: 600px;
+      color: $opacity-5;
+      margin: 0 auto;
+      font-size: 13px;
+
+      a {
+        color: $white;
+      }
+    }
+  }
+}
+
+.panel-header-sm {
+  height: 135px;
+}
+
+.panel-header-lg {
+  height: 380px;
+}
+
+@media screen and (max-width: 991px) {
+  .sidebar {
+    position: fixed;
+    display: block;
+    top: 0;
+    height: 100%;
+    width: 260px;
+    right: auto;
+    left: 0;
+    margin: 0;
+    border-radius: 0;
+    z-index: 1032;
+    visibility: visible;
+    overflow-y: visible;
+    padding: 0;
+    @include transition(0.5s cubic-bezier(0.685, 0.0473, 0.346, 1));
+    @include transform-translate-x(-260px);
+  }
+
+  .wrapper {
+    @include transition(0.5s, cubic-bezier(0.685, 0.0473, 0.346, 1));
+  }
+
+  .main-panel {
+    width: 100%;
+    .content {
+      padding-left: 30px;
+    }
+  }
+
+  .nav-open {
+    .main-panel {
+      right: 0;
+      @include transform-translate-x(260px);
+    }
+
+    .sidebar {
+      @include transition(0.5s cubic-bezier(0.685, 0.0473, 0.346, 1));
+      @include transform-translate-x(0px);
+      &:before {
+        content: unset;
+      }
+    }
+
+    body {
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .menu-on-right {
+      .main-panel {
+        @include transform-translate-x(-260px);
+      }
+
+      .navbar-collapse,
+      .sidebar {
+        @include transform-translate-x(0px);
+      }
+
+      #bodyClick {
+        right: 260px;
+        left: auto;
+      }
+    }
+  }
+
+  .menu-on-right {
+    .sidebar {
+      left: auto;
+      right: 0;
+      @include transform-translate-x(260px);
+    }
+  }
+
+  #bodyClick {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    opacity: 1;
+    top: 0;
+    right: 0;
+    left: 260px;
+    content: "";
+    z-index: 9999;
+    overflow-x: hidden;
+    background-color: transparent;
+    @include transition(0.5s, cubic-bezier(0.685, 0.0473, 0.346, 1));
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .main-panel .content {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+}
