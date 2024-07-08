@@ -23,10 +23,12 @@ body {
     align-items: center;
     margin-bottom: 20px;
     justify-content: space-between;
+    flex-wrap: wrap;
 }
 
 .header label, .header select, .header input {
     margin-right: 10px;
+    margin-bottom: 10px;
 }
 
 .user-table {
@@ -85,4 +87,20 @@ body {
 
 .Assigning-Roles-btn:hover {
     background-color: #1976D2;
+}
+
+/* Add responsive design */
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .user-table th, .user-table td {
+        padding: 6px;
+    }
+
+    .edit-btn, .delete-btn, .Assigning-Roles-btn {
+        padding: 3px 5px;
+    }
 }

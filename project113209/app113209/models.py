@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 import pyotp
+from django.db import migrations
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, username, password=None, **extra_fields):
@@ -66,6 +67,9 @@ class Role(models.Model):
     name = models.CharField(max_length=20, unique=True)
     users = models.ManyToManyField(User, related_name='roles')
 
+    class Meta:
+        db_table = 'role'
+
     def __str__(self):
         return self.name    
     
@@ -80,6 +84,18 @@ class RolePermission(models.Model):
     can_export = models.BooleanField(default=False)
     can_maintain = models.BooleanField(default=False)
 
+    class Meta:
+        db_table = 'rolepermission'
+
     def __str__(self):
         return f"{self.role.name} - {self.permission_name}"
-    
+
+class Migration(migrations.Migration):
+
+    dependencies = [
+        ('app113209', '上一個遷移文件名稱'),  # 替換為實際的上一個遷移文件名稱
+    ]
+
+    operations = [
+        # 在這裡記錄當前狀態，但不進行任何實際變更
+    ]

@@ -42,7 +42,7 @@ def history(request):
     return render(request, 'backend/history.html')
 
 class BackendLogoutView(LogoutView):
-    next_page = 'backend/logout_success'  # 登出后重定向到 logout_success 页面
+    next_page = 'backend:logout_success'  # 登出后重定向到 logout_success 页面
 
 def logout_success(request):
     return render(request, 'backend/logout_success.html')
@@ -146,6 +146,9 @@ def register(request):
 
     return render(request, 'backend/register.html')
 
+def registration_success(request):
+    return render(request, 'backend/registration_success.html')
+
 def approve_user(request, user_id):
     try:
         user = User.objects.get(id=user_id)
@@ -154,15 +157,6 @@ def approve_user(request, user_id):
         return redirect('approval_success')
     except User.DoesNotExist:
         return redirect('approval_failure')
-
-def registration_success(request):
-    return render(request, 'backend/registration_success.html')
-
-def verification_success(request):
-    return render(request, 'backend/verification_success.html')
-
-def verification_failure(request):
-    return render(request, 'backend/verification_failure.html')
 
 def approval_success(request):
     return render(request, 'backend/approval_success.html')
@@ -214,33 +208,62 @@ def dashboard(request):
 
 # 用戶管理
 def user_management(request):
-    query = request.GET.get('q')
+    query = request.GET.get('q', '')
+    sort_by = request.GET.get('sort_by', '')
+    department_filter = request.GET.get('department', '')
+
+    active_users = User.objects.filter(is_active=True)
+
     if query:
-        active_users = User.objects.filter(is_active=True).filter(
+        active_users = active_users.filter(
             Q(username__icontains=query) |
             Q(email__icontains=query) |
             Q(phone__icontains=query) |
             Q(department_id__icontains=query) |
             Q(position_id__icontains=query)
         )
-    else:
-        active_users = User.objects.filter(is_active=True)
+    
+    if department_filter and department_filter != 'all':
+        active_users = active_users.filter(department_id=department_filter)
 
-    departments = ["銷售部", "人力資源部", "資訊技術部", "市場部", "財務部"]
-    positions = ["經理", "主管", "店長"]
+    if sort_by:
+        if sort_by == 'name':
+            active_users = active_users.order_by('username')
+        elif sort_by == 'email':
+            active_users = active_users.order_by('email')
+        elif sort_by == 'department':
+            active_users = active_users.order_by('department_id')
+        elif sort_by == 'position':
+            active_users = active_users.order_by('position_id')
+        elif sort_by == 'creation-time':
+            active_users = active_users.order_by('date_joined')
+        elif sort_by == 'last-login':
+            active_users = active_users.order_by('last_login')
 
-    return render(request, 'backend/user_management.html', {'active_users': active_users, 'departments': departments, 'positions': positions})
+    departments = ["銷售部", "人力資源部", "資訊部", "業務部", "財務部"]
+    positions = ["總經理", "經理", "店長"]
 
-# 更新用戶部門和職位
+    return render(request, 'backend/user_management.html', {
+        'active_users': active_users,
+        'departments': departments,
+        'positions': positions,
+        'query': query,
+        'sort_by': sort_by,
+        'department_filter': department_filter,
+    })
+
+# 更新用戶信息，包括部門和職位
 def update_user_department_and_position(request, user_id):
     if request.method == 'POST':
         user = get_object_or_404(User, id=user_id)
+        user.username = request.POST.get('username')
+        user.email = request.POST.get('email')
+        user.phone = request.POST.get('phone')
         user.department_id = request.POST.get('department')
         user.position_id = request.POST.get('position')
         user.save()
         return redirect('backend:user_management')
     return redirect('backend:user_management')
-
 # 刪除用戶
 def delete_user(request, user_id):
     user = get_object_or_404(User, id=user_id)
@@ -250,6 +273,8 @@ def delete_user(request, user_id):
 # 編輯用戶
 def edit_user(request, user_id):
     user = get_object_or_404(User, id=user_id)
+    departments = ["銷售部", "人力資源部", "資訊部", "財務部", "業務部"]
+    positions = ["總經理", "經理", "店長"]
     if request.method == 'POST':
         form = UserForm(request.POST, instance=user)
         if form.is_valid():
@@ -257,7 +282,7 @@ def edit_user(request, user_id):
             return redirect('backend:user_management')
     else:
         form = UserForm(instance=user)
-    return render(request, 'backend/edit_user.html', {'form': form, 'user': user})
+    return render(request, 'backend/edit_user.html', {'form': form, 'user': user, 'departments': departments, 'positions': positions})
 
 def get_user(request, user_id):
     user = get_object_or_404(User, id=user_id)

@@ -1,88 +1,149 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>用戶管理</title>
-    <link
-      rel="stylesheet"
-      href="{% static 'backend/css/user_management.css' %}"
-    />
-  </head>
-  <body>
+    <link rel="stylesheet" href="{% static 'backend/css/user_management.css' %}">
+    <style>
+        .container {
+            margin: 0 auto;
+            padding: 20px;
+            max-width: 1200px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .header label, .header select, .header input {
+            margin-right: 10px;
+        }
+        .user-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .user-table th, .user-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .user-table th {
+            background-color: #f2f2f2;
+        }
+        .user-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .user-table tr:hover {
+            background-color: #ddd;
+        }
+        .edit-btn, .delete-btn, .Assigning-Roles-btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+        }
+        .edit-btn {
+            background-color: #ffa500;
+        }
+        .edit-btn:hover {
+            background-color: #e59400;
+        }
+        .delete-btn {
+            background-color: #f44336;
+        }
+        .delete-btn:hover {
+            background-color: #d32f2f;
+        }
+        .Assigning-Roles-btn {
+            background-color: #2196F3;
+        }
+        .Assigning-Roles-btn:hover {
+            background-color: #1976D2;
+        }
+    </style>
+</head>
+<body>
     <div class="container">
-      <div class="header">
-        <button
-          id="pending-approval-btn"
-          class="btn"
-          onclick="location.href='{% url 'backend:pending_list' %}'"
-        >
-          待審核
-        </button>
-        <label for="sort-select">排序:</label>
-        <select id="sort-select">
-          <option value="name">姓名</option>
-          <option value="email">電子郵件</option>
-          <option value="department">部門</option>
-          <option value="creation-time">建立時間</option>
-          <option value="last-login">最近登入時間</option>
-        </select>
-        <label for="department-select">部門:</label>
-        <select id="department-select">
-          <option value="all">全部</option>
-          <option value="sales">銷售部</option>
-          <option value="hr">人力資源部</option>
-          <option value="it">資訊技術部</option>
-          <option value="marketing">市場部</option>
-        </select>
-        <input type="text" id="search-box" placeholder="搜尋..." />
-      </div>
-      <table class="user-table">
-        <thead>
-          <tr>
-            <th>姓名</th>
-            <th>電子郵件</th>
-            <th>電話號碼</th>
-            <th>部門</th>
-            <th>建立時間</th>
-            <th>最近登入時間</th>
-            <th>操作</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for user in active_users %}
-          <tr>
-            <td>{{ user.username }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.phone }}</td>
-            <td>{{ user.department_id }}</td>
-            <td>{{ user.date_joined }}</td>
-            <td>{{ user.last_login }}</td>
-            <td>
-              <button
-                class="edit-btn"
-                onclick="location.href='{% url 'backend:edit_user' user.id %}'"
-              >
-                編輯
-              </button>
-              <button
-                class="delete-btn"
-                onclick="location.href='{% url 'backend:delete_user' user.id %}'"
-              >
-                刪除
-              </button>
-              <button
-                class="Assigning-Roles-btn"
-                onclick="location.href='{% url 'backend:assign_role' user.id %}'"
-              >
-                分配角色
-              </button>
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+        <div class="header">
+            <button id="pending-approval-btn" class="btn" onclick="location.href='{% url 'backend:pending_list' %}'">待審核</button>
+            <label for="sort-select">排序:</label>
+            <select id="sort-select" onchange="applyFilters()">
+                <option value="name" {% if sort_by == 'name' %}selected{% endif %}>姓名</option>
+                <option value="email" {% if sort_by == 'email' %}selected{% endif %}>電子郵件</option>
+                <option value="department" {% if sort_by == 'department' %}selected{% endif %}>部門</option>
+                <option value="position" {% if sort_by == 'position' %}selected{% endif %}>職位</option>
+                <option value="creation-time" {% if sort_by == 'creation-time' %}selected{% endif %}>建立時間</option>
+                <option value="last-login" {% if sort_by == 'last-login' %}selected{% endif %}>最近登入時間</option>
+            </select>
+            <label for="department-select">部門:</label>
+            <select id="department-select" onchange="applyFilters()">
+                <option value="all" {% if department_filter == 'all' %}selected{% endif %}>全部</option>
+                {% for department in departments %}
+                <option value="{{ department }}" {% if department_filter == department %}selected{% endif %}>{{ department }}</option>
+                {% endfor %}
+            </select>
+            <input type="text" id="search-box" placeholder="搜尋..." value="{{ query }}" onkeydown="handleSearch(event)">
+            <button onclick="applyFilters()" class="search-btn">搜尋</button>
+        </div>
+        <table class="user-table">
+            <thead>
+                <tr>
+                    <th>姓名</th>
+                    <th>電子郵件</th>
+                    <th>電話號碼</th>
+                    <th>部門</th>
+                    <th>職位</th>
+                    <th>建立時間</th>
+                    <th>最近登入時間</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in active_users %}
+                <tr>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.phone }}</td>
+                    <td>{{ user.department_id }}</td>
+                    <td>{{ user.position_id }}</td>
+                    <td>{{ user.date_joined }}</td>
+                    <td>{{ user.last_login }}</td>
+                    <td>
+                        <button class="edit-btn" onclick="location.href='{% url 'backend:edit_user' user.id %}'">編輯</button>
+                        <button class="delete-btn" onclick="location.href='{% url 'backend:delete_user' user.id %}'">刪除</button>
+                        <button class="Assigning-Roles-btn" onclick="location.href='{% url 'backend:assign_role' user.id %}'">分配角色</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
-  </body>
+    <script>
+        function applyFilters() {
+            const sortSelect = document.getElementById('sort-select').value;
+            const departmentSelect = document.getElementById('department-select').value;
+            const searchQuery = document.getElementById('search-box').value;
+            const url = new URL(window.location.href);
+            url.searchParams.set('sort_by', sortSelect);
+            url.searchParams.set('department', departmentSelect);
+            url.searchParams.set('q', searchQuery);
+            window.location.href = url.href;
+        }
+
+        function handleSearch(event) {
+            if (event.key === 'Enter') {
+                applyFilters();
+            }
+        }
+    </script>
+</body>
 </html>
