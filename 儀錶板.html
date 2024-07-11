@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>首頁</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 0;
+      margin: 0;
+    }
+    h2 {
+      text-align: center;
+      margin-top: 100px; 
+    }
+    .navbar {
+      position: absolute;
+      top: 60px; 
+      left: 20px;
+    }
+    .dropdown {
+      display: inline-block;
+    }
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+      left: 0;
+    }
+    .dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+    .dropdown-content a:hover {
+      background-color: #f1f1f1;
+    }
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+    .dropdown .dropbtn {
+      background-color: #007bff;
+      color: white;
+      padding: 10px 16px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+    }
+    .controls {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .controls button {
+      margin: 5px;
+    }
+    .chart-container {
+      width: 80%;
+      margin: 20px auto;
+      display: none;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgb(0,0,0);
+      background-color: rgba(0,0,0,0.4);
+    }
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 40%;
+    }
+    .modal-content label, .modal-content select, .modal-content button {
+      display: block;
+      margin: 10px 0;
+    }
+    .selection {
+      text-align: center;
+      margin: 20px;
+    }
+    .gauge-container {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 20px;
+    }
+    .bar-chart-container {
+      width: 80%;
+      margin: 20px auto;
+    }
+    .chart-label {
+      text-align: center;
+      margin-top: 10px;
+    }
+    .date-select {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .date-select select {
+      margin: 0 5px;
+      padding: 5px;
+    }
+    .header-bar {
+      width: 100%;
+      background-color: black;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 18px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+    }
+    .pie-chart {
+      width: 30%;
+      margin: 10px;
+      display: inline-block;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gaugeJS/dist/gauge.min.js"></script>
+  <script src="scripts2.js"></script>
+</head>
+<body>
+  <div class="header-bar">首頁</div>
+
+  <h2></h2>
+
+  <div class="navbar">
+    <div class="dropdown">
+      <button class="dropbtn">選單</button>
+      <div class="dropdown-content">
+        <a href="儀錶板.html">首頁</a>
+        <a href="個人資訊.html">個人資訊</a>
+        <a href="帳號設定.html">帳號設定</a>
+        <a href="歷史紀錄.html">歷史紀錄</a>
+        <a href="登出.html" onclick="logout()">登出</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button onclick="showChart('sales')">銷售額</button>
+    <button onclick="showChart('revenue')">營業額</button>
+    <button onclick="showChart('inventory')">庫存量</button>
+  </div>
+
+  <div class="date-select">
+    <label for="yearSelect">選擇年份：</label>
+    <select id="yearSelect"></select>
+    <label for="monthSelect">選擇月份：</label>
+    <select id="monthSelect"></select>
+    <label for="daySelect">選擇日期：</label>
+    <select id="daySelect"></select>
+    <button id="queryButton">查詢</button>
+  </div>
+
+  <div class="chart-container" id="salesChartContainer">
+    <div class="chart-controls">
+      <div class="control-box">
+        <button onclick="changeDataset('sales', 'salesBarChart')">銷售額</button>
+        <button onclick="changeDataset('cost', 'salesBarChart')">銷售成本</button>
+        <button onclick="changeDataset('profit', 'salesBarChart')">銷售毛利</button>
+      </div>
+      <canvas id="salesBarChart"></canvas>
+      <div class="gauge-container">
+        <div>
+          <canvas id="salesGauge"></canvas>
+          <div class="chart-label">銷售額評估</div>
+        </div>
+        <div>
+          <canvas id="salesCostGauge"></canvas>
+          <div class="chart-label">銷售成本評估</div>
+        </div>
+        <div>
+          <canvas id="salesProfitGauge"></canvas>
+          <div class="chart-label">銷售毛利評估</div>
+        </div>
+      </div>
+    </div>
+    <div class="pie-charts">
+      <div class="pie-chart">
+        <canvas id="salesPieChart" style="width: 200px; height: 200px;"></canvas>
+      </div>
+      <div class="pie-chart">
+        <canvas id="salesCostPieChart" style="width: 200px; height: 200px;"></canvas>
+      </div>
+      <div class="pie-chart">
+        <canvas id="salesProfitPieChart" style="width: 200px; height: 200px;"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="chart-container" id="revenueChartContainer">
+    <div class="chart-controls">
+      <div class="control-box">
+        <button onclick="changeDataset('revenue', 'revenueBarChart')">營業收入</button>
+        <button onclick="changeDataset('cost', 'revenueBarChart')">營業成本</button>
+        <button onclick="changeDataset('profit', 'revenueBarChart')">營業毛利</button>
+      </div>
+      <canvas id="revenueBarChart"></canvas>
+      <div class="gauge-container">
+        <div>
+          <canvas id="revenueGauge"></canvas>
+          <div class="chart-label">營業額評估</div>
+        </div>
+        <div>
+          <canvas id="revenueCostGauge"></canvas>
+          <div class="chart-label">營業成本評估</div>
+        </div>
+        <div>
+          <canvas id="revenueProfitGauge"></canvas>
+          <div class="chart-label">營業毛利評估</div>
+        </div>
+      </div>
+    </div>
+    <div class="pie-charts">
+      <div class="pie-chart">
+        <canvas id="revenuePieChart" style="width: 200px; height: 200px;"></canvas>
+      </div>
+      <div class="pie-chart">
+        <canvas id="revenueCostPieChart" style="width: 200px; height: 200px;"></canvas>
+      </div>
+      <div class="pie-chart">
+        <canvas id="revenueProfitPieChart" style="width: 200px; height: 200px;"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="chart-container" id="inventoryChartContainer">
+    <div class="chart-controls">
+      <canvas id="inventoryBarChart"></canvas>
+      <div class="gauge-container">
+        <div>
+          <canvas id="inventoryGauge"></canvas>
+          <div class="chart-label">庫存量</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="myModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <label for="chartType">選擇圖表類型：</label>
+      <select id="chartType">
+        <option value="bar">長條圖</option>
+        <option value="pie">圓餅圖</option>
+        <option value="line">折線圖</option>
+      </select>
+      <button onclick="changeChartType()">確定</button>
+    </div>
+  </div>
+
+  <script>
+    // Chart data and configurations
+    const salesData = {
+      labels: ['產品A', '產品B', '產品C'],
+      datasets: [{
+        label: '銷售額',
+        data: [300, 500, 200],
+        backgroundColor: ['#007bff', '#28a745', '#ffc107'],
+        borderWidth: 1
+      }]
+    };
+
+    const salesPieConfig = {
+      type: 'pie',
+      data: salesData,
+      options: {
+        plugins: {
+          legend: {
+            position: 'top',
+          },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                let label = context.label || '';
+                if (label) {
+                  label += ': ';
+                }
+                label += context.raw.toLocaleString();
+                return label;
+              }
+            }
+          }
+        }
+      }
+    };
+
+    const salesBarConfig = {
+      type: 'bar',
+      data: salesData,
+      options: {
+        plugins: {
+          legend: {
+            display: false,
+          },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                let label = context.dataset.label || '';
+                if (label) {
+                  label += ': ';
+                }
+                if (context.raw) {
+                  label += context.raw.toLocaleString();
+                }
+                return label;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: {
+              display: false
+            }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: function(value) {
+                return value.toLocaleString();
+              }
+            }
+          }
+        }
+      }
+    };
+
+    const inventoryData = {
+      labels: ['產品A', '產品B', '產品C'],
+      datasets: [{
+        label: '庫存量',
+        data: [100, 150, 80],
+        backgroundColor: ['#007bff', '#28a745', '#ffc107'],
+        borderWidth: 1
+      }]
+    };
+
+    const inventoryBarConfig = {
+      type: 'bar',
+      data: inventoryData,
+      options: {
+        plugins: {
+          legend: {
+            display: false,
+          },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                let label = context.dataset.label || '';
+                if (label) {
+                  label += ': ';
+                }
+                if (context.raw) {
+                  label += context.raw.toLocaleString();
+                }
+                return label;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: {
+              display: false
+            }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: function(value) {
+                return value.toLocaleString();
+              }
+            }
+          }
+        }
+      }
+    };
+
+    const revenueData = {
+      labels: ['產品A', '產品B', '產品C'],
+      datasets: [{
+        label: '營業額',
+        data: [800, 600, 400],
+        backgroundColor: ['#007bff', '#28a745', '#ffc107'],
+        borderWidth: 1
+      }]
+    };
+
+    const revenuePieConfig = {
+      type: 'pie',
+      data: revenueData,
+      options: {
+        plugins: {
+          legend: {
+            position: 'top',
+          },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                let label = context.label || '';
+                if (label) {
+                  label += ': ';
+                }
+                label += context.raw.toLocaleString();
+                return label;
+              }
+            }
+          }
+        }
+      }
+    };
+
+    const revenueBarConfig = {
+      type: 'bar',
+      data: revenueData,
+      options: {
+        plugins: {
+          legend: {
+            display: false,
+          },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                let label = context.dataset.label || '';
+                if (label) {
+                  label += ': ';
+                }
+                if (context.raw) {
+                  label += context.raw.toLocaleString();
+                }
+                return label;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: {
+              display: false
+            }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: function(value) {
+                return value.toLocaleString();
+              }
+            }
+          }
+        }
+      }
+    };
+
+    // Functions
+    function showChart(chartType) {
+      const containers = document.getElementsByClassName('chart-container');
+      for (let i = 0; i < containers.length; i++) {
+        containers[i].style.display = 'none';
+      }
+
+      const selectedContainer = document.getElementById(chartType + 'ChartContainer');
+      if (selectedContainer) {
+        selectedContainer.style.display = 'block';
+        if (chartType === 'sales') {
+          renderSalesCharts();
+        } else if (chartType === 'revenue') {
+          renderRevenueCharts();
+        } else if (chartType === 'inventory') {
+          renderInventoryCharts();
+        }
+      }
+    }
+
+    function renderSalesCharts() {
+      renderBarChart('salesBarChart', salesBarConfig);
+      renderPieChart('salesPieChart', salesPieConfig);
+      renderGauges('salesGauge', 'salesCostGauge', 'salesProfitGauge', [60, 40, 80]);
+    }
+
+    function renderRevenueCharts() {
+      renderBarChart('revenueBarChart', revenueBarConfig);
+      renderPieChart('revenuePieChart', revenuePieConfig);
+      renderGauges('revenueGauge', 'revenueCostGauge', 'revenueProfitGauge', [80, 50, 70]);
+    }
+
+    function renderInventoryCharts() {
+      renderBarChart('inventoryBarChart', inventoryBarConfig);
+      renderGauge('inventoryGauge', 70);
+    }
+
+    function renderBarChart(canvasId, config) {
+      const ctx = document.getElementById(canvasId).getContext('2d');
+      new Chart(ctx, config);
+    }
+
+    function renderPieChart(canvasId, config) {
+      const ctx = document.getElementById(canvasId).getContext('2d');
+      new Chart(ctx, config);
+    }
+
+    function renderGauges(gaugeId1, gaugeId2, gaugeId3, values) {
+      renderGauge(gaugeId1, values[0]);
+      renderGauge(gaugeId2, values[1]);
+      renderGauge(gaugeId3, values[2]);
+    }
+
+    function renderGauge(gaugeId, value) {
+      const opts = {
+        angle: 0,
+        lineWidth: 0.1,
+        radiusScale: 1,
+        pointer: {
+          length: 0.6,
+          strokeWidth: 0.035,
+          color: '#000000'
+        },
+        limitMax: false,
+        limitMin: false,
+        strokeColor: '#E0E0E0',
+        generateGradient: true,
+        highDpiSupport: true,
+        staticZones: [
+          {strokeStyle: '#F03E3E', min: 0, max: 50},
+          {strokeStyle: '#FFDD00', min: 50, max: 90},
+          {strokeStyle: '#30B32D', min: 90, max: 100}
+        ],
+        staticLabels: {
+          font: "10px sans-serif",
+          labels: [0, 50, 90, 100],
+          color: "#000000",
+          fractionDigits: 0
+        }
+      };
+      const target = document.getElementById(gaugeId);
+      const gauge = new Gauge(target).setOptions(opts);
+      gauge.maxValue = 100;
+      gauge.setMinValue(0);
+      gauge.animationSpeed = 32;
+      gauge.set(value);
+    }
+
+    function changeDataset(type, chartId) {
+      let newData;
+      if (type === 'sales') {
+        newData = {
+          labels: ['產品A', '產品B', '產品C'],
+          datasets: [{
+            label: '銷售額',
+            data: [300, 500, 200],
+            backgroundColor: ['#007bff', '#28a745', '#ffc107'],
+            borderWidth: 1
+          }]
+        };
+      } else if (type === 'revenue') {
+        newData = {
+          labels: ['產品A', '產品B', '產品C'],
+          datasets: [{
+            label: '營業額',
+            data: [800, 600, 400],
+            backgroundColor: ['#007bff', '#28a745', '#ffc107'],
+            borderWidth: 1
+          }]
+        };
+      } else if (type === 'cost') {
+        newData = {
+          labels: ['產品A', '產品B', '產品C'],
+          datasets: [{
+            label: '銷售成本',
+            data: [200, 300, 150],
+            backgroundColor: ['#007bff', '#28a745', '#ffc107'],
+            borderWidth: 1
+          }]
+        };
+      } else if (type === 'profit') {
+        newData = {
+          labels: ['產品A', '產品B', '產品C'],
+          datasets: [{
+            label: '銷售毛利',
+            data: [100, 200, 50],
+            backgroundColor: ['#007bff', '#28a745', '#ffc107'],
+            borderWidth: 1
+          }]
+        };
+      }
+
+      const chart = Chart.getChart(chartId);
+      chart.data = newData;
+      chart.update();
+    }
+
+    function openModal() {
+      const modal = document.getElementById('myModal');
+      modal.style.display = 'block';
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('myModal');
+      modal.style.display = 'none';
+    }
+
+    function changeChartType() {
+      const chartType = document.getElementById('chartType').value;
+      const charts = document.getElementsByClassName('pie-chart');
+      for (let i = 0; i < charts.length; i++) {
+        charts[i].style.display = (chartType === 'pie') ? 'inline-block' : 'none';
+      }
+      closeModal();
+    }
+
+    // Close the modal if user clicks outside of it
+    window.onclick = function(event) {
+      const modal = document.getElementById('myModal');
+      if (event.target === modal) {
+        modal.style.display = 'none';
+      }
+    };
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', function() {
+      const yearSelect = document.getElementById('yearSelect');
+      const monthSelect = document.getElementById('monthSelect');
+      const daySelect = document.getElementById('daySelect');
+
+      // Populate year select
+      const currentYear = new Date().getFullYear();
+      for (let year = currentYear; year >= currentYear - 10; year--) {
+        const option = document.createElement('option');
+        option.textContent = year;
+        option.value = year;
+        yearSelect.appendChild(option);
+      }
+
+      // Populate month select
+      for (let month = 1; month <= 12; month++) {
+        const option = document.createElement('option');
+        option.textContent = month;
+        option.value = month;
+        monthSelect.appendChild(option);
+      }
+
+      // Populate day select
+      for (let day = 1; day <= 31; day++) {
+        const option = document.createElement('option');
+        option.textContent = day;
+        option.value = day;
+        daySelect.appendChild(option);
+      }
+
+      showChart('sales');
+    });
+  </script>
+</body>
+</html>

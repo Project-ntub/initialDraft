@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>修改密碼</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 0;
+      margin: 0;
+    }
+    .header-bar {
+      width: 100%;
+      background-color: black;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 18px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+    }
+    h2 {
+      text-align: center;
+      margin-top: 60px; /* 调整标题的顶部间距，使其不被黑色條覆蓋 */
+    }
+    .change-password-form {
+      max-width: 400px;
+      margin: 80px auto 0; /* 调整表單的顶部间距，使其不被黑色條覆蓋 */
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 20px;
+    }
+    .input-container {
+      margin-bottom: 10px;
+    }
+    .input-container label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    .input-container input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .button-container {
+      text-align: center;
+    }
+    .button-container button {
+      padding: 10px 20px;
+      margin: 0 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: #007bff;
+      color: white;
+    }
+    .button-container button.cancel {
+      background-color: #6c757d;
+    }
+    .back-home {
+      display: flex;
+      justify-content: center;
+      margin: 20px;
+    }
+    .back-home button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #1404f6; /* Green background */
+      color: white; /* White text */
+      border: none;
+      border-radius: 5px;
+    }
+    .back-home button:hover {
+      background-color: #0a24eb;
+    }
+    .navbar {
+      position: absolute;
+      top: 60px; /* 调整导航栏的位置 */
+      left: 20px;
+    }
+    .dropdown {
+      display: inline-block;
+    }
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+      left: 0;
+    }
+    .dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+    .dropdown-content a:hover {
+      background-color: #f1f1f1;
+    }
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+    .dropdown .dropbtn {
+      background-color: #007bff;
+      color: white;
+      padding: 10px 16px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="header-bar">修改密碼</div>
+
+  <h2></h2>
+
+  <form class="change-password-form">
+    <div class="input-container">
+      <label for="currentPassword">原密碼：</label>
+      <input type="password" id="currentPassword" name="currentPassword">
+    </div>
+    <div class="input-container">
+      <label for="newPassword">新密碼：</label>
+      <input type="password" id="newPassword" name="newPassword">
+    </div>
+    <div class="input-container">
+      <label for="confirmNewPassword">新密碼確認：</label>
+      <input type="password" id="confirmNewPassword" name="confirmNewPassword">
+    </div>
+
+    <div class="button-container">
+      <button type="submit">更改</button>
+      <button type="button" class="cancel" onclick="cancelChanges()">取消變更</button>
+    </div>
+  </form>
+
+  <div class="back-home">
+    <button onclick="goHome()">返回首頁</button>
+  </div>
+
+  <div class="navbar">
+    <div class="dropdown">
+      <button class="dropbtn">選單</button>
+      <div class="dropdown-content">
+        <a href="儀錶板 624.html">首頁</a>
+        <a href="個人資訊.html">個人資訊</a>
+        <a href="帳號設定.html">帳號設定</a>
+        <a href="歷史紀錄.html">歷史紀錄</a>
+        <a href="登出.html" onclick="logout()">登出</a> <!-- 新增登出按鈕 -->
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function goHome() {
+      window.location.href = '儀錶板 624.html';
+    }
+
+    function cancelChanges() {
+      alert('您取消了變更密碼');
+    }
+
+    // Add your password change form submission handling here if needed
+  </script>
+</body>
+</html>

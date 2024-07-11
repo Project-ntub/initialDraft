@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用戶註冊</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+        .header-bar {
+            width: 100%;
+            background-color: black;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+        .sidebar {
+            height: 100%;
+            width: 60px;
+            position: fixed;
+            top: 40px; /* Adjusted to start below the header */
+            left: 0;
+            background-color: #333;
+            overflow-x: hidden;
+            transition: width 0.3s;
+            padding-top: 20px;
+            z-index: 1000;
+        }
+        .sidebar.open {
+            width: 200px;
+        }
+        .sidebar a {
+            text-decoration: none;
+            font-size: 18px;
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            transition: background 0.3s, color 0.3s;
+        }
+        .sidebar a:hover {
+            background-color: #575757;
+        }
+        .sidebar a .icon {
+            margin-right: 10px;
+            display: inline-block;
+            width: 25px;
+            text-align: center;
+        }
+        .sidebar.open a .text {
+            display: inline-block;
+        }
+        .sidebar a .text {
+            display: none;
+        }
+        .sidebar .toggle-btn {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 18px;
+            cursor: pointer;
+            color: white;
+        }
+        .content {
+            margin-left: 60px;
+            padding: 20px;
+            transition: margin-left 0.3s;
+        }
+        .content.shift {
+            margin-left: 200px;
+        }
+        .sidebar-header {
+            padding: 10px 15px;
+            font-size: 18px;
+            color: white;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .sidebar-header img {
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            margin-bottom: 10px;
+        }
+        .sidebar-header .status {
+            font-size: 12px;
+            color: #00ff00;
+        }
+        .container {
+            max-width: 400px;
+            margin: 100px auto 50px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .password-container {
+            position: relative;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="submit"],
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        .password-container input[type="password"] {
+            padding-right: 40px;
+        }
+        .password-container .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        input[type="submit"] {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #218838;
+        }
+        .feedback {
+            font-size: 12px;
+            color: red;
+            text-align: center;
+        }
+        .password-example {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+    </style>
+    <script>
+        function getVerificationCode() {
+            const email = document.getElementById("email").value.trim();
+            if (!validateEmail(email)) {
+                alert("請輸入有效的電子郵件地址。");
+                return;
+            }
+
+            fetch('/send-verification', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("驗證碼已發送到您的電子郵件。");
+                    document.getElementById("verification-feedback").innerText = "驗證碼已發送到您的電子郵件，有效期限5分鐘。";
+                } else {
+                    alert("發送驗證碼失敗，請重試。");
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("發送驗證碼失敗，請重試。");
+            });
+        }
+
+        function validateEmail(email) {
+            const re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+            return re.test(String(email).toLowerCase());
+        }
+
+        function validatePassword(password) {
+            const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+            return re.test(password);
+        }
+
+        function handleTogglePassword(event) {
+            const passwordInput = event.target.previousElementSibling;
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                event.target.innerText = "👁️";
+            } else {
+                passwordInput.type = "password";
+                event.target.innerText = "👁️";
+            }
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+            const username = document.getElementById("username").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const confirmPassword = document.getElementById("confirm_password").value.trim();
+            const phone = document.getElementById("phone").value.trim();
+            const inputCode = document.getElementById("verification_code").value.trim();
+
+            if (password !== confirmPassword) {
+                alert("密碼與確認密碼不匹配。");
+                return;
+            }
+
+            if (!validatePassword(password)) {
+                alert("密碼必須包含至少8個字符，且包括大小寫字母、數字和特殊字符。例如：Password@123");
+                return;
+            }
+
+            fetch('/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, email, password, phone, inputCode })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = data.redirect; // 成功後重定向到登入頁面
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("註冊失敗，請重試。");
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const toggleBtn = document.getElementById("toggleBtn");
+            const sidebar = document.getElementById("sidebar");
+            const content = document.getElementById("content");
+
+            toggleBtn.addEventListener("click", function() {
+                sidebar.classList.toggle("open");
+                content.classList.toggle("shift");
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="header-bar">註冊</div>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <img src="https://via.placeholder.com/40" alt="User Avatar">
+            <span class="toggle-btn" id="toggleBtn">☰</span>
+        </div>
+        <a href="儀錶板.html">
+            <span class="icon"><i class="fas fa-tachometer-alt"></i></span>
+            <span class="text">儀錶板管理</span>
+        </a>
+        <a href="用戶管理.html">
+            <span class="icon"><i class="fas fa-user"></i></span>
+            <span class="text">用戶管理</span>
+        </a>
+        <a href="角色管理.html">
+            <span class="icon"><i class="fas fa-users"></i></span>
+            <span class="text">角色管理</span>
+        </a>
+        <a href="歷史紀錄.html">
+            <span class="icon"><i class="fas fa-history"></i></span>
+            <span class="text">歷史紀錄</span>
+        </a>
+        <a href="前台登出成功.html">
+            <span class="icon"><i class="fas fa-sign-out-alt"></i></span>
+            <span class="text">登出</span>
+        </a>
+    </div>
+    <div class="content" id="content">
+        <div class="container">
+            <h2>註冊</h2>
+            <form onsubmit="handleSubmit(event)">
+                <label for="username">用戶名</label>
+                <input type="text" id="username" name="username" required>
+
+                <label for="email">電子郵件</label>
+                <input type="email" id="email" name="email" required>
+
+                <button type="button" onclick="getVerificationCode()">獲取驗證碼</button>
+                <div id="verification-feedback" class="feedback"></div>
+
+                <label for="verification_code">驗證碼</label>
+                <input type="text" id="verification_code" name="verification_code" required>
+
+                <label for="password">密碼</label>
+                <div class="password-container">
+                    <input type="password" id="password" name="password" required>
+                    <span class="toggle-password" onclick="handleTogglePassword(event)">👁️</span>
+                </div>
+                <div class="password-example">密碼必須包含至少8個字符，且包括大小寫字母、數字和特殊字符。例如：Password@123</div>
+
+                <label for="confirm_password">確認密碼</label>
+                <div class="password-container">
+                    <input type="password" id="confirm_password" name="confirm_password" required>
+                    <span class="toggle-password" onclick="handleTogglePassword(event)">👁️</span>
+                </div>
+
+                <label for="phone">電話號碼</label>
+                <input type="text" id="phone" name="phone" required>
+
+                <input type="submit" value="註冊">
+            </form>
+        </div>
+    </div>
+</body>
+</html>

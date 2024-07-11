@@ -7,103 +7,195 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      padding: 20px;
+      background-color: #f7f7f7;
+      margin: 0;
+      padding: 0;
     }
-    h2 {
-      text-align: center;
-    }
-    .history-form {
-      max-width: 400px;
+    .container {
+      width: 600px; /* Adjusted width */
       margin: 0 auto;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      padding: 20px;
+      padding-top: 50px;
     }
-    .input-container {
-      margin-bottom: 10px;
+    .header {
+      background-color: black;
+      color: white;
+      padding: 10px;
+      text-align: center;
+      border-radius: 5px 5px 0 0;
     }
-    .input-container label {
+    .dropdown {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+    }
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+      left: 0;
+      top: 100%;
+      min-width: 120px;
+    }
+    .dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
       display: block;
-      margin-bottom: 5px;
     }
-    .input-container select {
-      width: 100%;
+    .dropdown-content a:hover {
+      background-color: #f1f1f1;
+    }
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+    .dropdown .dropbtn {
+      background-color: #007bff;
+      color: white;
+      padding: 10px 16px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+    }
+    .search-container {
+      display: flex;
+      justify-content: center;
+      padding: 10px;
+      background-color: #fff;
+    }
+    .search-container input[type="text"] {
+      width: 80%;
       padding: 10px;
       border: 1px solid #ccc;
       border-radius: 5px;
+      margin-right: 10px;
     }
-    .button-container {
-      text-align: center;
-      margin-top: 20px;
-    }
-    .button-container button {
-      padding: 10px 20px;
-      margin: 0 10px;
+    .search-container button {
+      padding: 10px;
+      background-color: #007bff;
+      color: white;
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      background-color: #007bff;
-      color: white;
     }
-    .button-container a {
-      display: inline-block;
-      text-decoration: none;
-      padding: 10px 20px;
-      margin: 0 10px;
+    .timeline {
+      position: relative;
+      margin: 20px 0;
+      padding: 20px 0;
+      list-style: none;
+    }
+    .timeline:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: #c5c5c5;
+      left: 20px;
+      margin-left: -1.5px;
+    }
+    .timeline-item {
+      margin-bottom: 20px;
+      position: relative;
+      cursor: pointer;
+    }
+    .timeline-item .timeline-panel {
+      position: relative;
+      width: calc(100% - 70px);
+      float: right;
+      background: #fff;
+      border: 1px solid #d4d4d4;
+      padding: 10px;
       border-radius: 5px;
-      background-color: #28a745;
-      color: white;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    .timeline-item .timeline-heading h4 {
+      margin: 0;
+      color: #3f51b5;
+    }
+    .timeline-item .timeline-body p {
+      margin: 0;
+    }
+    .timeline-item .timeline-user {
+      font-size: 14px;
+      color: #999;
+      margin-top: 5px;
     }
   </style>
 </head>
 <body>
-  <h2>歷史紀錄</h2>
-
-  <form class="history-form">
-    <div class="input-container">
-      <label for="year">年：</label>
-      <select id="year" name="year">
-        <option value="2024">2024</option>
-        <option value="2023">2023</option>
-        <option value="2022">2022</option>
-        <!-- Add more years as needed -->
-      </select>
+  <div class="header">歷史紀錄</div>
+  <div class="container">
+    <div class="dropdown">
+      <button class="dropbtn">選單</button>
+      <div class="dropdown-content">
+        <a href="儀錶板 624.html">首頁</a>
+        <a href="個人資訊.html">個人資訊</a>
+        <a href="帳號設定.html">帳號設定</a>
+        <a href="歷史紀錄.html">歷史紀錄</a>
+        <a href="登出.html" onclick="logout()">登出</a>
+      </div>
     </div>
-    <div class="input-container">
-      <label for="month">月：</label>
-      <select id="month" name="month">
-        <option value="1">1月</option>
-        <option value="2">2月</option>
-        <option value="3">3月</option>
-        <!-- Add more months as needed -->
-      </select>
+    <div class="search-container">
+      <input type="text" id="searchInput" placeholder="搜尋紀錄...">
+      <button onclick="filterTimeline()">搜尋</button>
     </div>
-    <div class="input-container">
-      <label for="day">日：</label>
-      <select id="day" name="day">
-        <!-- Add days dynamically using JavaScript based on selected month and year -->
-      </select>
-    </div>
-    <div class="input-container">
-      <label for="time">時間：</label>
-      <input type="time" id="time" name="time">
-    </div>
-
-    <div class="button-container">
-      <button type="submit">更改</button>
-      <button type="button" class="cancel" onclick="cancelChanges()">取消變更</button>
-    </div>
-  </form>
-
-  <div class="button-container">
-    <a href="edit_profile.html">編輯個人資訊</a>
-    <a href="homepage.html">查看首頁</a>
+    <ul class="timeline" id="timeline">
+      <li class="timeline-item" onclick="showDetail(1)">
+        <div class="timeline-panel">
+          <div class="timeline-heading">
+            <h4>2024/1/22 16:22:39</h4>
+          </div>
+          <div class="timeline-body">
+            <p>編輯個人資訊</p>
+            <div class="timeline-user">使用者: User1</div>
+          </div>
+        </div>
+      </li>
+      <li class="timeline-item" onclick="showDetail(2)">
+        <div class="timeline-panel">
+          <div class="timeline-heading">
+            <h4>2024/1/22 16:00:21</h4>
+          </div>
+          <div class="timeline-body">
+            <p>查看首頁</p>
+            <div class="timeline-user">使用者: User2</div>
+          </div>
+        </div>
+      </li>
+      <!-- 其他 timeline-item 略 -->
+    </ul>
   </div>
 
   <script>
-    function cancelChanges() {
-      // 在此處添加取消變更的功能
-      alert('您取消了變更歷史紀錄');
+    function filterTimeline() {
+      var input, filter, ul, li, div, p, i, txtValue;
+      input = document.getElementById('searchInput');
+      filter = input.value.toUpperCase();
+      ul = document.getElementById("timeline");
+      li = ul.getElementsByClassName('timeline-item');
+
+      for (i = 0; i < li.length; i++) {
+        div = li[i].getElementsByClassName("timeline-panel")[0];
+        p = div.getElementsByTagName("p")[0];
+        txtValue = p.textContent || p.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          li[i].style.display = "";
+        } else {
+          li[i].style.display = "none";
+        }
+      }
+    }
+
+    function showDetail(id) {
+      // 根據 id 載入詳細信息，這裡是假設的範例
+      window.location.href = `detail.html?id=${id}`;
+    }
+
+    function logout() {
+      // 登出功能的處理，可以在這裡添加相應的邏輯
+      alert("已登出");
     }
   </script>
 </body>

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>偏好設定</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 300px;
+            margin: 0 auto;
+            padding-top: 50px;
+        }
+        .header {
+            background-color: #3f51b5;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        .form-group {
+            margin: 15px 0;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+        .buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .cancel-button {
+            background-color: white;
+            border: 1px solid #ccc;
+        }
+        .submit-button {
+            background-color: #3f51b5;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            帳號設定 &gt; 偏好設定
+        </div>
+        <div class="form-group">
+            <label for="font-size">字體大小</label>
+            <select id="font-size">
+                <option value="large">大</option>
+                <option value="medium">適中</option>
+                <option value="small">小</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="notification">通知設定</label>
+            <select id="notification">
+                <option value="enable">開啟通知</option>
+                <option value="disable">關閉通知</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="auto-login">自動登入</label>
+            <select id="auto-login">
+                <option value="enable">自動登入</option>
+                <option value="disable">取消自動登入</option>
+            </select>
+        </div>
+        <div class="buttons">
+            <button class="cancel-button">取消變更</button>
+            <button class="submit-button">更改</button>
+        </div>
+    </div>
+    <!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>首頁</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 0;
+      margin: 0;
+    }
+    h2 {
+      text-align: center;
+      margin-top: 100px;
+    }
+    .navbar {
+      position: absolute;
+      top: 60px;
+      left: 20px;
+    }
+    .dropdown {
+      display: inline-block;
+    }
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+      left: 0;
+    }
+    .dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+    .dropdown-content a:hover {
+      background-color: #f1f1f1;
+    }
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+    .dropdown .dropbtn {
+      background-color: #007bff;
+      color: white;
+      padding: 10px 16px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+    }
+    .controls {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .controls button {
+      margin: 5px;
+    }
+    .chart-container {
+      width: 80%;
+      margin: 20px auto;
+      display: none;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgb(0,0,0);
+      background-color: rgba(0,0,0,0.4);
+    }
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 40%;
+    }
+    .modal-content label, .modal-content select, .modal-content button {
+      display: block;
+      margin: 10px 0;
+    }
+    .selection {
+      text-align: center;
+      margin: 20px;
+    }
+    .gauge-container {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 20px;
+    }
+    .bar-chart-container {
+      width: 80%;
+      margin: 20px auto;
+    }
+    .chart-label {
+      text-align: center;
+      margin-top: 10px;
+    }
+    .date-select {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .date-select select {
+      margin: 0 5px;
+      padding: 5px;
+    }
+    .header-bar {
+      width: 100%;
+      background-color: black;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 18px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+    }
+    /* 新增的樣式 */
+    .hamburger-menu {
+      display: none;
+      flex-direction: column;
+      justify-content: space-around;
+      width: 30px;
+      height: 30px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      z-index: 1001;
+    }
+    .hamburger-menu div {
+      width: 30px;
+      height: 3px;
+      background-color: white;
+    }
+    @media (max-width: 768px) {
+      .dropdown {
+        display: none;
+      }
+      .hamburger-menu {
+        display: flex;
+      }
+      .dropdown-content {
+        display: block;
+        position: static;
+        background-color: black;
+        color: white;
+        text-align: center;
+      }
+      .dropdown-content a {
+        color: white;
+        padding: 10px 0;
+        border-top: 1px solid #444;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header-bar">偏好設定</div>
+  <button class="hamburger-menu" onclick="toggleMenu()">
+    <div></div>
+    <div></div>
+    <div></div>
+  </button>
+
+  <div class="navbar">
+    <div class="dropdown">
+      <button class="dropbtn">選單</button>
+      <div class="dropdown-content">
+        <a href="儀錶板 624.html">首頁</a>
+        <a href="個人資訊.html">個人資訊</a>
+        <a href="帳號設定.html">帳號設定</a>
+        <a href="歷史紀錄.html">歷史紀錄</a>
+        <a href="登出.html" onclick="logout()">登出</a> <!-- 新增登出按鈕 -->
+
+      </div>
+    </div>
+  </div>
+
+  <!-- 其他內容 -->
+
+  <script>
+    function toggleMenu() {
+      const dropdownContent = document.querySelector('.dropdown-content');
+      if (dropdownContent.style.display === 'block') {
+        dropdownContent.style.display = 'none';
+      } else {
+        dropdownContent.style.display = 'block';
+      }
+    }
+
+    // 原有的JavaScript代碼
+  </script>
+</body>
+</html>
+
+</body>
+</html>

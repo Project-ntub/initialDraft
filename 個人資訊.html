@@ -7,16 +7,39 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      padding: 20px;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .header-bar {
+      width: 100%;
+      background-color: black;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 18px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1000;
     }
     h2 {
       text-align: center;
+      margin-top: 60px; /* 調整標題的頂部間距，使其不被黑色條覆蓋 */
     }
     .info-container {
       border: 1px solid #ccc;
       border-radius: 5px;
       padding: 20px;
+      margin-top: 100px; /* 距離頂部多一點 */
       margin-bottom: 20px;
+      width: 80%; /* 調整寬度 */
+      max-width: 600px; /* 最大寬度 */
+      text-align: center; /* 內容置中 */
     }
     .info-container h3 {
       margin-top: 0;
@@ -26,6 +49,7 @@
     }
     .button-container {
       text-align: center;
+      margin-top: 20px;
     }
     .button-container button {
       padding: 10px 20px;
@@ -42,20 +66,77 @@
       background-color: #f44336;
       color: white;
     }
+    .navbar {
+      position: fixed;
+      top: 40px; /* 調整選單位置，避免與 header-bar 重疊 */
+      left: 20px;
+    }
+    .dropdown {
+      display: inline-block;
+    }
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+      left: 0;
+    }
+    .dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+    .dropdown-content a:hover {
+      background-color: #f1f1f1;
+    }
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+    .dropdown .dropbtn {
+      background-color: #007bff;
+      color: white;
+      padding: 10px 16px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+    }
+    input[type="text"], input[type="email"] {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0;
+      box-sizing: border-box;
+    }
   </style>
 </head>
 <body>
+  <div class="header-bar">個人資訊</div>
+
+  <div class="navbar">
+    <div class="dropdown">
+      <button class="dropbtn">選單</button>
+      <div class="dropdown-content">
+        <a href="儀錶板.html">首頁</a>
+        <a href="個人資訊.html">個人資訊</a>
+        <a href="帳號設定.html">帳號設定</a>
+        <a href="歷史紀錄.html">歷史紀錄</a>
+        <a href="#" onclick="logout()">登出</a> <!-- 新增登出按鈕 -->
+      </div>
+    </div>
+  </div>
+
   <h2>個人資訊</h2>
 
   <div class="info-container">
     <h3>個人資訊</h3>
-    <p>姓名：John Doe</p>
-    <p>帳號：johndoe123</p>
-    <p>部門：行銷部</p>
-    <p>職位：經理</p>
-    <p>電話：123-456-7890</p>
-    <p>電子郵件：johndoe@example.com</p>
-    <p>建立時間：2024-05-18 10:00:00</p>
+    <p>姓名：<span id="name"></span></p>
+    <p>帳號：<span id="account"></span></p>
+    <p>部門：<span id="department"></span></p>
+    <p>職位：<span id="position"></span></p>
+    <p>電話：<span id="phone"></span></p>
+    <p>電子郵件：<span id="email"></span></p>
+    <p>建立時間：<span id="created"></span></p>
   </div>
 
   <div class="button-container">
@@ -65,14 +146,92 @@
 
   <script>
     function editProfile() {
-      // 在此處添加編輯個人資訊的功能
-      alert('您點擊了編輯按鈕');
+      const userData = {
+        name: document.getElementById('name').innerText,
+        account: document.getElementById('account').innerText,
+        department: document.getElementById('department').innerText,
+        position: document.getElementById('position').innerText,
+        phone: document.getElementById('phone').innerText,
+        email: document.getElementById('email').innerText,
+        created: document.getElementById('created').innerText
+      };
+
+      document.querySelector('.info-container').innerHTML = `
+        <h3>編輯個人資訊</h3>
+        <p>姓名：<input type="text" id="edit-name" value="${userData.name}"></p>
+        <p>帳號：<input type="text" id="edit-account" value="${userData.account}"></p>
+        <p>部門：<input type="text" id="edit-department" value="${userData.department}"></p>
+        <p>職位：<input type="text" id="edit-position" value="${userData.position}"></p>
+        <p>電話：<input type="text" id="edit-phone" value="${userData.phone}"></p>
+        <p>電子郵件：<input type="email" id="edit-email" value="${userData.email}"></p>
+        <p>建立時間：${userData.created}</p>
+        <button onclick="saveProfile()">儲存</button>
+      `;
+    }
+
+    function saveProfile() {
+      const updatedData = {
+        name: document.getElementById('edit-name').value,
+        account: document.getElementById('edit-account').value,
+        department: document.getElementById('edit-department').value,
+        position: document.getElementById('edit-position').value,
+        phone: document.getElementById('edit-phone').value,
+        email: document.getElementById('edit-email').value
+      };
+
+      document.querySelector('.info-container').innerHTML = `
+        <h3>個人資訊</h3>
+        <p>姓名：<span id="name">${updatedData.name}</span></p>
+        <p>帳號：<span id="account">${updatedData.account}</span></p>
+        <p>部門：<span id="department">${updatedData.department}</span></p>
+        <p>職位：<span id="position">${updatedData.position}</span></p>
+        <p>電話：<span id="phone">${updatedData.phone}</span></p>
+        <p>電子郵件：<span id="email">${updatedData.email}</span></p>
+        <p>建立時間：<span id="created">${updatedData.created}</span></p>
+      `;
     }
 
     function logout() {
-      // 在此處添加登出功能
-      alert('您已登出');
+      fetch('/logout', { method: 'POST' })
+        .then(response => {
+          if (response.ok) {
+            // 模擬登出過程
+            document.body.innerHTML = `
+              <div class="header-bar">登出成功</div>
+              <div class="info-container">
+                <h3>您已成功登出</h3>
+                <p>感謝您的使用，再見！</p>
+              </div>
+            `;
+          }
+        })
+        .catch(error => console.error('Error:', error));
     }
+
+    // 獲取當前用戶信息
+    document.addEventListener('DOMContentLoaded', function() {
+      fetch('/個人資訊')
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            const userData = data.user;
+            document.getElementById('name').textContent = userData.username;
+            document.getElementById('account').textContent = userData.username;
+            document.getElementById('department').textContent = userData.department;
+            document.getElementById('position').textContent = userData.position;
+            document.getElementById('phone').textContent = userData.phone;
+            document.getElementById('email').textContent = userData.email;
+            document.getElementById('created').textContent = userData.date_joined;
+          } else {
+            alert('未登入或會話過期');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('無法獲取用戶信息');
+        });
+    });
   </script>
+
 </body>
 </html>
