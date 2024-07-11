@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>新增模組</title>
+    <link
+      rel="stylesheet"
+      href="{% static 'backend/css/role_management.css' %}"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <form method="post" action="{% url 'backend:create_module' %}">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="module_name">模組名稱</label>
+          <input type="text" id="module_name" name="module_name" required />
+        </div>
+        <button type="submit" class="btn">新增模組</button>
+      </form>
+    </div>
+  </body>
+</html>

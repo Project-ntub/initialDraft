@@ -14,19 +14,28 @@
     <div class="container">
       <div class="header">
         <button
-          id="add-role-btn"
           class="btn"
-          onclick="location.href='{% url 'backend:create_role' %}'"
+          onclick="location.href='{% url 'backend:role_management' %}'"
         >
-          新增角色
+          角色管理
         </button>
-        <label for="chart-module-select">圖表模組編輯:</label>
-        <select id="chart-module-select">
-          <option value="module1">模組1</option>
-          <option value="module2">模組2</option>
-          <option value="module3">模組3</option>
-        </select>
+        <button
+          class="btn"
+          onclick="location.href='{% url 'backend:module_management' %}'"
+        >
+          模組管理
+        </button>
       </div>
+      <button id="add-role-btn" class="btn" onclick="openCreateRoleModal()">
+        新增角色
+      </button>
+      <label for="chart-module-select">圖表模組:</label>
+      <select id="chart-module-select" onchange="filterRolesByModule()">
+        <option value="all">所有模組</option>
+        {% for module in modules %}
+        <option value="{{ module.name }}">{{ module.name }}</option>
+        {% endfor %}
+      </select>
       <table class="role-table">
         <thead>
           <tr>
@@ -37,11 +46,27 @@
             <th>操作</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="role-tbody">
           {% for role in roles %}
-          <tr>
+          <tr class="role-row" data-module="{{ role.module }}">
             <td>{{ role.name }}</td>
-            <td><button class="status-btn">開啟</button></td>
+            <td>
+              {% if role.is_active %}
+              <button
+                class="status-btn"
+                onclick="toggleStatus({{ role.id }}, false)"
+              >
+                關閉
+              </button>
+              {% else %}
+              <button
+                class="status-btn"
+                onclick="toggleStatus({{ role.id }}, true)"
+              >
+                開啟
+              </button>
+              {% endif %}
+            </td>
             <td>{{ role.users.count }}</td>
             <td>
               <select>
@@ -69,5 +94,70 @@
         </tbody>
       </table>
     </div>
+
+    <div id="create-role-modal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeCreateRoleModal()">&times;</span>
+        <h2>新增角色</h2>
+        <form method="post" action="{% url 'backend:create_role' %}">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="role-name">角色名稱</label>
+            <input type="text" id="role-name" name="name" required />
+          </div>
+          <div class="form-group">
+            <label for="role-module">模組</label>
+            <input type="text" id="role-module" name="module" required />
+          </div>
+          <button type="submit" class="btn">新增</button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      function filterRolesByModule() {
+        const selectedModule = document.getElementById(
+          "chart-module-select"
+        ).value;
+        const rows = document.querySelectorAll(".role-row");
+        rows.forEach((row) => {
+          if (
+            selectedModule === "all" ||
+            row.dataset.module === selectedModule
+          ) {
+            row.style.display = "";
+          } else {
+            row.style.display = "none";
+          }
+        });
+      }
+
+      function toggleStatus(roleId, isActive) {
+        fetch(`/backend/toggle_role_status/${roleId}/`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": "{{ csrf_token }}",
+          },
+          body: JSON.stringify({ is_active: isActive }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              location.reload();
+            } else {
+              alert("狀態更新失敗");
+            }
+          });
+      }
+
+      function openCreateRoleModal() {
+        document.getElementById("create-role-modal").style.display = "block";
+      }
+
+      function closeCreateRoleModal() {
+        document.getElementById("create-role-modal").style.display = "none";
+      }
+    </script>
   </body>
 </html>

@@ -1,0 +1,104 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>模組管理</title>
+    <link
+      rel="stylesheet"
+      href="{% static 'backend/css/module_management.css' %}"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <button
+          class="btn"
+          onclick="location.href='{% url 'backend:role_management' %}'"
+        >
+          角色管理
+        </button>
+        <button
+          class="btn"
+          onclick="location.href='{% url 'backend:module_management' %}'"
+        >
+          模組管理
+        </button>
+      </div>
+      <button id="add-module-btn" class="btn" onclick="openCreateModuleModal()">
+        新增模組
+      </button>
+      <table class="module-table">
+        <thead>
+          <tr>
+            <th>模組名稱</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for module in modules %}
+          <tr>
+            <td>{{ module }}</td>
+            <td>
+              <button
+                class="delete-btn"
+                onclick="location.href='{% url 'backend:delete_module' module %}'"
+              >
+                刪除
+              </button>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div id="create-module-modal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeCreateModuleModal()">&times;</span>
+        <h2>新增模組</h2>
+        <form id="create-module-form">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="module-name">模組名稱</label>
+            <input type="text" id="module-name" name="module_name" required />
+          </div>
+          <button type="button" class="btn" onclick="createModule()">
+            新增
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      function openCreateModuleModal() {
+        document.getElementById("create-module-modal").style.display = "block";
+      }
+
+      function closeCreateModuleModal() {
+        document.getElementById("create-module-modal").style.display = "none";
+      }
+
+      function createModule() {
+        const moduleName = document.getElementById("module-name").value;
+        fetch(`/backend/create_module/`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": "{{ csrf_token }}",
+          },
+          body: JSON.stringify({ module_name: moduleName }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              location.reload();
+            } else {
+              alert("新增模組失敗");
+            }
+          });
+      }
+    </script>
+  </body>
+</html>

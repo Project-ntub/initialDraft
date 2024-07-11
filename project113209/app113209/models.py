@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, User
 from django.db import models
 import pyotp
 from django.db import migrations
@@ -66,17 +66,21 @@ class User(AbstractBaseUser, PermissionsMixin):
 class Role(models.Model):
     name = models.CharField(max_length=20, unique=True)
     users = models.ManyToManyField(User, related_name='roles')
+    is_active = models.BooleanField(default=False)
+    module = models.CharField(max_length=50, default='default')
 
     class Meta:
         db_table = 'role'
 
     def __str__(self):
-        return self.name    
+        return self.name
+
     
 class RolePermission(models.Model):
     role = models.ForeignKey(Role, on_delete=models.CASCADE)
-    permission_name = models.BooleanField(default=False)
+    permission_name = models.CharField(max_length=100, default=False)
     can_add = models.BooleanField(default=False)
+    can_query = models.BooleanField(default=False)
     can_view = models.BooleanField(default=False)
     can_edit = models.BooleanField(default=False)
     can_delete = models.BooleanField(default=False)
@@ -86,9 +90,16 @@ class RolePermission(models.Model):
 
     class Meta:
         db_table = 'rolepermission'
+        unique_together = ('role', 'permission_name')  # 添加唯一約束
 
     def __str__(self):
         return f"{self.role.name} - {self.permission_name}"
+
+class Module(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
 
 class Migration(migrations.Migration):
 

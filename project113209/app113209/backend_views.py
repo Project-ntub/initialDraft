@@ -1,7 +1,8 @@
 import logging
 import uuid
-from .models import User, Role
-from .forms import UserForm, RoleForm
+import json
+from .models import User, Role, RolePermission, Module
+from .forms import UserForm, RoleForm, RolePermissionForm
 from .validators import CustomPasswordValidator
 from datetime import timedelta
 from django.contrib.auth import get_user_model
@@ -11,6 +12,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.http import require_POST
 from django.core.mail import send_mail
 from django.core.exceptions import ValidationError
 from django.conf import settings
@@ -311,9 +313,15 @@ def assign_role(request, user_id):
 # 角色管理
 def role_management(request):
     roles = Role.objects.all()
-    return render(request, 'backend/role_management.html', {'roles': roles})
+    modules = Module.objects.all()  # 從 Module 模型獲取所有模組
+    return render(request, 'backend/role_management.html', {'roles': roles, 'modules': modules})
 
-# 創建新角色
+
+#模組管理
+def module_management(request):
+    modules = Module.objects.all()  # 假設你有一個名為 `Module` 的模型
+    return render(request, 'backend/module_management.html', {'modules': modules})
+
 def create_role(request):
     if request.method == 'POST':
         form = RoleForm(request.POST)
@@ -322,9 +330,10 @@ def create_role(request):
             return redirect('backend:role_management')
     else:
         form = RoleForm()
-    return render(request, 'backend/role_form.html', {'form': form})
+    return render(request, 'backend/role_form.html', {'form': form, 'is_edit': False})
 
-# 編輯角色
+
+
 def edit_role(request, role_id):
     role = get_object_or_404(Role, id=role_id)
     if request.method == 'POST':
@@ -332,22 +341,79 @@ def edit_role(request, role_id):
         if form.is_valid():
             form.save()
             for permission in role.rolepermission_set.all():
-                permission.can_add = request.POST.get(f'can_add_{permission.id}', False)
-                permission.can_view = request.POST.get(f'can_view_{permission.id}', False)
-                permission.can_edit = request.POST.get(f'can_edit_{permission.id}', False)
-                permission.can_delete = request.POST.get(f'can_delete_{permission.id}', False)
-                permission.can_print = request.POST.get(f'can_print_{permission.id}', False)
-                permission.can_export = request.POST.get(f'can_export_{permission.id}', False)
-                permission.can_maintain = request.POST.get(f'can_maintain_{permission.id}', False)
+                permission.can_add = 'can_add_' + str(permission.id) in request.POST
+                permission.can_query = 'can_query_' + str(permission.id) in request.POST
+                permission.can_view = 'can_view_' + str(permission.id) in request.POST
+                permission.can_edit = 'can_edit_' + str(permission.id) in request.POST
+                permission.can_delete = 'can_delete_' + str(permission.id) in request.POST
+                permission.can_print = 'can_print_' + str(permission.id) in request.POST
+                permission.can_export = 'can_export_' + str(permission.id) in request.POST
+                permission.can_maintain = 'can_maintain_' + str(permission.id) in request.POST
                 permission.save()
             return redirect('backend:role_management')
     else:
         form = RoleForm(instance=role)
         role_permissions = role.rolepermission_set.all()
-    return render(request, 'backend/role_form.html', {'form': form, 'role_permissions': role_permissions})
+    return render(request, 'backend/role_form.html', {
+        'form': form,
+        'role_permissions': role_permissions,
+        'is_edit': True,
+        'role': role  # 確保傳遞role對象到模板
+    })
+
+
 
 # 刪除角色
 def delete_role(request, role_id):
     role = get_object_or_404(Role, id=role_id)
     role.delete()
     return redirect('backend:role_management')
+
+def toggle_role_status(request, role_id):
+    role = get_object_or_404(Role, id=role_id)
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        role.is_active = data['is_active']
+        role.save()
+        return JsonResponse({'success': True})
+    return JsonResponse({'success': False})
+
+def get_modules(request):
+    modules = Role.objects.values_list('module', flat=True).distinct()
+    return JsonResponse({'modules': list(modules)})
+
+@csrf_protect
+def create_module(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        module_name = data.get('module_name')
+        if module_name:
+            Module.objects.create(name=module_name)  # 確保這裡只創建模組
+            return JsonResponse({'success': True})
+        return JsonResponse({'success': False, 'message': '模組名稱為必填項'})
+    return JsonResponse({'success': False, 'message': '無效的請求方法'})
+
+
+def delete_module(request, module_name):
+    roles = Role.objects.filter(module=module_name)
+    roles.delete()
+    return redirect('backend:role_management')
+
+def add_permission(request, role_id):
+    role = get_object_or_404(Role, id=role_id)
+    if request.method == 'POST':
+        form = RolePermissionForm(request.POST)
+        if form.is_valid():
+            permission = form.save(commit=False)
+            permission.role = role
+            permission.save()
+            return redirect('backend:edit_role', role_id=role_id)
+    else:
+        form = RolePermissionForm()
+    return render(request, 'backend/add_permission.html', {'form': form, 'role': role})
+
+def delete_permission(request, permission_id):
+    permission = get_object_or_404(RolePermission, id=permission_id)
+    role_id = permission.role.id
+    permission.delete()
+    return redirect('backend:edit_role', role_id=role_id)
