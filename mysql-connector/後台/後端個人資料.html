@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>個人資料</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .profile-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        .profile-container h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        .profile-container p {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+        .profile-container label {
+            display: block;
+            margin: 5px 0;
+        }
+        .profile-container input {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .profile-container button {
+            padding: 10px 20px;
+            margin-right: 10px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .profile-container button:hover {
+            background-color: #2980b9;
+        }
+        .profile-container .logout-btn {
+            background-color: #e74c3c;
+        }
+        .profile-container .logout-btn:hover {
+            background-color: #c0392b;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 8px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <h2>個人資料</h2>
+        <label for="name">姓名：</label>
+        <input type="text" id="name" value="John Doe">
+        
+        <label for="username">帳號：</label>
+        <input type="text" id="username" value="johndoe123">
+        
+        <label for="department">部門：</label>
+        <input type="text" id="department" value="技術部">
+        
+        <label for="position">職位：</label>
+        <input type="text" id="position" value="系統管理員">
+        
+        <label for="phone">電話：</label>
+        <input type="text" id="phone" value="0912345678">
+        
+        <label for="email">電子郵件：</label>
+        <input type="text" id="email" value="johndoe@example.com">
+        
+        <label for="created">建立時間：</label>
+        <input type="text" id="created" value="2023-01-01" disabled>
+
+        <button onclick="openModal()">編輯</button>
+        <button class="logout-btn" onclick="logout()">登出</button>
+    </div>
+
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>編輯個人資料</h2>
+            <label for="modal-name">姓名：</label>
+            <input type="text" id="modal-name" value="John Doe">
+            
+            <label for="modal-username">帳號：</label>
+            <input type="text" id="modal-username" value="johndoe123">
+            
+            <label for="modal-department">部門：</label>
+            <input type="text" id="modal-department" value="技術部">
+            
+            <label for="modal-position">職位：</label>
+            <input type="text" id="modal-position" value="系統管理員">
+            
+            <label for="modal-phone">電話：</label>
+            <input type="text" id="modal-phone" value="0912345678">
+            
+            <label for="modal-email">電子郵件：</label>
+            <input type="text" id="modal-email" value="johndoe@example.com">
+
+            <button onclick="saveProfile()">保存</button>
+        </div>
+    </div>
+
+    <script>
+        function openModal() {
+            document.getElementById("editModal").style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById("editModal").style.display = "none";
+        }
+
+        function saveProfile() {
+            var name = document.getElementById("modal-name").value;
+            var username = document.getElementById("modal-username").value;
+            var department = document.getElementById("modal-department").value;
+            var position = document.getElementById("modal-position").value;
+            var phone = document.getElementById("modal-phone").value;
+            var email = document.getElementById("modal-email").value;
+
+            document.getElementById("name").value = name;
+            document.getElementById("username").value = username;
+            document.getElementById("department").value = department;
+            document.getElementById("position").value = position;
+            document.getElementById("phone").value = phone;
+            document.getElementById("email").value = email;
+
+            closeModal();
+            alert("個人資料已更新");
+        }
+
+        function logout() {
+            window.location.href = '登出成功.html';
+        }
+    </script>
+</body>
+</html>
