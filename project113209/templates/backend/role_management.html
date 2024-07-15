@@ -13,19 +13,22 @@
   <body>
     <div class="container">
       <div class="header">
-        <button
-          class="btn"
-          onclick="location.href='{% url 'backend:role_management' %}'"
-        >
-          角色管理
-        </button>
-        <button
-          class="btn"
-          onclick="location.href='{% url 'backend:module_management' %}'"
-        >
-          模組管理
-        </button>
+        <div>
+          <button
+            class="btn {% if current_page == 'role_management' %}active{% endif %}"
+            onclick="location.href='{% url 'backend:role_management' %}'"
+          >
+            角色
+          </button>
+          <button
+            class="btn {% if current_page == 'module_management' %}active{% endif %}"
+            onclick="location.href='{% url 'backend:module_management' %}'"
+          >
+            模組
+          </button>
+        </div>
       </div>
+      <h2>角色管理</h2>
       <button id="add-role-btn" class="btn" onclick="openCreateRoleModal()">
         新增角色
       </button>
@@ -43,6 +46,7 @@
             <th>角色狀態</th>
             <th>用戶數</th>
             <th>角色成員</th>
+            <th>模組</th>
             <th>操作</th>
           </tr>
         </thead>
@@ -75,6 +79,7 @@
                 {% endfor %}
               </select>
             </td>
+            <td>{{ role.module }}</td>
             <td>
               <button
                 class="permissions-btn"
@@ -107,7 +112,11 @@
           </div>
           <div class="form-group">
             <label for="role-module">模組</label>
-            <input type="text" id="role-module" name="module" required />
+            <select id="role-module" name="module" required>
+              {% for module in modules %}
+              <option value="{{ module.id }}">{{ module.name }}</option>
+              {% endfor %}
+            </select>
           </div>
           <button type="submit" class="btn">新增</button>
         </form>

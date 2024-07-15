@@ -26,6 +26,21 @@ body {
     flex-wrap: wrap;
 }
 
+.pending-approval-btn {
+    background-color: #4CAF50;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: white;
+    text-align: center;
+}
+
+.pending-approval-btn:hover {
+    background-color: #45a049;
+}
+
 .header label, .header select, .header input {
     margin-right: 10px;
     margin-bottom: 10px;

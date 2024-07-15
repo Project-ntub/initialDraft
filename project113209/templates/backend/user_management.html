@@ -6,75 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>用戶管理</title>
     <link rel="stylesheet" href="{% static 'backend/css/user_management.css' %}">
-    <style>
-        .container {
-            margin: 0 auto;
-            padding: 20px;
-            max-width: 1200px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .header label, .header select, .header input {
-            margin-right: 10px;
-        }
-        .user-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .user-table th, .user-table td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        .user-table th {
-            background-color: #f2f2f2;
-        }
-        .user-table tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        .user-table tr:hover {
-            background-color: #ddd;
-        }
-        .edit-btn, .delete-btn, .Assigning-Roles-btn {
-            padding: 5px 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            color: white;
-            text-align: center;
-            text-decoration: none;
-        }
-        .edit-btn {
-            background-color: #ffa500;
-        }
-        .edit-btn:hover {
-            background-color: #e59400;
-        }
-        .delete-btn {
-            background-color: #f44336;
-        }
-        .delete-btn:hover {
-            background-color: #d32f2f;
-        }
-        .Assigning-Roles-btn {
-            background-color: #2196F3;
-        }
-        .Assigning-Roles-btn:hover {
-            background-color: #1976D2;
-        }
-    </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <button id="pending-approval-btn" class="btn" onclick="location.href='{% url 'backend:pending_list' %}'">待審核</button>
+            <h2>用戶管理</h2>
+            <button id="pending-approval-btn" class="pending-approval-btn" onclick="location.href='{% url 'backend:pending_list' %}'">待審核</button>
+        </div>
+        <div class="filter-section">
             <label for="sort-select">排序:</label>
             <select id="sort-select" onchange="applyFilters()">
                 <option value="name" {% if sort_by == 'name' %}selected{% endif %}>姓名</option>

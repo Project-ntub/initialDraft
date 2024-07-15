@@ -14,18 +14,19 @@
     <div class="container">
       <div class="header">
         <button
-          class="btn"
+          class="btn {% if current_page == 'role_management' %}active{% else %}inactive{% endif %}"
           onclick="location.href='{% url 'backend:role_management' %}'"
         >
-          角色管理
+          角色
         </button>
         <button
-          class="btn"
+          class="btn {% if current_page == 'module_management' %}active{% else %}inactive{% endif %}"
           onclick="location.href='{% url 'backend:module_management' %}'"
         >
-          模組管理
+          模組
         </button>
       </div>
+      <h2>模組管理</h2>
       <button id="add-module-btn" class="btn" onclick="openCreateModuleModal()">
         新增模組
       </button>
@@ -39,11 +40,17 @@
         <tbody>
           {% for module in modules %}
           <tr>
-            <td>{{ module }}</td>
+            <td>{{ module.name }}</td>
             <td>
               <button
+                class="edit-btn"
+                onclick="openEditModuleModal('{{ module.id }}', '{{ module.name }}')"
+              >
+                編輯
+              </button>
+              <button
                 class="delete-btn"
-                onclick="location.href='{% url 'backend:delete_module' module %}'"
+                onclick="location.href='{% url 'backend:delete_module' module.id %}'"
               >
                 刪除
               </button>
@@ -67,6 +74,27 @@
           <button type="button" class="btn" onclick="createModule()">
             新增
           </button>
+        </form>
+      </div>
+    </div>
+
+    <div id="edit-module-modal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeEditModuleModal()">&times;</span>
+        <h2>編輯模組</h2>
+        <form id="edit-module-form">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="edit-module-name">模組名稱</label>
+            <input
+              type="text"
+              id="edit-module-name"
+              name="module_name"
+              required
+            />
+          </div>
+          <input type="hidden" id="edit-module-id" name="module_id" />
+          <button type="button" class="btn" onclick="editModule()">保存</button>
         </form>
       </div>
     </div>
@@ -96,6 +124,40 @@
               location.reload();
             } else {
               alert("新增模組失敗");
+            }
+          });
+      }
+
+      function openEditModuleModal(id, name) {
+        document.getElementById("edit-module-id").value = id;
+        document.getElementById("edit-module-name").value = name;
+        document.getElementById("edit-module-modal").style.display = "block";
+      }
+
+      function closeEditModuleModal() {
+        document.getElementById("edit-module-modal").style.display = "none";
+      }
+
+      function editModule() {
+        const moduleId = document.getElementById("edit-module-id").value;
+        const moduleName = document.getElementById("edit-module-name").value;
+        fetch(`/backend/edit_module/`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": "{{ csrf_token }}",
+          },
+          body: JSON.stringify({
+            module_id: moduleId,
+            module_name: moduleName,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              location.reload();
+            } else {
+              alert("編輯模組失敗");
             }
           });
       }

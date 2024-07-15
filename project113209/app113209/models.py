@@ -1,7 +1,6 @@
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, User
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 import pyotp
-from django.db import migrations
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, username, password=None, **extra_fields):
@@ -27,7 +26,6 @@ class CustomUserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=100, unique=True)
     email = models.EmailField(unique=True)
-    password = models.CharField(max_length=100)
     phone = models.CharField(max_length=15, unique=True, null=False, blank=False, default='0000000000')
     verification_code = models.CharField(max_length=6, unique=True, null=True, blank=True)
     expiry_time = models.DateTimeField(null=True, blank=True)
@@ -42,6 +40,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=False)  # 确保这里字段名正确
     otp_secret = models.CharField(max_length=32, blank=True, null=True)
     date_joined = models.DateTimeField(auto_now_add=True)
+    is_deleted = models.BooleanField(default=False)  # Add this field for soft delete
 
     objects = CustomUserManager()
 
@@ -62,12 +61,23 @@ class User(AbstractBaseUser, PermissionsMixin):
     def verify_otp(self, otp):
         totp = pyotp.TOTP(self.otp_secret)
         return totp.verify(otp)
-    
+
+class Module(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    is_deleted = models.BooleanField(default=False)  # Add this field for soft delete
+
+    class Meta:
+        db_table = 'module'
+
+    def __str__(self):
+        return self.name
+
 class Role(models.Model):
     name = models.CharField(max_length=20, unique=True)
     users = models.ManyToManyField(User, related_name='roles')
     is_active = models.BooleanField(default=False)
-    module = models.CharField(max_length=50, default='default')
+    module = models.ForeignKey(Module, on_delete=models.CASCADE)
+    is_deleted = models.BooleanField(default=False)  # Add this field for soft delete
 
     class Meta:
         db_table = 'role'
@@ -75,7 +85,6 @@ class Role(models.Model):
     def __str__(self):
         return self.name
 
-    
 class RolePermission(models.Model):
     role = models.ForeignKey(Role, on_delete=models.CASCADE)
     permission_name = models.CharField(max_length=100, default=False)
@@ -87,6 +96,7 @@ class RolePermission(models.Model):
     can_print = models.BooleanField(default=False)
     can_export = models.BooleanField(default=False)
     can_maintain = models.BooleanField(default=False)
+    is_deleted = models.BooleanField(default=False)  # Add this field for soft delete
 
     class Meta:
         db_table = 'rolepermission'
@@ -94,19 +104,3 @@ class RolePermission(models.Model):
 
     def __str__(self):
         return f"{self.role.name} - {self.permission_name}"
-
-class Module(models.Model):
-    name = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.name
-
-class Migration(migrations.Migration):
-
-    dependencies = [
-        ('app113209', '上一個遷移文件名稱'),  # 替換為實際的上一個遷移文件名稱
-    ]
-
-    operations = [
-        # 在這裡記錄當前狀態，但不進行任何實際變更
-    ]

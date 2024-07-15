@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="{% static 'backend/css/management.css' %}" />
   </head>
   <body>
+    <div class="hamburger-menu" onclick="toggleSidebar()">
+      <div class="hamburger-icon">☰</div>
+    </div>
     <div class="sidebar">
       <h2>管理介面</h2>
       <a href="{% url 'backend:dashboard' %}" data-frame="dashboard"
@@ -22,47 +25,37 @@
       <a href="{% url 'backend:history' %}" data-frame="history">歷史紀錄</a>
       <button class="logout-btn">登出</button>
     </div>
-
-    <div class="main-content">
-      <h1>歡迎來到管理介面</h1>
-      <p>請選擇一個選項來管理。</p>
-      <iframe
-        id="dashboard"
-        src="{% url 'backend:dashboard' %}"
-        style="display: none"
-      ></iframe>
-      <iframe
-        id="user-management"
-        src="{% url 'backend:user_management' %}"
-        style="display: none"
-      ></iframe>
-      <iframe
-        id="role-management"
-        src="{% url 'backend:role_management' %}"
-        style="display: none"
-      ></iframe>
-      <iframe
-        id="history"
-        src="{% url 'backend:history' %}"
-        style="display: none"
-      ></iframe>
+    <div class="main-content" id="main-content">
+      <h1 id="welcome-title">歡迎來到管理介面</h1>
+      <p id="welcome-description">請選擇一個選項來管理。</p>
     </div>
 
     <script>
-      document.querySelectorAll('.sidebar a').forEach(function(link) {
-          link.addEventListener('click', function(event) {
-              event.preventDefault();
-              document.querySelectorAll('.main-content iframe').forEach(function(iframe) {
-                  iframe.style.display = 'none'; // 隱藏所有iframe
-              });
-              var frameId = this.getAttribute('data-frame');
-              document.getElementById(frameId).style.display = 'block'; // 顯示對應的iframe
-          });
-      });
+        function toggleSidebar() {
+          var sidebar = document.querySelector('.sidebar');
+          var mainContent = document.querySelector('.main-content');
+          var hamburgerIcon = document.querySelector('.hamburger-icon');
+          sidebar.classList.toggle('active');
+          mainContent.classList.toggle('shifted');
+          if (sidebar.classList.contains('active')) {
+              hamburgerIcon.textContent = '✕';
+          } else {
+              hamburgerIcon.textContent = '☰';
+          }
+      }
 
-      document.querySelector('.logout-btn').addEventListener('click', function() {
-          window.location.href = '{% url 'backend:logout_success' %}'; // 跳轉到登出頁面
-      });
+        document.querySelectorAll('.sidebar a').forEach(function(link) {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+                var frameId = this.getAttribute('data-frame');
+                var mainContent = document.getElementById('main-content');
+                mainContent.innerHTML = '<iframe src="' + this.href + '" style="width: 100%; height: 100vh; border: none;"></iframe>';
+            });
+        });
+
+        document.querySelector('.logout-btn').addEventListener('click', function() {
+            window.location.href = '{% url 'backend:logout_success' %}'; // 跳轉到登出頁面
+        });
     </script>
   </body>
 </html>

@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.views import LoginView, LogoutView
 from django.utils import timezone
 from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.views.decorators.http import require_POST
 from django.core.mail import send_mail
 from django.core.exceptions import ValidationError
@@ -214,7 +214,7 @@ def user_management(request):
     sort_by = request.GET.get('sort_by', '')
     department_filter = request.GET.get('department', '')
 
-    active_users = User.objects.filter(is_active=True)
+    active_users = User.objects.filter(is_active=True, is_deleted=False)
 
     if query:
         active_users = active_users.filter(
@@ -269,7 +269,8 @@ def update_user_department_and_position(request, user_id):
 # 刪除用戶
 def delete_user(request, user_id):
     user = get_object_or_404(User, id=user_id)
-    user.delete()
+    user.is_deleted = True
+    user.save()
     return redirect('backend:user_management')
 
 # 編輯用戶
@@ -312,17 +313,24 @@ def assign_role(request, user_id):
 
 # 角色管理
 def role_management(request):
-    roles = Role.objects.all()
-    modules = Module.objects.all()  # 從 Module 模型獲取所有模組
-    return render(request, 'backend/role_management.html', {'roles': roles, 'modules': modules})
-
+    roles = Role.objects.filter(is_deleted=False)
+    modules = Module.objects.filter(is_deleted=False)
+    return render(request, 'backend/role_management.html', {
+        'roles': roles,
+        'modules': modules,
+        'current_page': 'role_management'
+    })
 
 #模組管理
 def module_management(request):
-    modules = Module.objects.all()  # 假設你有一個名為 `Module` 的模型
-    return render(request, 'backend/module_management.html', {'modules': modules})
+    modules = Module.objects.filter(is_deleted=False)
+    return render(request, 'backend/module_management.html', {
+        'modules': modules,
+        'current_page': 'module_management'
+    })
 
 def create_role(request):
+    modules = Module.objects.all()  # 確保從數據庫中獲取所有模組
     if request.method == 'POST':
         form = RoleForm(request.POST)
         if form.is_valid():
@@ -330,17 +338,18 @@ def create_role(request):
             return redirect('backend:role_management')
     else:
         form = RoleForm()
-    return render(request, 'backend/role_form.html', {'form': form, 'is_edit': False})
-
+    return render(request, 'backend/role_form.html', {'form': form, 'is_edit': False, 'modules': modules})
 
 
 def edit_role(request, role_id):
     role = get_object_or_404(Role, id=role_id)
+    if role.is_deleted:
+        return redirect('backend:role_management')
     if request.method == 'POST':
         form = RoleForm(request.POST, instance=role)
         if form.is_valid():
             form.save()
-            for permission in role.rolepermission_set.all():
+            for permission in role.rolepermission_set.filter(is_deleted=False):
                 permission.can_add = 'can_add_' + str(permission.id) in request.POST
                 permission.can_query = 'can_query_' + str(permission.id) in request.POST
                 permission.can_view = 'can_view_' + str(permission.id) in request.POST
@@ -353,20 +362,20 @@ def edit_role(request, role_id):
             return redirect('backend:role_management')
     else:
         form = RoleForm(instance=role)
-        role_permissions = role.rolepermission_set.all()
+        role_permissions = role.rolepermission_set.filter(is_deleted=False)
     return render(request, 'backend/role_form.html', {
         'form': form,
         'role_permissions': role_permissions,
         'is_edit': True,
-        'role': role  # 確保傳遞role對象到模板
+        'role': role
     })
-
 
 
 # 刪除角色
 def delete_role(request, role_id):
     role = get_object_or_404(Role, id=role_id)
-    role.delete()
+    role.is_deleted = True
+    role.save()
     return redirect('backend:role_management')
 
 def toggle_role_status(request, role_id):
@@ -394,10 +403,25 @@ def create_module(request):
     return JsonResponse({'success': False, 'message': '無效的請求方法'})
 
 
-def delete_module(request, module_name):
-    roles = Role.objects.filter(module=module_name)
-    roles.delete()
-    return redirect('backend:role_management')
+def delete_module(request, module_id):
+    module = get_object_or_404(Module, id=module_id)
+    module.is_deleted = True
+    module.save()
+    return redirect('backend:module_management')
+
+@csrf_exempt
+def edit_module(request):
+    if request.method == 'POST':
+        data = josn.loads(request.body)
+        try:
+            module = Module.objects.get(id=data['module_id'])
+            module.name = data['module_name']
+            module.save()
+            return JsonResponse({'success': True})
+        except Module.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Module not found'})
+        return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
 
 def add_permission(request, role_id):
     role = get_object_or_404(Role, id=role_id)
@@ -414,6 +438,7 @@ def add_permission(request, role_id):
 
 def delete_permission(request, permission_id):
     permission = get_object_or_404(RolePermission, id=permission_id)
+    permission.is_deleted = True
+    permission.save()
     role_id = permission.role.id
-    permission.delete()
     return redirect('backend:edit_role', role_id=role_id)

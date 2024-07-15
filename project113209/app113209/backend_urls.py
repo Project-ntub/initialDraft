@@ -32,7 +32,7 @@ urlpatterns = [
     path('assign_role/<int:user_id>/', backend_views.assign_role, name='assign_role'), 
     path('get_modules/', backend_views.get_modules, name='get_modules'),
     path('create_module/', backend_views.create_module, name='create_module'),
-    path('delete_module/<str:module_name>/', backend_views.delete_module, name='delete_module'),
-    path('add_permission/<int:role_id>/', backend_views.add_permission, name='add_permission'),
+    path('delete_module/<int:module_id>/', backend_views.delete_module, name='delete_module'),    path('add_permission/<int:role_id>/', backend_views.add_permission, name='add_permission'),
+    path('edit_module/', backend_views.edit_module, name='edit_module'),
     path('delete_permission/<int:permission_id>/', backend_views.delete_permission, name='delete_permission'),
 ]
