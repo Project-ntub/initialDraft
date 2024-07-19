@@ -1,4 +1,3 @@
-# backend_views.py
 import logging
 import uuid
 import json
@@ -20,11 +19,13 @@ from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.db.models import Q
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 logger = logging.getLogger(__name__)
 
 User = get_user_model()
-
 
 class BackendLoginView(LoginView):
     template_name = 'backend/login.html'
@@ -44,12 +45,11 @@ class BackendLoginView(LoginView):
         except json.JSONDecodeError:
             return JsonResponse({'error': '無效的數據格式'}, status=400)
 
-
 def history(request):
     return render(request, 'backend/history.html')
 
 class BackendLogoutView(LogoutView):
-    next_page = 'backend:logout_success'  # 登出后重定向到 logout_success 页面
+    next_page = 'backend:logout_success'
 
 def logout_success(request):
     return render(request, 'backend/logout_success.html')
@@ -139,9 +139,8 @@ def register(request):
             user.save()
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             logger.info(f"User {username} registered successfully")
-            return redirect('backend:registration_success')  # 重定向到註冊成功頁面
+            return redirect('backend:registration_success')
         except User.DoesNotExist:
-            # 如果用戶不存在,則創建一個新用戶
             user = User.objects.create(email=email, username=username, phone=phone)
             user.set_password(password)
             user.verification_code = verification_code
@@ -149,7 +148,7 @@ def register(request):
             user.save()
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             logger.info(f"User {username} registered successfully")
-            return redirect('backend:registration_success')  # 重定向到註冊成功頁面
+            return redirect('backend:registration_success')
 
     return render(request, 'backend/register.html')
 
@@ -157,26 +156,16 @@ def registration_success(request):
     return render(request, 'backend/registration_success.html')
 
 def approve_user(request, user_id):
-    try:
-        user = User.objects.get(id=user_id)
-        user.is_approved = True
-        user.save()
-        return redirect('approval_success')
-    except User.DoesNotExist:
-        return redirect('approval_failure')
-
-def approval_success(request):
-    return render(request, 'backend/approval_success.html')
-
-def approval_failure(request):
-    return render(request, 'backend/approval_failure.html')
+    user = get_object_or_404(User, id=user_id)
+    user.is_active = True
+    user.save()
+    return JsonResponse({'success': True})
 
 def forgot_password(request):
     if request.method == 'POST':
         email = request.POST['email']
         try:
             user = User.objects.get(email=email)
-            # Generate and send password reset link
             return redirect('password_reset_done')
         except User.DoesNotExist:
             return redirect('password_reset_failed')
@@ -191,29 +180,33 @@ class AllowIframeMiddleware:
         response["X-Frame-Options"] = "ALLOWALL"
         return response
 
-
-# 審核用戶列表
 def pending_list(request):
-    pending_users = User.objects.filter(is_active=False)
-    return render(request, 'backend/pending_list.html', {'pending_users': pending_users})
+    return render(request, 'backend/pending_list.html')
 
-# 審核用戶
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_pending_users(request):
+    pending_users = User.objects.filter(is_active=False, is_deleted=False)
+    data = list(pending_users.values())
+    return JsonResponse(data, safe=False)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def approve_user(request, user_id):
-    user = get_object_or_404(User, id=user_id)
-    user.is_active = True  # 開通用戶
-    user.save()
-    return redirect('backend:pending_list')
-
+    try:
+        user = User.objects.get(id=user_id, is_active=False)
+        user.is_active = True
+        user.save()
+        return JsonResponse({'success': True})
+    except User.DoesNotExist:
+        return JsonResponse({'error': 'User not found'}, status=404)
 
 def management(request):
     return render(request, 'backend/management.html')
 
-
 def dashboard(request):
     return render(request, 'backend/dashboard.html')
 
-
-# 用戶管理
 def user_management(request):
     query = request.GET.get('q', '')
     sort_by = request.GET.get('sort_by', '')
@@ -226,10 +219,10 @@ def user_management(request):
             Q(username__icontains=query) |
             Q(email__icontains=query) |
             Q(phone__icontains=query) |
-            Q(department_id__icontains=query) |
-            Q(position_id__icontains=query)
+            Q(department_id__icontains(query)) |
+            Q(position_id__icontains(query))
         )
-    
+
     if department_filter and department_filter != 'all':
         active_users = active_users.filter(department_id=department_filter)
 
@@ -259,7 +252,6 @@ def user_management(request):
         'department_filter': department_filter,
     })
 
-# 更新用戶信息，包括部門和職位
 def update_user_department_and_position(request, user_id):
     if request.method == 'POST':
         user = get_object_or_404(User, id=user_id)
@@ -271,14 +263,13 @@ def update_user_department_and_position(request, user_id):
         user.save()
         return redirect('backend:user_management')
     return redirect('backend:user_management')
-# 刪除用戶
+
 def delete_user(request, user_id):
     user = get_object_or_404(User, id=user_id)
     user.is_deleted = True
     user.save()
     return redirect('backend:user_management')
 
-# 編輯用戶
 def edit_user(request, user_id):
     user = get_object_or_404(User, id=user_id)
     departments = ["銷售部", "人力資源部", "資訊部", "財務部", "業務部"]
@@ -292,16 +283,19 @@ def edit_user(request, user_id):
         form = UserForm(instance=user)
     return render(request, 'backend/edit_user.html', {'form': form, 'user': user, 'departments': departments, 'positions': positions})
 
-def get_user(request, user_id):
-    user = get_object_or_404(User, id=user_id)
-    data = {
-        'username': user.username,
-        'email': user.email,
-        'phone': user.phone,
-        'department_id': user.department_id,
-        'position_id': user.position_id 
-    }
-    return JsonResponse(data)
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_users(request):
+    users = User.objects.filter(is_active=True, is_deleted=False)
+    data = list(users.values())
+    return JsonResponse(data, safe=False)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_roles(request):
+    roles = Role.objects.filter(is_deleted=False)
+    data = list(roles.values())
+    return JsonResponse(data, safe=False)
 
 def get_roles_by_module(request, module_id):
     roles = Role.objects.filter(module_id=module_id, is_deleted=False).values('id', 'name')
@@ -330,8 +324,6 @@ def assign_role_and_module(request, user_id):
     }
     return render(request, 'backend/assign_role_and_module.html', context)
 
-
-# 角色管理
 def role_management(request):
     roles = Role.objects.filter(is_deleted=False)
     modules = Module.objects.filter(is_deleted=False)
@@ -341,7 +333,6 @@ def role_management(request):
         'current_page': 'role_management'
     })
 
-#模組管理
 def module_management(request):
     modules = Module.objects.filter(is_deleted=False)
     return render(request, 'backend/module_management.html', {
@@ -350,7 +341,7 @@ def module_management(request):
     })
 
 def create_role(request):
-    modules = Module.objects.all()  # 確保從數據庫中獲取所有模組
+    modules = Module.objects.all()
     if request.method == 'POST':
         form = RoleForm(request.POST)
         if form.is_valid():
@@ -359,7 +350,6 @@ def create_role(request):
     else:
         form = RoleForm()
     return render(request, 'backend/role_form.html', {'form': form, 'is_edit': False, 'modules': modules})
-
 
 def edit_role(request, role_id):
     role = get_object_or_404(Role, id=role_id)
@@ -390,8 +380,6 @@ def edit_role(request, role_id):
         'role': role
     })
 
-
-# 刪除角色
 def delete_role(request, role_id):
     role = get_object_or_404(Role, id=role_id)
     role.is_deleted = True
@@ -417,11 +405,10 @@ def create_module(request):
         data = json.loads(request.body)
         module_name = data.get('module_name')
         if module_name:
-            Module.objects.create(name=module_name)  # 確保這裡只創建模組
+            Module.objects.create(name=module_name)
             return JsonResponse({'success': True})
         return JsonResponse({'success': False, 'message': '模組名稱為必填項'})
     return JsonResponse({'success': False, 'message': '無效的請求方法'})
-
 
 def delete_module(request, module_id):
     module = get_object_or_404(Module, id=module_id)
@@ -429,7 +416,7 @@ def delete_module(request, module_id):
     module.save()
     return redirect('backend:module_management')
 
-# @csrf_exempt
+@csrf_exempt
 def edit_module(request):
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -440,8 +427,7 @@ def edit_module(request):
             return JsonResponse({'success': True})
         except Module.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'Module not found'})
-        return JsonResponse({'success': False, 'error': 'Invalid request method'})
-
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
 def add_permission(request, role_id):
     role = get_object_or_404(Role, id=role_id)

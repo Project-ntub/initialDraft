@@ -1,4 +1,3 @@
-# backend_urls.py
 from django.urls import path, include
 from . import backend_views
 
@@ -19,7 +18,6 @@ urlpatterns = [
     path('update_user/<int:user_id>/', backend_views.update_user_department_and_position, name='update_user_department_and_position'),
     path('delete_user/<int:user_id>/', backend_views.delete_user, name='delete_user'),
     path('edit_user/<int:user_id>/', backend_views.edit_user, name='edit_user'),
-    path('get_user/<int:user_id>/', backend_views.get_user, name='get_user'),
     path('role_management/', backend_views.role_management, name='role_management'),
     path('module_management/', backend_views.module_management, name='module_management'),
     path('toggle_role_status/<int:role_id>/', backend_views.toggle_role_status, name='toggle_role_status'),
@@ -38,4 +36,8 @@ urlpatterns = [
     path('edit_module/', backend_views.edit_module, name='edit_module'),
     path('delete_permission/<int:permission_id>/', backend_views.delete_permission, name='delete_permission'),
     path('api/', include('app113209.api_urls')),  # 包含 API 路由
+    path('api/roles/', backend_views.get_roles, name='get_roles'),
+    path('api/users/', backend_views.get_users, name='get_users'),
+    path('api/pending_users/', backend_views.get_pending_users, name='get_pending_users'), # Ensure this endpoint exists
+    path('api/approve_user/<int:user_id>/', backend_views.approve_user, name='api_approve_user'), # Ensure this endpoint exists
 ]

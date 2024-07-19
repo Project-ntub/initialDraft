@@ -29,6 +29,7 @@
 </template>
 
 <script>
+// import '../assets/Dashboard.css';
 import { ref, onMounted } from 'vue';
 import { Chart, registerables } from 'chart.js';
 

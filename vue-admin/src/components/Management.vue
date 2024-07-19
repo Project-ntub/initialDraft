@@ -24,14 +24,16 @@
 </template>
 
 <script>
+// import '../assets/Management.css';
 import { ref, watch } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 export default {
   name: 'AppManagement',
   setup() {
     const isSidebarActive = ref(false);
     const route = useRoute();
+    const router = useRouter();
     const hasRouteComponent = ref(false);
 
     watch(route, (newRoute) => {
@@ -43,8 +45,7 @@ export default {
     };
 
     const logout = () => {
-      // 這裡可以實現登出邏輯
-      this.$router.push('/login');
+      router.push('/login');
     };
 
     return {
@@ -58,96 +59,95 @@ export default {
 </script>
 
 <style scoped>
-/* 添加CSS樣式 */
 body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  height: 100vh;
-  background-color: #f4f4f4;
-}
-
-.hamburger-menu {
-  position: fixed;
-  top: 10px;
-  left: 10px;
-  z-index: 1000;
-  cursor: pointer;
-}
-
-.hamburger-icon {
-  font-size: 30px;
-}
-
-.sidebar {
-  width: 250px;
-  background-color: #333;
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding-top: 20px;
-  position: fixed;
-  top: 0;
-  left: -250px;
-  height: 100%;
-  transition: left 0.3s ease;
-}
-
-.sidebar.active {
-  left: 0;
-}
-
-.sidebar h2 {
-  margin-left: 20px;
-  margin-bottom: 20px;
-}
-
-.sidebar a {
-  text-decoration: none;
-  color: #fff;
-  margin: 10px 0;
-  padding: 10px 20px;
-  width: 100%;
-  text-align: left;
-  background-color: #333;
-  border-radius: 0;
-  display: block;
-  transition: background-color 0.3s;
-  box-sizing: border-box;
-}
-
-.sidebar a:hover {
-  background-color: #444;
-}
-
-.main-content {
-  flex: 1;
-  padding: 60px 20px 20px 20px;
-  margin-left: 0;
-  transition: margin-left 0.3s ease;
-}
-
-.main-content.shifted {
-  margin-left: 250px;
-}
-
-.logout-btn {
-  margin-top: auto;
-  margin-bottom: 20px;
-  padding: 10px 20px;
-  background-color: #e74c3c;
-  border: none;
-  border-radius: 4px;
-  color: #fff;
-  cursor: pointer;
-  width: 100%;
-  text-align: left;
-  box-sizing: border-box;
-}
-
-.logout-btn:hover {
-  background-color: #c0392b;
-}
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    height: 100vh;
+    background-color: #f4f4f4;
+  }
+  
+  .hamburger-menu {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 1000;
+    cursor: pointer;
+  }
+  
+  .hamburger-icon {
+    font-size: 30px;
+  }
+  
+  .sidebar {
+    width: 250px;
+    background-color: #333;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-top: 20px;
+    position: fixed;
+    top: 0;
+    left: -250px;
+    height: 100%;
+    transition: left 0.3s ease;
+  }
+  
+  .sidebar.active {
+    left: 0;
+  }
+  
+  .sidebar h2 {
+    margin-left: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .sidebar a {
+    text-decoration: none;
+    color: #fff;
+    margin: 10px 0;
+    padding: 10px 20px;
+    width: 100%;
+    text-align: left;
+    background-color: #333;
+    border-radius: 0;
+    display: block;
+    transition: background-color 0.3s;
+    box-sizing: border-box;
+  }
+  
+  .sidebar a:hover {
+    background-color: #444;
+  }
+  
+  .main-content {
+    flex: 1;
+    padding: 60px 20px 20px 20px;
+    margin-left: 0;
+    transition: margin-left 0.3s ease;
+  }
+  
+  .main-content.shifted {
+    margin-left: 250px;
+  }
+  
+  .logout-btn {
+    margin-top: auto;
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    background-color: #e74c3c;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    box-sizing: border-box;
+  }
+  
+  .logout-btn:hover {
+    background-color: #c0392b;
+  }
 </style>

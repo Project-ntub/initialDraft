@@ -1,9 +1,14 @@
+// src/axios.js
 import axios from 'axios';
 
 axios.defaults.baseURL = 'http://localhost:8000'; // Django 服务器的基础 URL
 axios.defaults.withCredentials = true; // 允许跨域请求时携带凭证
 
 axios.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers['Authorization'] = `Bearer ${token}`;
+  }
   const csrfToken = getCookie('csrftoken');
   if (csrfToken) {
     config.headers['X-CSRFToken'] = csrfToken;
