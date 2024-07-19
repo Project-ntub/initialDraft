@@ -1,0 +1,43 @@
+/* 设置 profile-page 的样式，使其左右排列 */
+.profile-page {
+  display: flex; /* 使用 flex 布局 */
+  justify-content: flex-start; /* 水平对齐到左边 */
+  align-items: flex-start; /* 垂直对齐到上边 */
+  padding-left: 20px; /* 左侧内边距 */
+  padding-right: 20px; /* 右侧内边距 */
+  padding-top: 20px; /* 顶部内边距 */
+  gap: 20px; /* 元素之间的间距 */
+  margin: 0 auto; /* 自动水平对齐 */
+  max-width: 1200px; /* 最大宽度 */
+  margin-top: 10px; /* 顶部外边距 */
+}
+
+/* 设置 button-container 的样式 */
+.button-container {
+  display: flex; /* 使用 flex 布局 */
+  justify-content: center; /* 水平居中 */
+  align-items: center; /* 垂直居中 */
+  margin-top: 20px; /* 顶部间距 */
+}
+
+/* 设置 logout 按钮的样式 */
+.logout {
+  padding: 10px 20px; /* 填充 */
+  background-color: #6200ea; /* 背景色 */
+  color: white; /* 字体颜色 */
+  border: none; /* 无边框 */
+  border-radius: 5px; /* 圆角 */
+  cursor: pointer; /* 鼠标样式 */
+}
+
+/* 设置 logout 按钮悬停时的样式 */
+.logout:hover {
+  background-color: #3700b3; /* 悬停背景色 */
+}
+
+/* main-panel 的样式 */
+.main-panel {
+  flex-grow: 1;
+  padding: 20px;
+  padding-top: 70px;  /* 额外添加顶部内边距，避免被顶部导航栏遮挡 */
+}

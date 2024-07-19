@@ -1,0 +1,63 @@
+/* 调整 preferences-dialog 的样式 */
+.preferences-dialog {
+  max-width: 400px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 标题样式 */
+.title {
+  font-size: 1.5em;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* 偏好项的样式 */
+.preference-item {
+  margin-bottom: 10px; /* 调整底部间距 */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px; /* 调整标签和下拉菜单之间的间距 */
+}
+
+/* 按钮组样式 */
+.button-group {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+/* 保存按钮和取消按钮样式 */
+.save-button, .cancel-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.cancel-button {
+  background-color: #dc3545;
+}
+
+.save-button:hover {
+  background-color: #0056b3;
+}
+
+.cancel-button:hover {
+  background-color: #c82333;
+}
+
+/* 消息样式 */
+.message {
+  margin-top: 10px;
+  color: green;
+  font-weight: bold;
+  text-align: center;
+}

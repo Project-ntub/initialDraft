@@ -1,0 +1,91 @@
+/* src/assets/css/RegisterPage.css */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    background-color: #f5f5f5; /* 背景顏色改為灰色 */
+  }
+  
+  .login-box {
+    width: 400px;
+    padding: 20px;
+    background-color: #ffffff; /* 背景顏色改為白色 */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    margin-top: 20px;
+  }
+  
+  .input-group {
+    margin-bottom: 15px;
+  }
+  
+  .input-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px; /* 字體大小統一 */
+  }
+  
+  .input-group input[type="text"],
+  .input-group input[type="email"],
+  .input-group input[type="password"],
+  .input-group input[type="tel"],
+  .input-group input[type="submit"],
+  .input-group input[type="button"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px; /* 字體大小統一 */
+  }
+  
+  .button-group {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  button.btn {
+    flex: 1;
+    padding: 10px;
+    margin-top: 10px;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  button.btn.btn-primary {
+    background-color: #007bff; /* 註冊按鈕顏色改為藍色 */
+  }
+  
+  button.btn.btn-secondary {
+    background-color: #6c757d; /* 返回按鈕顏色稍微區別 */
+  }
+  
+  button.btn:hover {
+    opacity: 0.9;
+  }
+  
+  .terms {
+    font-size: 12px;
+    text-align: center;
+  }
+  
+  .terms a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .back-link {
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+    font-size: 14px;
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .back-link:hover {
+    text-decoration: underline;
+  }
+  
