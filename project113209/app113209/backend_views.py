@@ -1,3 +1,4 @@
+# backend_views.py
 import logging
 import uuid
 import json
@@ -20,24 +21,28 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.db.models import Q
 
-
 logger = logging.getLogger(__name__)
 
 User = get_user_model()
+
 
 class BackendLoginView(LoginView):
     template_name = 'backend/login.html'
 
     @method_decorator(csrf_protect)
     def post(self, request, *args, **kwargs):
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-            return redirect(settings.BACKEND_LOGIN_REDIRECT_URL)
-        else:
-            return render(request, self.template_name, {'error': '用戶名或密碼錯誤'})
+        try:
+            data = json.loads(request.body)
+            email = data.get('username')
+            password = data.get('password')
+            user = authenticate(request, email=email, password=password)
+            if user is not None:
+                login(request, user, backend='app113209.backends.EmailBackend')
+                return JsonResponse({'success': True})
+            else:
+                return JsonResponse({'error': '使用者名稱或密碼錯誤'}, status=400)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': '無效的數據格式'}, status=400)
 
 
 def history(request):
@@ -298,17 +303,32 @@ def get_user(request, user_id):
     }
     return JsonResponse(data)
 
-def assign_role(request, user_id):
-    user = get_object_or_404(User, id=user_id)
+def get_roles_by_module(request, module_id):
+    roles = Role.objects.filter(module_id=module_id, is_deleted=False).values('id', 'name')
+    return JsonResponse(list(roles), safe=False)
+
+def assign_role_and_module(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+    modules = Module.objects.filter(is_deleted=False)
+
     if request.method == 'POST':
         role_id = request.POST.get('role')
-        role = get_object_or_404(Role, id=role_id)
-        user.roles.clear()
-        user.roles.add(role)
-        return redirect('backend:user_management')
-    else:
-        roles = Role.objects.all()
-        return render(request, 'backend/assign_role.html', {'user': user, 'roles': roles})
+        module_id = request.POST.get('module')
+
+        role = get_object_or_404(Role, pk=role_id)
+        module = get_object_or_404(Module, pk=module_id)
+
+        user.role = role
+        user.module = module
+        user.save()
+
+        return redirect('backend:role_management')
+
+    context = {
+        'user': user,
+        'modules': modules,
+    }
+    return render(request, 'backend/assign_role_and_module.html', context)
 
 
 # 角色管理
@@ -409,10 +429,10 @@ def delete_module(request, module_id):
     module.save()
     return redirect('backend:module_management')
 
-@csrf_exempt
+# @csrf_exempt
 def edit_module(request):
     if request.method == 'POST':
-        data = josn.loads(request.body)
+        data = json.loads(request.body)
         try:
             module = Module.objects.get(id=data['module_id'])
             module.name = data['module_name']

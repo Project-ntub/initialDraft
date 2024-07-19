@@ -84,7 +84,6 @@ function getCookie(name) {
   }
   return cookieValue;
 }
-
 </script>
 
 <style scoped>

@@ -1,3 +1,4 @@
+# models.py
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 import pyotp
@@ -64,6 +65,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class Module(models.Model):
     name = models.CharField(max_length=100, unique=True)
+    is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)  # Add this field for soft delete
 
     class Meta:

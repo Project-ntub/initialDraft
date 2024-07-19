@@ -1,3 +1,4 @@
+# settings.py
 import logging
 import os
 from pathlib import Path
@@ -32,9 +33,10 @@ INSTALLED_APPS = [
     'django_otp.plugins.otp_totp',
     'django_otp.plugins.otp_static',
     'two_factor',
-    # 'rest_framework',
-    # 'corsheaders'
-    'app113209',
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'corsheaders',  
+    'app113209',   
 ]
 
 MIDDLEWARE = [
@@ -46,7 +48,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_otp.middleware.OTPMiddleware',
-    # 'corsheaders.middleware.CorsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'app113209.middleware.allow_iframe.AllowIframeMiddleware',
 ]
 
@@ -75,12 +77,12 @@ WSGI_APPLICATION = 'project113209.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',  # 使用 MySQL 數據庫
-        'NAME': '113-ntub113209',                 # 數據庫名稱
-        'USER': 'ntub113209',                     # MySQL 用戶名
-        'PASSWORD': 'Sw@23110565',             # MySQL 用戶密碼
-        'HOST': '140.131.114.242',                  # 數據庫地址
-        'PORT': '3306',                       # 數據庫端口
+        'ENGINE': 'django.db.backends.mysql',  # 使用 MySQL 数据库
+        'NAME': '113-ntub113209',              # 数据库名称
+        'USER': 'ntub113209',                  # MySQL 用户名
+        'PASSWORD': 'Sw@23110565',             # MySQL 用户密码
+        'HOST': '140.131.114.242',             # 数据库地址
+        'PORT': '3306',                        # 数据库端口
     }
 }
 
@@ -112,6 +114,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
+    BASE_DIR / 'vue-admin' / 'dist',
 ]
 
 # Default primary key field type
@@ -120,12 +123,12 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # login
-# 對於前台
+# 对于前台
 LOGIN_URL = '/frontend/login/'
 LOGIN_REDIRECT_URL = '/frontend/home/'
 LOGOUT_REDIRECT_URL = '/frontend/login/'
 
-# 對於後台
+# 对于后台
 BACKEND_LOGIN_URL = '/backend/login/'
 BACKEND_LOGIN_REDIRECT_URL = '/backend/management/'
 BACKEND_LOGOUT_REDIRECT_URL = '/backend/login/'
@@ -137,7 +140,6 @@ logging.basicConfig(
     format='%(asctime)s %(levelname)s %(message)s',
 )
 
-
 # Email settings for password reset and verification
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
@@ -148,8 +150,8 @@ EMAIL_HOST_PASSWORD = 'cxur tzpv jiwm yytp'
 
 # Session settings
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-SESSION_COOKIE_AGE = 60 * 30  # 30 分鐘
-SESSION_COOKIE_SECURE = False  # 在本地開發時可以設定為 False，生產環境應設定為 True
+SESSION_COOKIE_AGE = 60 * 30  # 30 分钟
+SESSION_COOKIE_SECURE = False  # 在本地开发时可以设置为 False，生产环境应设置为 True
 
 # Cache settings
 CACHES = {
@@ -159,24 +161,47 @@ CACHES = {
     }
 }
 
-# 認證後端
+# 认证后端
 AUTHENTICATION_BACKENDS = (
+    'app113209.backends.EmailBackend',
     'two_factor.auth_backend.TwoFactorBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
 
 # Django REST framework configuration
-# REST_FRAMEWORK = {
-#     'DEFAULT_PERMISSION_CLASSES':[
-#         'rest_framework.permission.AllowAny',
-#     ],
-#     'DEFAULT_AUTHENTICATION_CLASSES':[
-#         'rest_framework.authentication.SessionAuthentication',
-#         'rest_framework.authentication.BasicAuthentication'
-#     ]
-# }
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
 
-# # CORS configuration
-# CORS_ALLOWED_ORIGINS =  [
-#     "http://localhost:8000",
-# ]
+# CORS configuration
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8080",
+]
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',
+    },
+}
+
+
+CORS_ALLOW_CREDENTIALS = True
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:8080",
+]

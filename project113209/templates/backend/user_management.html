@@ -59,7 +59,7 @@
                     <td>
                         <button class="edit-btn" onclick="location.href='{% url 'backend:edit_user' user.id %}'">編輯</button>
                         <button class="delete-btn" onclick="location.href='{% url 'backend:delete_user' user.id %}'">刪除</button>
-                        <button class="Assigning-Roles-btn" onclick="location.href='{% url 'backend:assign_role' user.id %}'">分配角色</button>
+                        <button class="Assigning-Roles-btn" onclick="location.href='{% url 'backend:assign_role_and_module' user.id %}'">分配角色</button>
                     </td>
                 </tr>
                 {% endfor %}

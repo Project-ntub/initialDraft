@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Login from '../components/Login.vue';
 import Management from '../components/Management.vue';
 import Dashboard from '../components/Dashboard.vue';
+import UserManagement from '../components/UserManagement.vue';
+import RoleManagement from '../components/RoleManagement.vue';
 
 const routes = [
   { path: '/', redirect: '/login' },
@@ -11,7 +13,9 @@ const routes = [
     component: Management,
     children: [
       { path: 'dashboard', component: Dashboard },
-      // 這裡可以添加更多子路由，如 user-management, role-management 等
+      { path: 'UserMmanagement', component: UserManagement },
+      { path: 'RoleManagement', component: RoleManagement },
+      // 這裡可以添加更多子路由，如 role-management 等
     ],
   },
 ];

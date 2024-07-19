@@ -1,6 +1,6 @@
-from django.urls import path
+# backend_urls.py
+from django.urls import path, include
 from . import backend_views
-from django.views.generic import TemplateView
 
 app_name = 'backend'
 
@@ -29,10 +29,13 @@ urlpatterns = [
     path('history/', backend_views.history, name='history'),
     path('logout_success/', backend_views.logout_success, name='logout_success'),
     path('pending_list/', backend_views.pending_list, name='pending_list'),
-    path('assign_role/<int:user_id>/', backend_views.assign_role, name='assign_role'), 
+    path('get_roles_by_module/<int:module_id>/', backend_views.get_roles_by_module, name='get_roles_by_module'),
+    path('assign_role_and_module/<int:user_id>/', backend_views.assign_role_and_module, name='assign_role_and_module'),
     path('get_modules/', backend_views.get_modules, name='get_modules'),
     path('create_module/', backend_views.create_module, name='create_module'),
-    path('delete_module/<int:module_id>/', backend_views.delete_module, name='delete_module'),    path('add_permission/<int:role_id>/', backend_views.add_permission, name='add_permission'),
+    path('delete_module/<int:module_id>/', backend_views.delete_module, name='delete_module'),
+    path('add_permission/<int:role_id>/', backend_views.add_permission, name='add_permission'),
     path('edit_module/', backend_views.edit_module, name='edit_module'),
     path('delete_permission/<int:permission_id>/', backend_views.delete_permission, name='delete_permission'),
+    path('api/', include('app113209.api_urls')),  # 包含 API 路由
 ]
