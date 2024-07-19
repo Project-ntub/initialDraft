@@ -29,7 +29,7 @@
 
 <script>
 import axios from '../axios'; // 使用配置好的 axios 实例
-// import '../assets/login.css'; // 確保文件名大小寫正確
+
 
 export default {
   name: 'AppLogin',
@@ -86,57 +86,4 @@ function getCookie(name) {
 }
 </script>
 
-<style scoped>
-body {
-  font-family: Arial, sans-serif !important;
-  background-color: #f4f4f4 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  display: flex !important;
-  justify-content: center !important;
-  align-items: flex-start !important;
-  min-height: 100vh !important;
-}
-
-.container {
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #f9f9f9;
-}
-.form-group {
-  margin-bottom: 20px;
-}
-.form-group label {
-  display: block;
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-.form-group input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-sizing: border-box;
-}
-.form-group input[type="checkbox"] {
-  width: auto;
-  display: inline;
-}
-.btn-login {
-  width: 100%;
-  padding: 10px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-}
-.btn-login:hover {
-  background-color: #0056b3;
-}
-
-</style>
+<style scoped src="../assets/css/login.css"></style>
