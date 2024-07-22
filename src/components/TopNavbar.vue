@@ -1,7 +1,7 @@
 <template>
-  <nav class="navbar">
+ <nav class="navbar">
     <div class="navbar-title">{{ currentRouteName }}</div>
-    <div class="export-container">
+    <div v-if="isHomePage" class="export-container">
       <button class="export-button" @click="toggleExportMenu">匯出</button>
       <div v-if="showExportMenu" class="export-menu">
         <button @click="exportFile('pdf')">匯出PDF</button>
@@ -21,6 +21,9 @@ export default {
   computed: {
     currentRouteName() {
       return this.$route.name;
+    },
+    isHomePage() {
+      return this.$route.name === '首頁'; // 确认首页的路由名称
     }
   },
   methods: {
@@ -34,6 +37,7 @@ export default {
   }
 };
 </script>
+
 
 <style scoped>
 .navbar {
@@ -51,7 +55,7 @@ export default {
 }
 
 .navbar-title {
-  font-size: 25px;
+  font-size: 30px;
   font-weight: bold;
 }
 
@@ -64,18 +68,22 @@ export default {
   background-color: #6200ea;
   color: white;
   border: none;
-  padding: 10px 40px;
+  padding: 10px 15px;
   cursor: pointer;
-  
+  margin-top: 20px; /* 增加上边距 */
+  margin-right: 20px;
+  font-size: 16px;
+  font-weight: bold;
 }
 
 .export-button:hover {
   background-color: #3700b3;
+
 }
 
 .export-menu {
   position: absolute;
-  top: 40px;
+  top: 69px;
   right: 0;
   background-color: #fff;
   border: 1px solid #ddd;
@@ -86,10 +94,11 @@ export default {
   background-color: #fff;
   color: #333;
   border: none;
-  padding: 10px 20px;
+  padding: 5px 35px;
   width: 100%;
-  text-align: left;
+  /* text-align: left; */
   cursor: pointer;
+  font-size: 15px;
 }
 
 .export-menu button:hover {

@@ -1,308 +1,95 @@
-@import '~@fortawesome/fontawesome-free/css/all.css';
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
-}
-
 .sidebar {
-  height: calc(100vh - 50px); /* 计算侧边栏的高度为视口高度减去顶部导航栏的高度 */
-  width: 60px; /* 初始宽度 */
+  /* height: calc(100% - 60px);  */
+  width: 60px;
   position: fixed;
-  top: 50px; /* 确保侧边栏在顶部导航栏下面 */
+  top: 69px;
   left: 0;
-  background: #11101d;
-  padding: 10px 0;
-  transition: width 0.3s; /* 添加平滑过渡效果 */
+  background-color: #636262;
+  overflow-x: hidden;
+  transition: width 0.3s;
+  padding-top: 20px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
 }
 
 .sidebar.open {
-  width: 200px; /* 展开状态下的宽度 */
-}
-
-
-.sidebar .logo-details {
-  height: 60px;
-  display: flex;
-  align-items: center;
-  position: relative;
-}
-
-.sidebar .logo-details .icon {
-  opacity: 0;
-  transition: all 0.5s ease;
-}
-
-.sidebar .logo-details .logo_name {
-  color: #fff;
-  font-size: 20px;
-  font-weight: 600;
-  opacity: 0;
-  transition: all 0.5s ease;
-}
-
-.sidebar.open .logo-details .icon,
-.sidebar.open .logo-details .logo_name {
-  opacity: 1;
-}
-
-.sidebar .logo-details #btn {
-  position: absolute;
-  top: 50%;
-  right: 0;
-  transform: translateY(-50%);
-  font-size: 22px;
-  transition: all 0.4s ease;
-  font-size: 23px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.5s ease;
-}
-
-.sidebar.open .logo-details #btn {
-  text-align: right;
-}
-
-.sidebar i {
-  color: #fff;
-  height: 60px;
-  min-width: 50px;
-  font-size: 28px;
-  text-align: center;
-  line-height: 60px;
-}
-
-.sidebar .nav-list {
-  margin-top: 20px;
-  height: 100%;
-}
-
-.sidebar li {
-  position: relative;
-  margin: 8px 0;
-  list-style: none;
-}
-
-.sidebar li .tooltip,
-.sidebar li .tooltip-logout {
-  position: absolute;
-  top: -20px;
-  left: calc(100% + 15px);
-  z-index: 3;
-  background: #fff;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
-  padding: 6px 12px;
-  border-radius: 4px;
-  font-size: 15px;
-  font-weight: 400;
-  opacity: 0;
-  white-space: nowrap;
-  pointer-events: none;
-  transition: 0s;
-}
-
-.sidebar li:hover .tooltip,
-.sidebar li.profile:hover .tooltip-logout {
-  opacity: 1;
-  pointer-events: auto;
-  transition: all 0.4s ease;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.sidebar.open li .tooltip,
-.sidebar.open li .tooltip-logout {
-  display: none;
-}
-
-.sidebar input {
-  font-size: 15px;
-  color: #FFF;
-  font-weight: 400;
-  outline: none;
-  height: 50px;
-  width: 100%;
-  width: 50px;
-  border: none;
-  border-radius: 12px;
-  transition: all 0.5s ease;
-  background: #1d1b31;
-}
-
-.sidebar.open input {
-  padding: 0 20px 0 50px;
-  width: 100%;
-}
-
-
-.sidebar .bx-search {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  transform: translateY(-50%);
-  font-size: 22px;
-  background: #1d1b31;
-  color: #FFF;
-}
-
-.sidebar.open .bx-search:hover {
-  background: #1d1b31;
-  color: #FFF;
-}
-
-.sidebar .bx-search:hover {
-  background: #FFF;
-  color: #11101d;
-}
-
-.sidebar li a {
-  display: flex;
-  height: 100%;
-  width: 100%;
-  border-radius: 12px;
-  align-items: center;
-  text-decoration: none;
-  transition: all 0.4s ease;
-  background: #11101D;
-}
-
-.sidebar li a:hover {
-  background: #FFF;
-}
-
-/* 調整字體大小 */
-.sidebar li a .links_name {
-  color: #fff;
-  font-size: 20px;
-  font-weight: 400;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: 0.4s;
-}
-
-.sidebar.open li a .links_name {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.sidebar li a:hover .links_name,
-.sidebar li a:hover i {
-  transition: all 0.5s ease;
-  color: #11101D;
-}
-
-.sidebar li i {
-  height: 50px;
-  line-height: 50px;
-  font-size: 18px;
-  border-radius: 12px;
-}
-
-.sidebar li.profile {
-  position: fixed;
-  height: 60px;
-  width: 60px;
-  left: 0;
-  bottom: -8px;
-  padding: 10px 14px;
-  background: #1d1b31;
-  transition: all 0.3s ease;
-  overflow: hidden;
-}
-/* 改登出鍵sidebar的長度 */
-.sidebar.open li.profile {
   width: 200px;
 }
 
-.sidebar li .profile-details {
+.sidebar a {
+  text-decoration: none;
+  font-size: 18px;
+  color: white;
   display: flex;
   align-items: center;
-  flex-wrap: nowrap;
+  padding: 10px 15px;
+  transition: background 0.3s, color 0.3s;
 }
 
-.sidebar li img {
-  height: 45px;
-  width: 45px;
-  object-fit: cover;
-  border-radius: 6px;
+.sidebar a:hover {
+  background-color: #575757;
+}
+
+.sidebar a .icon {
   margin-right: 10px;
-}
-
-.sidebar li.profile .name,
-.sidebar li.profile .job {
-  font-size: 15px;
-  font-weight: 400;
-  color: #fff;
-  white-space: nowrap;
-}
-
-.sidebar li.profile .job {
-  font-size: 12px; /* 设置职位文本的字体大小 */
-}
-
-/* 设置 profile 区域的样式 */
-.sidebar .profile {
-  position: absolute; /* 绝对定位 */
-  bottom: 10px; /* 距离底部 10px */
-  width: 100%; /* 宽度 100% */
-  text-align: center; /* 文本居中对齐 */
-  transition: left 0.3s; /* 左边距过渡效果，时长 0.3s */
-  
-}
-
-/* 设置登出按钮的样式 */
-.sidebar .profile #log_out {
-  position: absolute; /* 绝对定位 */
-  top: 50%; /* 距离顶部 50% */
-  left: 0; /* 距离左侧 0 */
-  transform: translateY(-50%); /* 垂直居中 */
-  background: #1d1b31; /* 背景色 */
-  width: 60px; /* 宽度 100% */
-  height: 60px; /* 高度 60px */
-  line-height: 60px; /* 行高 60px，使内容垂直居中 */
-  border-radius: 0px; /* 无边框圆角 */
-  transition: all 0.5s ease; /* 所有属性的过渡效果，时长 0.5s，缓动效果 */
-}
-
-/* 在侧边栏展开时调整登出按钮的样式 */
-.sidebar.open .profile #log_out {
-  left: 0; /* 侧边栏展开时，登出按钮靠左显示 */
-  width: 190px; /* 宽度 100% */
-  background: none; /* 无背景色 */
-  padding-left: 20px; /* 左边内边距，使其与其他图标对齐 */
-  box-sizing: border-box; /* 确保内边距计算在宽度内 */
-  text-align: left; /* 文字左对齐 */
-}
-
-.home-section {
-  position: relative;
-  background: #E4E9F7;
-  min-height: 100vh;
-  top: 0;
-  left: 78px;
-  width: calc(100% - 78px);
-  transition: all 0.5s ease;
-  z-index: 2;
-}
-
-.sidebar.open ~ .home-section {
-  left: 250px;
-  width: calc(100% - 250px);
-}
-
-.home-section .text {
   display: inline-block;
-  color: #11101d;
-  font-size: 25px;
-  font-weight: 500;
-  margin: 18px;
+  width: 25px;
+  text-align: center;
+  font-size: 33px;
 }
 
-@media (max-width: 420px) {
-  .sidebar li .tooltip {
-    display: none;
-  }
+.sidebar.open a .text {
+  display: inline-block;
+}
+
+.sidebar a .text {
+  display: none;
+}
+
+.sidebar .toggle-btn {
+  position: absolute;
+  top: 10px;
+  left: -120px;
+  font-size: 30px;
+  cursor: pointer;
+  color: white;
+}
+
+.sidebar-header {
+  margin-top: 30px;
+  padding: 10px 15px;
+  font-size: 25px;
+  color: white;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.sidebar-header img {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  margin-bottom: 10px;
+}
+
+.sidebar a:not(.logout) {
+  flex-grow: 0.05;
+}
+
+.logout {
+  margin-top: auto;
+  padding-bottom: 20px;
+}
+
+.content {
+  margin-left: 60px;
+  padding: 20px;
+  transition: margin-left 0.3s;
+}
+
+.content.shift {
+  margin-left: 200px;
 }

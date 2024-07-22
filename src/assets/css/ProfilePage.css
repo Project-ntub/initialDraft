@@ -1,43 +1,78 @@
-/* 设置 profile-page 的样式，使其左右排列 */
 .profile-page {
-  display: flex; /* 使用 flex 布局 */
-  justify-content: flex-start; /* 水平对齐到左边 */
-  align-items: flex-start; /* 垂直对齐到上边 */
-  padding-left: 20px; /* 左侧内边距 */
-  padding-right: 20px; /* 右侧内边距 */
-  padding-top: 20px; /* 顶部内边距 */
-  gap: 20px; /* 元素之间的间距 */
-  margin: 0 auto; /* 自动水平对齐 */
-  max-width: 1200px; /* 最大宽度 */
-  margin-top: 10px; /* 顶部外边距 */
-}
-
-/* 设置 button-container 的样式 */
-.button-container {
-  display: flex; /* 使用 flex 布局 */
-  justify-content: center; /* 水平居中 */
-  align-items: center; /* 垂直居中 */
-  margin-top: 20px; /* 顶部间距 */
-}
-
-/* 设置 logout 按钮的样式 */
-.logout {
-  padding: 10px 20px; /* 填充 */
-  background-color: #6200ea; /* 背景色 */
-  color: white; /* 字体颜色 */
-  border: none; /* 无边框 */
-  border-radius: 5px; /* 圆角 */
-  cursor: pointer; /* 鼠标样式 */
-}
-
-/* 设置 logout 按钮悬停时的样式 */
-.logout:hover {
-  background-color: #3700b3; /* 悬停背景色 */
-}
-
-/* main-panel 的样式 */
-.main-panel {
-  flex-grow: 1;
-  padding: 20px;
-  padding-top: 70px;  /* 额外添加顶部内边距，避免被顶部导航栏遮挡 */
-}
+    display: flex;
+  }
+  
+  .main-panel {
+    flex-grow: 1;
+    padding: 20px;
+    transition: margin-left 0.3s;
+  }
+  
+  .profile-card-container {
+    margin-top: 50px;
+  }
+  
+  .edit-profile-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+  }
+  
+  .input-group-container {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .input-group {
+    flex: 1;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+  
+  .button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  .save-button, .cancel-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .save-button {
+    background-color: #6200ea;
+    color: white;
+  }
+  
+  .cancel-button {
+    background-color: #ccc;
+    color: white;
+  }
+  
+  .save-button:hover {
+    background-color: #3700b3;
+  }
+  
+  .cancel-button:hover {
+    background-color: #999;
+  }

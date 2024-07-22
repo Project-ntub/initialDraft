@@ -1,30 +1,38 @@
 <template>
-  <div class="history-page">
-    <div class="container">
-      <div class="search-container">
-        <input type="text" id="searchInput" placeholder="搜尋紀錄..." v-model="searchQuery">
-        <button @click="filterTimeline">搜尋</button>
+  <div>
+    <SidebarPage /> <!-- 確保 SidebarPage 組件在這裡使用 -->
+    <div class="history-page">
+      <div class="container">
+        <div class="search-container">
+          <input type="text" id="searchInput" placeholder="搜尋紀錄..." v-model="searchQuery">
+          <button @click="filterTimeline">搜尋</button>
+        </div>
+        <ul class="timeline" id="timeline">
+          <li class="timeline-item" v-for="item in filteredItems" :key="item.id" @click="showDetail(item.id)">
+            <div class="timeline-panel">
+              <div class="timeline-heading">
+                <h4>{{ item.date }}</h4>
+              </div>
+              <div class="timeline-body">
+                <p>{{ item.action }}</p>
+                <div class="timeline-user">使用者: {{ item.user }}</div>
+              </div>
+            </div>
+          </li>
+        </ul>
       </div>
-      <ul class="timeline" id="timeline">
-        <li class="timeline-item" v-for="item in filteredItems" :key="item.id" @click="showDetail(item.id)">
-          <div class="timeline-panel">
-            <div class="timeline-heading">
-              <h4>{{ item.date }}</h4>
-            </div>
-            <div class="timeline-body">
-              <p>{{ item.action }}</p>
-              <div class="timeline-user">使用者: {{ item.user }}</div>
-            </div>
-          </div>
-        </li>
-      </ul>
     </div>
   </div>
 </template>
 
 <script>
+import SidebarPage from '@/components/SidebarPage.vue'; // 確保引入 SidebarPage 組件
+
 export default {
   name: 'HistoryPage',
+  components: {
+    SidebarPage // 註冊 SidebarPage 組件
+  },
   data() {
     return {
       searchQuery: '',

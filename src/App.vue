@@ -1,30 +1,29 @@
 <template>
   <div id="app">
+    <TopNavbar v-if="showTopNavbar" />
     <SidebarPage v-if="!$route.meta.hideSidebar" />
     <router-view />
   </div>
 </template>
 
 <script>
+import TopNavbar from './components/TopNavbar.vue';
 import SidebarPage from './components/SidebarPage.vue';
 
 export default {
   name: 'App',
   components: {
-    SidebarPage,
+    TopNavbar,
+    SidebarPage
   },
+  computed: {
+    showTopNavbar() {
+      return !this.$route.meta.hideNavbar;
+    }
+  }
 };
 </script>
 
 <style>
-@import '~@fortawesome/fontawesome-free/css/all.css';
-
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  /* margin-top: 60px; */
-}
+/* 你的样式 */
 </style>

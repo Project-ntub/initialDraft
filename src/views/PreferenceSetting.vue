@@ -1,182 +1,141 @@
 <template>
-  <div class="preferences-page">
-    <div class="preferences-dialog">
-      <h3 class="title">偏好設置</h3>
-      <div class="preference-item">
-        <label for="fontSize">字體大小：</label>
-        <select id="fontSize" v-model="fontSize" @change="updateFontSize">
-          <option value="medium">適中</option>
-          <option value="large">大</option>
-        </select>
+    <div>
+      <div class="header-bar">偏好設定</div>
+      <button class="hamburger-menu" @click="toggleMenu">
+        <div></div>
+        <div></div>
+        <div></div>
+      </button>
+  
+      <SidebarPage />
+  
+      <div class="content" id="content">
+        <div class="container">
+          <div class="preferences">
+            <div class="header">
+              偏好設定
+            </div>
+            <div class="form-group">
+              <label for="font-size">字體大小</label>
+              <select id="font-size" v-model="fontSize">
+                <option value="large">大</option>
+                <option value="medium">適中</option>
+                <option value="small">小</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="notification">通知設定</label>
+              <select id="notification" v-model="notification">
+                <option value="enable">開啟通知</option>
+                <option value="disable">關閉通知</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="auto-login">自動登入</label>
+              <select id="auto-login" v-model="autoLogin">
+                <option value="enable">自動登入</option>
+                <option value="disable">取消自動登入</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="authentication">認證設定</label>
+              <select id="authentication" v-model="authentication">
+                <option value="enable">開啟認證</option>
+                <option value="disable">關閉認證</option>
+              </select>
+            </div>
+            <div class="buttons">
+              <button class="cancel-button" @click="cancelChanges">取消變更</button>
+              <button class="submit-button" @click="submitChanges">更改</button>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="preference-item">
-        <label for="autoLogin">自動登錄：</label>
-        <select id="autoLogin" v-model="autoLogin" @change="updateAutoLogin">
-          <option :value="false">取消自動登入</option>
-          <option :value="true">開啟自動登入</option>
-        </select>
-      </div>
-      <div class="preference-item">
-        <label for="notifications">通知：</label>
-        <select id="notifications" v-model="notifications" @change="updateNotifications">
-          <option :value="true">開啟通知</option>
-          <option :value="false">關閉通知</option>
-        </select>
-      </div>
-      <div class="button-group">
-        <button class="save-button" @click="savePreferences">保存</button>
-        <button class="cancel-button" @click="cancelPreferences">取消</button>
-      </div>
-      <div v-if="message" class="message">{{ message }}</div>
     </div>
-  </div>
-</template>
-
-<script>
-export default {
-  name: 'PreferenceSetting',
-  data() {
-    return {
-      fontSize: 'medium',
-      autoLogin: false,
-      notifications: true,
-      rootFontSize: '16px',
-      originalPreferences: {},
-      message: ''
-    };
-  },
-  methods: {
-    updateFontSize() {
-      switch (this.fontSize) {
-        case 'medium':
-          this.rootFontSize = '16px';
-          break;
-        case 'large':
-          this.rootFontSize = '24px';
-          break;
-        default:
-          this.rootFontSize = '16px';
-          break;
+  </template>
+  
+  <script>
+  import SidebarPage from '@/components/SidebarPage.vue';
+  
+  export default {
+    name: 'PreferenceSetting',
+    components: {
+      SidebarPage,
+    },
+    data() {
+      return {
+        fontSize: 'medium',
+        notification: 'disable',
+        autoLogin: 'disable',
+        authentication: 'disable',
+      };
+    },
+    mounted() {
+      // 從資料庫中獲取上次的偏好設定
+      fetch('/api/user-data')
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            const user = data.data[0];
+            this.fontSize = user.font_size;
+            this.notification = user.notifications_enabled ? 'enable' : 'disable';
+            this.autoLogin = user.auto_login_enabled ? 'enable' : 'disable';
+            this.authentication = user.authentication_enabled ? 'enable' : 'disable';
+  
+            const fontSize = this.fontSize === 'large' ? '18px' : this.fontSize === 'small' ? '12px' : '16px';
+            document.body.style.fontSize = fontSize;
+          }
+        })
+        .catch(error => {
+          console.error('獲取偏好設定錯誤:', error);
+        });
+  
+      const storedFontSize = localStorage.getItem('fontSize');
+      if (storedFontSize) {
+        document.body.style.fontSize = storedFontSize;
       }
-      this.updateRootFontSize();
     },
-    updateRootFontSize() {
-      document.documentElement.style.fontSize = this.rootFontSize;
+    methods: {
+      toggleMenu() {
+        const dropdownContent = document.querySelector('.dropdown-content');
+        if (dropdownContent.style.display === 'block') {
+          dropdownContent.style.display = 'none';
+        } else {
+          dropdownContent.style.display = 'block';
+        }
+      },
+      cancelChanges() {
+        // 還原表單值為當前的偏好設定
+        this.$data = this.$options.data();
+        this.mounted();
+      },
+      submitChanges() {
+        const fontSize = this.fontSize;
+        const notification = this.notification;
+        const autoLogin = this.autoLogin;
+        const authentication = this.authentication;
+  
+        fetch('/update-preferences', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ fontSize, notification, autoLogin, authentication })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('偏好設定更新成功');
+          } else {
+            alert('偏好設定更新失敗，請重試。');
+          }
+        })
+        .catch(error => {
+          console.error('偏好設定更新錯誤:', error);
+          alert('偏好設定更新失敗，請重試。');
+        });
+      }
     },
-    updateAutoLogin() {},
-    updateNotifications() {},
-    savePreferences() {
-      localStorage.setItem('preferences', JSON.stringify({
-        fontSize: this.fontSize,
-        autoLogin: this.autoLogin,
-        notifications: this.notifications,
-      }));
-      this.message = '保存成功！';
-      setTimeout(() => this.message = '', 3000);
-      this.$emit('close');
-    },
-    cancelPreferences() {
-      this.fontSize = this.originalPreferences.fontSize;
-      this.autoLogin = this.originalPreferences.autoLogin;
-      this.notifications = this.originalPreferences.notifications;
-      this.updateFontSize();
-      this.$emit('close');
-    }
-  },
-  mounted() {
-    const preferences = localStorage.getItem('preferences');
-    const savedPreferences = preferences ? JSON.parse(preferences) : null;
-    if (savedPreferences) {
-      this.fontSize = savedPreferences.fontSize;
-      this.autoLogin = savedPreferences.autoLogin;
-      this.notifications = savedPreferences.notifications;
-      this.updateFontSize();
-    }
-    this.originalPreferences = {
-      fontSize: this.fontSize,
-      autoLogin: this.autoLogin,
-      notifications: this.notifications
-    };
-  }
-};
-</script>
-
-<style scoped>
-.preferences-page {
-  display: flex;
-  align-items: flex-start;
-  padding: 20px;
-}
-
-.preferences-dialog {
-  width: 300px;
-  margin-top: 20px;
-  margin-left: 250px; /* 调整左边距 */
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #f9f9f9;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-}
-
-.title {
-  font-size: 1.5em;
-  font-weight: bold;
-  text-align: center;
-}
-
-.preference-item {
-  margin-bottom: 15px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.preference-item label {
-  flex: 1;
-  text-align: left;
-  margin-right: 10px;
-}
-
-.preference-item select {
-  flex: 2;
-  padding: 5px;
-  font-size: 1.1em;
-}
-
-.button-group {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-}
-
-.save-button, .cancel-button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  flex: 1;
-  margin: 0 5px;
-}
-
-.cancel-button {
-  background-color: #dc3545;
-}
-
-.save-button:hover {
-  background-color: #0056b3;
-}
-
-.cancel-button:hover {
-  background-color: #c82333;
-}
-
-.message {
-  margin-top: 10px;
-  color: green;
-  font-weight: bold;
-  text-align: center;
-}
-</style>
+  };
+  </script>
+  
+  <style scoped src="../assets/css/PreferenceSetting.css"></style>
+  

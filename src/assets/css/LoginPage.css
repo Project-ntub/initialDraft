@@ -1,118 +1,98 @@
-/* 设置 body 和 html 的基本样式 */
 body, html {
-  margin: 0; /* 移除默认边距 */
-  padding: 0; /* 移除默认填充 */
-  height: 100%; /* 设置高度为 100% 视口高度 */
-  width: 100%; /* 设置宽度为 100% 视口宽度 */
-  font-family: 'Poppins', sans-serif; /* 设置字体 */
-  background-color: #f2f2f2; /* 设置背景色 */
-  display: flex; /* 使用 flex 布局 */
-  justify-content: center; /* 水平居中 */
-  align-items: center; /* 垂直居中 */
-  overflow: hidden; /* 隐藏滚动条 */
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  font-family: 'Poppins', sans-serif;
+  background-color: #f2f2f2;
+  display: flex;
+  /* justify-content: center; */
+  /* align-items: center; */
+  overflow: hidden;
 }
 
-/* 设置 login-container 的基本样式 */
 .login-container {
-  display: flex; /* 使用 flex 布局 */
-  justify-content: center; /* 水平居中 */
-  align-items: center; /* 垂直居中 */
-  height: 100vh; /* 设置高度为 100% 视口高度 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
-/* 设置 login-form 的基本样式 */
 .login-form {
-  background-color: white; /* 设置背景色为白色 */
-  padding: 40px 40px; /* 设置填充 */
-  border-radius: 10px; /* 设置边框圆角 */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 设置阴影 */
-  text-align: center; /* 设置文本居中 */
-  width: 100%; /* 设置宽度为父容器的 100% */
-  max-width: 400px; /* 设置最大宽度为 400px */
+  background-color: white;
+  padding: 40px 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  width: 100%;
+  max-width: 400px;
 }
 
-/* 设置 login-form 中 h2 标签的基本样式 */
 .login-form h2 {
-  margin-bottom: 20px; /* 设置底部边距 */
-  font-size: 24px; /* 设置字体大小 */
-  color: #333; /* 设置字体颜色 */
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #333;
 }
-
-/* 设置 input-group 的基本样式 */
+/* 
 .input-group {
-  margin-bottom: 15px; /* 设置底部边距 */
-  text-align: left; /* 设置文本左对齐 */
-}
-
-/* 设置 input-group 中 label 标签的基本样式 */
+  margin-bottom: 15px;
+  text-align: left;
+} */
+/* 
 .input-group label {
-  display: block; /* 设置为块级元素 */
-  margin-bottom: 5px; /* 设置底部边距 */
-  font-size: 14px; /* 设置字体大小 */
-  color: #333; /* 设置字体颜色 */
+  display: block;
+  margin-bottom: 5px;
+  font-size: 14px;
+  color: #333;
+} */
+
+/* .input-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  box-sizing: border-box;
+} */
+
+/* .remember-me-container {
+  display: flex;
+  align-items: center;
+  text-align: left;
+} */
+
+.remember-me-container input[type="checkbox"] {
+  margin-left: 10px;
 }
 
-/* 设置 input-group 中 input 标签的基本样式 */
-.input-group input {
-  width: 100%; /* 设置宽度为父容器的 100% */
-  padding: 10px; /* 设置填充 */
-  border: 1px solid #ccc; /* 设置边框 */
-  border-radius: 5px; /* 设置边框圆角 */
-  font-size: 14px; /* 设置字体大小 */
-  box-sizing: border-box; /* 确保 padding 和 border 包含在宽度和高度内 */
-}
-
-/* 设置 remember-me 的基本样式 */
-.remember-me {
-  display: flex; /* 使用 flex 布局 */
-  align-items: center; /* 垂直居中 */
-  margin-bottom: 15px; /* 设置底部边距 */
-}
-
-/* 设置 remember-me 中的 input 标签样式 */
-.remember-me input {
-  margin-right: 5px; /* 设置右边边距 */
-}
-
-/* 设置 remember-me 中的 label 标签样式 */
-.remember-me label {
-  font-size: 14px; /* 设置字体大小 */
-  color: #333; /* 设置字体颜色 */
-}
-
-/* 设置 login-button 的基本样式 */
 .login-button {
-  width: 100%; /* 设置宽度为父容器的 100% */
-  padding: 10px; /* 设置填充 */
-  background-color: #6200ea; /* 设置背景色 */
-  color: white; /* 设置字体颜色 */
-  border: none; /* 移除边框 */
-  border-radius: 5px; /* 设置边框圆角 */
-  font-size: 16px; /* 设置字体大小 */
-  cursor: pointer; /* 设置鼠标指针样式 */
-  box-sizing: border-box; /* 确保 padding 和 border 包含在宽度和高度内 */
+  width: 100%;
+  padding: 10px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  box-sizing: border-box;
 }
 
-/* 设置 login-button 悬停时的样式 */
 .login-button:hover {
-  background-color: #3700b3; /* 设置背景色 */
+  background-color: #279e42;
 }
 
-/* 设置 links 的基本样式 */
 .links {
-  margin-top: 10px; /* 设置顶部边距 */
-  display: flex; /* 使用 flex 布局 */
-  justify-content: space-between; /* 设置链接之间的空间 */
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
 }
 
-/* 设置 links 中的 a 标签的基本样式 */
 .links a {
-  font-size: 14px; /* 设置字体大小 */
-  color: #6200ea; /* 设置字体颜色 */
-  text-decoration: none; /* 移除文本装饰 */
+  font-size: 14px;
+  color: #6200ea;
+  text-decoration: none;
 }
 
-/* 设置 links 中的 a 标签悬停时的样式 */
 .links a:hover {
-  text-decoration: underline; /* 添加文本下划线 */
+  text-decoration: underline;
 }

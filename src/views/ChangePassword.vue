@@ -1,8 +1,5 @@
 <template>
     <div>
- 
-  
-  
       <form class="change-password-form" @submit.prevent="handleSubmit">
         <div class="input-container">
           <label for="currentPassword">原密碼：</label>
