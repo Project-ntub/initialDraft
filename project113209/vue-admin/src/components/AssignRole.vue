@@ -12,7 +12,7 @@
       <label for="role">選擇角色:</label>
       <select id="role" v-model="selectedRole">
         <option value="">-- 選擇角色 --</option>
-        <option v-for="role in roles" :key="role.id" :value="role.id">
+        <option v-for="role in roles" :key="role.id">
           {{ role.name }}
         </option>
       </select>
@@ -23,6 +23,8 @@
 </template>
 
 <script>
+import axios from '../axios';
+
 export default {
   name: "AssignRoleAndModule",
   data() {
@@ -31,46 +33,66 @@ export default {
       selectedRole: "",
       modules: [],
       roles: [],
-      user: { username: "user" } // 假設用戶數據
+      user: {} // Initialize user as an empty object
     };
   },
   methods: {
     loadModules() {
-      // 加載模組數據
-      this.$http.get("/backend/modules")
+      axios.get("/api/backend/get_modules/")
         .then(response => {
           this.modules = response.data.modules;
+        })
+        .catch(error => {
+          console.error('Error loading modules:', error);
         });
     },
     loadRoles() {
       if (this.selectedModule) {
-        this.$http.get(`/backend/get_roles_by_module/${this.selectedModule}/`)
+        axios.get(`/api/backend/get_roles_by_module/${this.selectedModule}/`)
           .then(response => {
-            this.roles = response.data.roles;
+            this.roles = response.data;
+          })
+          .catch(error => {
+            console.error('Error loading roles:', error);
           });
       } else {
         this.roles = [];
       }
     },
     assignRoleAndModule() {
-      // 發送請求到後端
-      this.$http.post("/backend/assign_role_and_module", {
+      const userId = this.$route.params.userId;
+      axios.post(`/api/backend/assign_role_and_module/${userId}/`, {
         module: this.selectedModule,
         role: this.selectedRole
       }).then(response => {
         if (response.data.success) {
           alert("保存成功");
+          this.$router.push({ name: 'userManagement' });
         } else {
           alert("保存失敗");
         }
+      }).catch(error => {
+        console.error('Error saving role and module:', error);
+        alert("保存失敗");
       });
     },
     goBack() {
       this.$router.go(-1);
+    },
+    loadUser() {
+      const userId = this.$route.params.userId;
+      axios.get(`/api/backend/users/${userId}/`)
+        .then(response => {
+          this.user = response.data;
+        })
+        .catch(error => {
+          console.error('Error loading user:', error);
+        });
     }
   },
   mounted() {
     this.loadModules();
+    this.loadUser();
   }
 };
 </script>

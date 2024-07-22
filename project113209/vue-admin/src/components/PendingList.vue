@@ -47,7 +47,7 @@
     },
     methods: {
       fetchPendingUsers() {
-        axios.get('/api/pending-users/')
+        axios.get('/api/backend/pending-users/')
           .then(response => {
             this.pendingUsers = response.data;
           })
@@ -56,7 +56,7 @@
           });
       },
       approveUser(userId) {
-        axios.post(`/api/approve-user/${userId}/`)
+        axios.post(`/api/backend/approve-user/${userId}/`)
           .then(response => {
             console.log('User approved:', response);
             this.fetchPendingUsers(); // Refresh the list after approval

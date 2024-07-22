@@ -1,9 +1,10 @@
+# project113209\app113209\backend\views.py
 import logging
 import uuid
 import json
-from .models import User, Role, RolePermission, Module
-from .forms import UserForm, RoleForm, RolePermissionForm
-from .validators import CustomPasswordValidator
+from app113209.models import User, Role, RolePermission, Module
+from app113209.forms import UserForm, RoleForm, RolePermissionForm
+from app113209.validators import CustomPasswordValidator
 from datetime import timedelta
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate, login
@@ -19,6 +20,7 @@ from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.db.models import Q
+from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -155,11 +157,16 @@ def register(request):
 def registration_success(request):
     return render(request, 'backend/registration_success.html')
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def approve_user(request, user_id):
-    user = get_object_or_404(User, id=user_id)
-    user.is_active = True
-    user.save()
-    return JsonResponse({'success': True})
+    try:
+        user = User.objects.get(id=user_id, is_active=False)
+        user.is_active = True
+        user.save()
+        return JsonResponse({'success': True})
+    except User.DoesNotExist:
+        return JsonResponse({'error': 'User not found'}, status=404)
 
 def forgot_password(request):
     if request.method == 'POST':
@@ -207,6 +214,7 @@ def management(request):
 def dashboard(request):
     return render(request, 'backend/dashboard.html')
 
+@login_required
 def user_management(request):
     query = request.GET.get('q', '')
     sort_by = request.GET.get('sort_by', '')
@@ -217,8 +225,8 @@ def user_management(request):
     if query:
         active_users = active_users.filter(
             Q(username__icontains=query) |
-            Q(email__icontains=query) |
-            Q(phone__icontains=query) |
+            Q(email__icontains(query)) |
+            Q(phone__icontains(query)) |
             Q(department_id__icontains(query)) |
             Q(position_id__icontains(query))
         )
@@ -264,11 +272,15 @@ def update_user_department_and_position(request, user_id):
         return redirect('backend:user_management')
     return redirect('backend:user_management')
 
+@api_view(['POST'])
 def delete_user(request, user_id):
-    user = get_object_or_404(User, id=user_id)
-    user.is_deleted = True
-    user.save()
-    return redirect('backend:user_management')
+    try:
+        user = User.objects.get(id=user_id)
+        user.is_deleted = True
+        user.save()
+        return Response({'success': True}, status=status.HTTP_200_OK)
+    except User.DoesNotExist:
+        return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
 
 def edit_user(request, user_id):
     user = get_object_or_404(User, id=user_id)
@@ -301,28 +313,21 @@ def get_roles_by_module(request, module_id):
     roles = Role.objects.filter(module_id=module_id, is_deleted=False).values('id', 'name')
     return JsonResponse(list(roles), safe=False)
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def assign_role_and_module(request, user_id):
     user = get_object_or_404(User, pk=user_id)
-    modules = Module.objects.filter(is_deleted=False)
+    module_id = request.data.get('module')
+    role_id = request.data.get('role')
 
-    if request.method == 'POST':
-        role_id = request.POST.get('role')
-        module_id = request.POST.get('module')
+    if module_id:
+        user.module_id = module_id
+    if role_id:
+        user.role_id = role_id
+    user.save()
 
-        role = get_object_or_404(Role, pk=role_id)
-        module = get_object_or_404(Module, pk=module_id)
+    return JsonResponse({'success': True})
 
-        user.role = role
-        user.module = module
-        user.save()
-
-        return redirect('backend:role_management')
-
-    context = {
-        'user': user,
-        'modules': modules,
-    }
-    return render(request, 'backend/assign_role_and_module.html', context)
 
 def role_management(request):
     roles = Role.objects.filter(is_deleted=False)
@@ -340,45 +345,69 @@ def module_management(request):
         'current_page': 'module_management'
     })
 
+@api_view(['POST'])
 def create_role(request):
-    modules = Module.objects.all()
-    if request.method == 'POST':
-        form = RoleForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('backend:role_management')
-    else:
-        form = RoleForm()
-    return render(request, 'backend/role_form.html', {'form': form, 'is_edit': False, 'modules': modules})
+    try:
+        role_data = request.data['role']
+        role_permissions_data = request.data['role_permissions']
+        
+        role = Role.objects.create(
+            name=role_data['name'],
+            is_active=role_data['is_active'],
+            module_id=role_data['module']
+        )
+        
+        for perm_data in role_permissions_data:
+            RolePermission.objects.create(
+                role=role,
+                permission_name=perm_data['permission_name'],
+                can_add=perm_data['can_add'],
+                can_query=perm_data['can_query'],
+                can_view=perm_data['can_view'],
+                can_edit=perm_data['can_edit'],
+                can_delete=perm_data['can_delete'],
+                can_print=perm_data['can_print'],
+                can_export=perm_data['can_export'],
+                can_maintain=perm_data['can_maintain']
+            )
+        
+        return JsonResponse({'success': True})
+    except Exception as e:
+        logger.error(f"Error creating role: {e}")
+        return JsonResponse({'success': False, 'message': str(e)}, status=500)
 
+@api_view(['PUT'])
 def edit_role(request, role_id):
-    role = get_object_or_404(Role, id=role_id)
-    if role.is_deleted:
-        return redirect('backend:role_management')
-    if request.method == 'POST':
-        form = RoleForm(request.POST, instance=role)
-        if form.is_valid():
-            form.save()
-            for permission in role.rolepermission_set.filter(is_deleted=False):
-                permission.can_add = 'can_add_' + str(permission.id) in request.POST
-                permission.can_query = 'can_query_' + str(permission.id) in request.POST
-                permission.can_view = 'can_view_' + str(permission.id) in request.POST
-                permission.can_edit = 'can_edit_' + str(permission.id) in request.POST
-                permission.can_delete = 'can_delete_' + str(permission.id) in request.POST
-                permission.can_print = 'can_print_' + str(permission.id) in request.POST
-                permission.can_export = 'can_export_' + str(permission.id) in request.POST
-                permission.can_maintain = 'can_maintain_' + str(permission.id) in request.POST
-                permission.save()
-            return redirect('backend:role_management')
-    else:
-        form = RoleForm(instance=role)
-        role_permissions = role.rolepermission_set.filter(is_deleted=False)
-    return render(request, 'backend/role_form.html', {
-        'form': form,
-        'role_permissions': role_permissions,
-        'is_edit': True,
-        'role': role
-    })
+    try:
+        role = get_object_or_404(Role, id=role_id)
+        role_data = request.data['role']
+        role_permissions_data = request.data['role_permissions']
+
+        role.name = role_data['name']
+        role.is_active = role_data['is_active']
+        role.module_id = role_data['module']
+        role.save()
+
+        role.rolepermission_set.all().delete()
+        for perm_data in role_permissions_data:
+            RolePermission.objects.create(
+                role=role,
+                permission_name=perm_data['permission_name'],
+                can_add=perm_data['can_add'],
+                can_query=perm_data['can_query'],
+                can_view=perm_data['can_view'],
+                can_edit=perm_data['can_edit'],
+                can_delete=perm_data['can_delete'],
+                can_print=perm_data['can_print'],
+                can_export=perm_data['can_export'],
+                can_maintain=perm_data['can_maintain']
+            )
+
+        return JsonResponse({'success': True})
+    except Exception as e:
+        logger.error(f"Error editing role: {e}")
+        return JsonResponse({'success': False, 'message': str(e)}, status=500)
+
 
 def delete_role(request, role_id):
     role = get_object_or_404(Role, id=role_id)
@@ -386,65 +415,70 @@ def delete_role(request, role_id):
     role.save()
     return redirect('backend:role_management')
 
+@api_view(['POST'])
 def toggle_role_status(request, role_id):
     role = get_object_or_404(Role, id=role_id)
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        role.is_active = data['is_active']
-        role.save()
-        return JsonResponse({'success': True})
-    return JsonResponse({'success': False})
+    data = request.data
+    role.is_active = data['is_active']
+    role.save()
+    return JsonResponse({'success': True})
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_modules(request):
-    modules = Role.objects.values_list('module', flat=True).distinct()
+    modules = Module.objects.filter(is_deleted=False).values('id', 'name')
     return JsonResponse({'modules': list(modules)})
 
-@csrf_protect
-def create_module(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        module_name = data.get('module_name')
-        if module_name:
-            Module.objects.create(name=module_name)
-            return JsonResponse({'success': True})
-        return JsonResponse({'success': False, 'message': '模組名稱為必填項'})
-    return JsonResponse({'success': False, 'message': '無效的請求方法'})
 
+@api_view(['POST'])
+def create_module(request):
+    data = request.data
+    module_name = data.get('module_name')
+    if module_name:
+        Module.objects.create(name=module_name)
+        return JsonResponse({'success': True})
+    return JsonResponse({'success': False, 'message': '模組名稱為必填項'})
+
+@api_view(['POST'])
 def delete_module(request, module_id):
     module = get_object_or_404(Module, id=module_id)
     module.is_deleted = True
     module.save()
     return redirect('backend:module_management')
 
-@csrf_exempt
+@api_view(['POST'])
 def edit_module(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        try:
-            module = Module.objects.get(id=data['module_id'])
-            module.name = data['module_name']
-            module.save()
-            return JsonResponse({'success': True})
-        except Module.DoesNotExist:
-            return JsonResponse({'success': False, 'error': 'Module not found'})
-    return JsonResponse({'success': False, 'error': 'Invalid request method'})
+    data = request.data
+    try:
+        module = Module.objects.get(id=data['module_id'])
+        module.name = data['module_name']
+        module.save()
+        return JsonResponse({'success': True})
+    except Module.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Module not found'})
 
+@api_view(['POST'])
 def add_permission(request, role_id):
     role = get_object_or_404(Role, id=role_id)
-    if request.method == 'POST':
-        form = RolePermissionForm(request.POST)
-        if form.is_valid():
-            permission = form.save(commit=False)
-            permission.role = role
-            permission.save()
-            return redirect('backend:edit_role', role_id=role_id)
-    else:
-        form = RolePermissionForm()
+    form = RolePermissionForm(request.POST)
+    if form.is_valid():
+        permission = form.save(commit=False)
+        permission.role = role
+        permission.save()
+        return redirect('backend:edit_role', role_id=role_id)
     return render(request, 'backend/add_permission.html', {'form': form, 'role': role})
 
+@api_view(['POST'])
 def delete_permission(request, permission_id):
     permission = get_object_or_404(RolePermission, id=permission_id)
     permission.is_deleted = True
     permission.save()
     role_id = permission.role.id
     return redirect('backend:edit_role', role_id=role_id)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_roles_by_module(request, module_id):
+    roles = Role.objects.filter(module_id=module_id, is_deleted=False).values('id', 'name')
+    return JsonResponse(list(roles), safe=False)
+

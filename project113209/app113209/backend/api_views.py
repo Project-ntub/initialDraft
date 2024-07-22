@@ -1,7 +1,7 @@
-# app113209/api_views.py
+# app113209/backend/api_views.py
 from rest_framework import viewsets
-from .models import User, Module, Role, RolePermission
-from .serializers import UserSerializer, ModuleSerializer, RoleSerializer, RolePermissionSerializer
+from app113209.models import User, Module, Role, RolePermission
+from app113209.serializers import UserSerializer, ModuleSerializer, RoleSerializer, RolePermissionSerializer
 from rest_framework.permissions import IsAuthenticated
 
 class UserViewSet(viewsets.ModelViewSet):

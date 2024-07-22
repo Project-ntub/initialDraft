@@ -7,7 +7,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.views import LoginView
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
-from .models import User
+from app113209.models import User
 from django.utils import timezone
 from datetime import timedelta
 from django.core.mail import send_mail

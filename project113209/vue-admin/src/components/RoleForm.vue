@@ -61,43 +61,91 @@
 </template>
 
 <script>
+import axios from '../axios';
+
 export default {
   name: "RoleForm",
-  props: {
-    isEdit: Boolean,
-    role: Object,
-    rolePermissions: Array
-  },
   data() {
     return {
-      localRole: { ...this.role },
-      localRolePermissions: [ ...this.rolePermissions ]
+      localRole: {
+        name: '',
+        module: ''
+      },
+      localRolePermissions: [],
+      isEdit: false,
+      modules: [] // 添加模块数据
     };
   },
   methods: {
-    saveRole() {
-      // 發送請求到後端
-      this.$http.post("/backend/role_form", {
-        role: this.localRole,
-        role_permissions: this.localRolePermissions
-      }).then(response => {
+    async saveRole() {
+      try {
+        const response = this.isEdit
+          ? await axios.put(`/api/backend/roles/${this.localRole.id}/`, {
+              role: this.localRole,
+              role_permissions: this.localRolePermissions
+            })
+          : await axios.post("/api/backend/roles/", {
+              role: this.localRole,
+              role_permissions: this.localRolePermissions
+            });
         if (response.data.success) {
           alert("保存成功");
+          this.$router.push({ name: 'roleManagement' });
         } else {
           alert("保存失敗");
         }
-      });
+      } catch (error) {
+        console.error('Error saving role:', error.response ? error.response.data : error.message);
+        alert("保存失敗");
+      }
     },
     deletePermission(permissionId) {
-      // 刪除權限的邏輯
       this.localRolePermissions = this.localRolePermissions.filter(p => p.id !== permissionId);
     },
     addPermission() {
-      // 新增權限的邏輯
-      this.$router.push({ name: 'addPermission', params: { roleId: this.localRole.id } });
+      if (!Array.isArray(this.localRolePermissions)) {
+        this.localRolePermissions = [];
+      }
+      this.localRolePermissions.push({
+        id: Date.now(), // You should replace this with a more robust ID generation in production
+        permissionName: '',
+        canAdd: false,
+        canQuery: false,
+        canView: false,
+        canEdit: false,
+        canDelete: false,
+        canPrint: false,
+        canExport: false,
+        canMaintain: false
+      });
     },
     cancel() {
       this.$router.go(-1);
+    },
+    async loadRole(roleId) {
+      try {
+        const response = await axios.get(`/api/backend/roles/${roleId}/`);
+        this.localRole = response.data;
+        this.localRolePermissions = response.data.permissions;
+      } catch (error) {
+        console.error('Error loading role:', error.response ? error.response.data : error.message);
+      }
+    },
+    async fetchModules() {
+      try {
+        const response = await axios.get('/api/backend/modules/');
+        this.modules = response.data;
+      } catch (error) {
+        console.error('Error fetching modules:', error);
+      }
+    }
+  },
+  async mounted() {
+    const roleId = this.$route.params.roleId;
+    await this.fetchModules(); // 确保在加载组件时获取模块数据
+    if (roleId) {
+      this.isEdit = true;
+      await this.loadRole(roleId);
     }
   }
 };

@@ -1,5 +1,6 @@
+# app113209\frontend\urls.py
 from django.urls import path
-from . import frontend_views
+from . import views as frontend_views
 from django.views.generic import TemplateView
 
 app_name = 'frontend'

@@ -1,5 +1,5 @@
-# models.py
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.db.models import Count
 from django.db import models
 import pyotp
 
@@ -74,9 +74,13 @@ class Module(models.Model):
     def __str__(self):
         return self.name
 
+    def user_count(self):
+        return self.role_set.filter(users__is_active=True).count()  # 計算關聯角色中所有活躍用戶的數量
+
+
 class Role(models.Model):
     name = models.CharField(max_length=20, unique=True)
-    users = models.ManyToManyField(User, related_name='roles')
+    users = models.ManyToManyField(User, related_name='roles', through='RoleUsers')
     is_active = models.BooleanField(default=False)
     module = models.ForeignKey(Module, on_delete=models.CASCADE)
     is_deleted = models.BooleanField(default=False)  # Add this field for soft delete
@@ -86,6 +90,14 @@ class Role(models.Model):
 
     def __str__(self):
         return self.name
+
+class RoleUsers(models.Model):
+    role = models.ForeignKey(Role, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    
+    class Meta:
+        db_table = 'role_users'
+        unique_together = ('role', 'user')
 
 class RolePermission(models.Model):
     role = models.ForeignKey(Role, on_delete=models.CASCADE)

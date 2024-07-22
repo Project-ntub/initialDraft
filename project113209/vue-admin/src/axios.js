@@ -1,4 +1,3 @@
-// src/axios.js
 import axios from 'axios';
 
 axios.defaults.baseURL = 'http://localhost:8000'; // Django 服务器的基础 URL

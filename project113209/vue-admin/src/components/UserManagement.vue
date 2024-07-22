@@ -120,7 +120,7 @@ export default {
       this.$router.push(`/management/assign_role/${userId}`);
     },
     fetchUsers() {
-      axios.get('/api/users/')
+      axios.get('/api/backend/users/')
         .then(response => {
           this.users = response.data;
         })
