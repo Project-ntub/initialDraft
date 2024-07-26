@@ -1,3 +1,4 @@
+# app113209/serializers.py
 from rest_framework import serializers
 from .models import User, Module, Role, RolePermission
 
@@ -14,19 +15,15 @@ class ModuleSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'user_count', 'is_deleted')
 
     def get_user_count(self, obj):
-        return User.objects.filter(module=obj.name, is_active=True).count()
+        return User.objects.filter(roles__module=obj, is_active=True).count()
 
 class RoleSerializer(serializers.ModelSerializer):
-    module_name = serializers.CharField(source='module.name', read_only=True)
-    user_count = serializers.SerializerMethodField()
-    users = UserSerializer(many=True, read_only=True)
+    module = ModuleSerializer()  # 使用嵌套的ModuleSerializer來顯示模組詳細信息
+    users = UserSerializer(many=True)  # 使用嵌套的UserSerializer來顯示用戶詳細信息
 
     class Meta:
         model = Role
-        fields = ('id', 'name', 'is_active', 'module', 'module_name', 'users', 'user_count', 'is_deleted')
-
-    def get_user_count(self, obj):
-        return obj.users.filter(is_active=True).count()
+        fields = ['id', 'name', 'is_active', 'module', 'users']
 
 class RolePermissionSerializer(serializers.ModelSerializer):
     class Meta:

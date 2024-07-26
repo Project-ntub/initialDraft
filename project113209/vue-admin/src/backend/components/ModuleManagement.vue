@@ -5,9 +5,7 @@
       <button class="btn" @click="navigateToModuleManagement">模組</button>
     </div>
     <h2>模組管理</h2>
-    <button id="add-module-btn" class="btn" @click="openCreateModuleModal">
-      新增模組
-    </button>
+    <button id="add-module-btn" class="btn" @click="openCreateModuleModal">新增模組</button>
     <table class="module-table">
       <thead>
         <tr>
@@ -19,7 +17,7 @@
       <tbody>
         <tr v-for="module in modules" :key="module.id">
           <td>{{ module.name }}</td>
-          <td>{{ module.user_count }}</td>
+          <td>{{ getUserCount(module.id) }}</td>
           <td>
             <button @click="openEditModuleModal(module.id, module.name)">編輯</button>
             <button @click="deleteModule(module.id)">刪除</button>
@@ -28,58 +26,30 @@
       </tbody>
     </table>
 
-    <div v-if="showCreateModuleModal" class="modal">
-      <div class="modal-content">
-        <span class="close" @click="closeCreateModuleModal">&times;</span>
-        <h2>新增模組</h2>
-        <form @submit.prevent="createModule">
-          <div class="form-group">
-            <label for="module-name">模組名稱</label>
-            <input type="text" v-model="newModuleName" id="module-name" required />
-          </div>
-          <button type="submit" class="btn">新增</button>
-        </form>
-      </div>
-    </div>
-
-    <div v-if="showEditModuleModal" class="modal">
-      <div class="modal-content">
-        <span class="close" @click="closeEditModuleModal">&times;</span>
-        <h2>編輯模組</h2>
-        <form @submit.prevent="editModule">
-          <div class="form-group">
-            <label for="edit-module-name">模組名稱</label>
-            <input type="text" v-model="editModuleName" id="edit-module-name" required />
-          </div>
-          <button type="submit" class="btn">保存</button>
-        </form>
-      </div>
-    </div>
+    <ModuleForm v-if="showCreateModuleModal" @close="closeCreateModuleModal" @create="createModule" />
   </div>
 </template>
 
 <script>
-import axios from '../axios';
+import axios from 'axios';
+import ModuleForm from './ModuleForm.vue';
 
 export default {
   name: "ModuleManagement",
+  components: {
+    ModuleForm
+  },
   data() {
     return {
       modules: [],
+      users: [],
       showCreateModuleModal: false,
-      showEditModuleModal: false,
       newModuleName: "",
       editModuleName: "",
       editModuleId: null
     };
   },
   methods: {
-    navigateToRoleManagement() {
-      this.$router.push({ name: 'roleManagement' });
-    },
-    navigateToModuleManagement() {
-      this.$router.push({ name: 'moduleManagement' });
-    },
     async loadModules() {
       try {
         const response = await axios.get('/api/backend/modules/');
@@ -94,9 +64,9 @@ export default {
     closeCreateModuleModal() {
       this.showCreateModuleModal = false;
     },
-    async createModule() {
+    async createModule(newModule) {
       try {
-        const response = await axios.post('/api/backend/modules/', { name: this.newModuleName });
+        const response = await axios.post('/api/backend/modules/', newModule);
         if (response.data.success) {
           this.loadModules();
           this.closeCreateModuleModal();
@@ -138,11 +108,27 @@ export default {
         }
       } catch (error) {
         console.error('Error deleting module:', error.response ? error.response.data : error.message);
+        alert("刪除模組失敗");
       }
+    },
+    navigateToRoleManagement() {
+      this.$router.push('/management/role-management');
+    },
+    navigateToModuleManagement() {
+      this.$router.push('/management/module-management');
+    },
+    getUserCount(moduleId) {
+      return this.users.filter(user => user.module.id === moduleId).length;
     }
   },
-  mounted() {
-    this.loadModules();
+  async mounted() {
+    await this.loadModules();
+    try {
+      const response = await axios.get('/api/backend/users/');
+      this.users = response.data;
+    } catch (error) {
+      console.error('Error fetching users:', error.response ? error.response.data : error.message);
+    }
   }
 };
 </script>

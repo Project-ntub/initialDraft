@@ -9,6 +9,8 @@ import EditUser from '../components/EditUser.vue';
 import AssignRole from '@/components/AssignRole.vue';
 import ModuleManagement from '../components/ModuleManagement.vue';
 import RoleForm from '../components/RoleForm.vue'; 
+import ModuleForm from '../components/ModuleForm.vue';
+import RolePermissions from '../components/RolePermissions.vue';
 
 const routes = [
   { path: '/', redirect: '/login' },
@@ -24,8 +26,11 @@ const routes = [
       { path: 'edit_user/:userId', component: EditUser, name: 'editUser' },
       { path: 'assign_role/:userId', component: AssignRole, name: 'assignRole' },
       { path: 'module-management', component: ModuleManagement, name: 'moduleManagement' },
-      { path: 'create_role', component: RoleForm, name: 'createRole' }, // 新增角色的路由
-      { path: 'edit_role/:roleId', component: RoleForm, name: 'editRole' }, // 编辑角色的路由
+      { path: 'create_role', component: RoleForm, name: 'createRole' },
+      { path: 'edit_role/:roleId', component: RoleForm, name: 'editRole' },
+      { path: 'create-module', component: ModuleForm, name: 'createModule' },
+      { path: 'edit_module/:moduleId', component: ModuleForm, name: 'editModule' },
+      { path: 'role_permissions/:roleId', component: RolePermissions, name: 'rolePermissions' },
     ],
   },
 ];

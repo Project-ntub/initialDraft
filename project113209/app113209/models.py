@@ -1,5 +1,4 @@
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
-from django.db.models import Count
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
 import pyotp
 
@@ -24,7 +23,7 @@ class CustomUserManager(BaseUserManager):
 
         return self.create_user(email, username, password, **extra_fields)
 
-class User(AbstractBaseUser, PermissionsMixin):
+class User(AbstractBaseUser):
     username = models.CharField(max_length=100, unique=True)
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=15, unique=True, null=False, blank=False, default='0000000000')
@@ -35,13 +34,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     department_id = models.CharField(max_length=50, blank=True, null=True)
     position_id = models.CharField(max_length=50, blank=True, null=True)
     branch_id = models.CharField(max_length=50, blank=True, null=True)
-    module = models.CharField(max_length=100, blank=True, null=True)
+    module = models.ForeignKey('Module', on_delete=models.SET_NULL, null=True, blank=True)
     gender = models.CharField(max_length=10, blank=True, null=True)
     is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=False)  # 确保这里字段名正确
+    is_active = models.BooleanField(default=False)
     otp_secret = models.CharField(max_length=32, blank=True, null=True)
     date_joined = models.DateTimeField(auto_now_add=True)
-    is_deleted = models.BooleanField(default=False)  # Add this field for soft delete
+    is_deleted = models.BooleanField(default=False)
 
     objects = CustomUserManager()
 
@@ -66,7 +65,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 class Module(models.Model):
     name = models.CharField(max_length=100, unique=True)
     is_active = models.BooleanField(default=True)
-    is_deleted = models.BooleanField(default=False)  # Add this field for soft delete
+    is_deleted = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'module'
@@ -74,16 +73,12 @@ class Module(models.Model):
     def __str__(self):
         return self.name
 
-    def user_count(self):
-        return self.role_set.filter(users__is_active=True).count()  # 計算關聯角色中所有活躍用戶的數量
-
-
 class Role(models.Model):
-    name = models.CharField(max_length=20, unique=True)
-    users = models.ManyToManyField(User, related_name='roles', through='RoleUsers')
-    is_active = models.BooleanField(default=False)
-    module = models.ForeignKey(Module, on_delete=models.CASCADE)
-    is_deleted = models.BooleanField(default=False)  # Add this field for soft delete
+    name = models.CharField(max_length=255)
+    is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
+    module = models.ForeignKey('Module', on_delete=models.CASCADE)
+    users = models.ManyToManyField('User', through='RoleUser', related_name='roles')
 
     class Meta:
         db_table = 'role'
@@ -91,17 +86,19 @@ class Role(models.Model):
     def __str__(self):
         return self.name
 
-class RoleUsers(models.Model):
-    role = models.ForeignKey(Role, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    
+class RoleUser(models.Model):
+    user = models.ForeignKey('User', on_delete=models.CASCADE)
+    role = models.ForeignKey('Role', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
     class Meta:
         db_table = 'role_users'
         unique_together = ('role', 'user')
 
 class RolePermission(models.Model):
     role = models.ForeignKey(Role, on_delete=models.CASCADE)
-    permission_name = models.CharField(max_length=100, default=False)
+    permission_name = models.CharField(max_length=100)
     can_add = models.BooleanField(default=False)
     can_query = models.BooleanField(default=False)
     can_view = models.BooleanField(default=False)
@@ -110,11 +107,11 @@ class RolePermission(models.Model):
     can_print = models.BooleanField(default=False)
     can_export = models.BooleanField(default=False)
     can_maintain = models.BooleanField(default=False)
-    is_deleted = models.BooleanField(default=False)  # Add this field for soft delete
+    is_deleted = models.BooleanField(default=False)
 
     class Meta:
-        db_table = 'rolepermission'
-        unique_together = ('role', 'permission_name')  # 添加唯一約束
+        db_table = 'role_permission'
+        unique_together = ('role', 'permission_name')
 
     def __str__(self):
-        return f"{self.role.name} - {self.permission_name}"
+        return self.permission_name

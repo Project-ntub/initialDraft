@@ -3,8 +3,9 @@ import logging
 import uuid
 import json
 from app113209.models import User, Role, RolePermission, Module
-from app113209.forms import UserForm, RoleForm, RolePermissionForm
+from app113209.forms import  UserForm, RoleForm, RolePermissionForm
 from app113209.validators import CustomPasswordValidator
+from app113209.serializers import UserSerializer, RoleSerializer, ModuleSerializer, RolePermissionSerializer
 from datetime import timedelta
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate, login
@@ -20,8 +21,8 @@ from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.db.models import Q
-from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework import status, viewsets
+from rest_framework.decorators import api_view, permission_classes, action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -157,17 +158,7 @@ def register(request):
 def registration_success(request):
     return render(request, 'backend/registration_success.html')
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def approve_user(request, user_id):
-    try:
-        user = User.objects.get(id=user_id, is_active=False)
-        user.is_active = True
-        user.save()
-        return JsonResponse({'success': True})
-    except User.DoesNotExist:
-        return JsonResponse({'error': 'User not found'}, status=404)
-
+    
 def forgot_password(request):
     if request.method == 'POST':
         email = request.POST['email']
@@ -207,6 +198,51 @@ def approve_user(request, user_id):
         return JsonResponse({'success': True})
     except User.DoesNotExist:
         return JsonResponse({'error': 'User not found'}, status=404)
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.filter(is_deleted=False)
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+
+class ModuleViewSet(viewsets.ModelViewSet):
+    queryset = Module.objects.filter(is_deleted=False)
+    serializer_class = ModuleSerializer
+    permission_classes = [IsAuthenticated]
+
+    def create(self, request):
+        module_name = request.data.get('module_name')
+        if module_name:
+            Module.objects.create(name=module_name)
+            return Response({'success': True})
+        return Response({'success': False, 'message': '模組名稱為必填項'})
+
+class RoleViewSet(viewsets.ModelViewSet):
+    queryset = Role.objects.filter(is_deleted=False)
+    serializer_class = RoleSerializer
+    permission_classes = [IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        logger.debug('創建角色請求數據: %s', request.data)
+        try:
+            response = super().create(request, *args, **kwargs)
+            logger.debug('角色創建成功: %s', response.data)
+            return response
+        except Exception as e:
+            logger.error('創建角色時發生錯誤: %s', e)
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True, methods=['post'])
+    def toggle_status(self, request, pk=None):
+        role = self.get_object()
+        role.is_active = not role.is_active
+        role.save()
+        return Response({'success': True})
+
+class RolePermissionViewSet(viewsets.ModelViewSet):
+    queryset = RolePermission.objects.filter(is_deleted=False)
+    serializer_class = RolePermissionSerializer
+    permission_classes = [IsAuthenticated]
+
 
 def management(request):
     return render(request, 'backend/management.html')
@@ -299,8 +335,8 @@ def edit_user(request, user_id):
 @permission_classes([IsAuthenticated])
 def get_users(request):
     users = User.objects.filter(is_active=True, is_deleted=False)
-    data = list(users.values())
-    return JsonResponse(data, safe=False)
+    serializer = UserSerializer(users, many=True)
+    return Response(serializer.data)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -346,42 +382,41 @@ def module_management(request):
     })
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def create_role(request):
-    try:
-        role_data = request.data['role']
-        role_permissions_data = request.data['role_permissions']
-        
-        role = Role.objects.create(
-            name=role_data['name'],
-            is_active=role_data['is_active'],
-            module_id=role_data['module']
-        )
-        
+    role_data = request.data.get('role', {})
+    role_permissions_data = request.data.get('role_permissions', [])
+
+    serializer = RoleSerializer(data=role_data)
+    if serializer.is_valid():
+        role = serializer.save()
+
+        # 處理權限
         for perm_data in role_permissions_data:
             RolePermission.objects.create(
                 role=role,
-                permission_name=perm_data['permission_name'],
-                can_add=perm_data['can_add'],
-                can_query=perm_data['can_query'],
-                can_view=perm_data['can_view'],
-                can_edit=perm_data['can_edit'],
-                can_delete=perm_data['can_delete'],
-                can_print=perm_data['can_print'],
-                can_export=perm_data['can_export'],
-                can_maintain=perm_data['can_maintain']
+                permission_name=perm_data.get('permission_name'),
+                can_add=perm_data.get('can_add'),
+                can_query=perm_data.get('can_query'),
+                can_view=perm_data.get('can_view'),
+                can_edit=perm_data.get('can_edit'),
+                can_delete=perm_data.get('can_delete'),
+                can_print=perm_data.get('can_print'),
+                can_export=perm_data.get('can_export'),
+                can_maintain=perm_data.get('can_maintain')
             )
-        
-        return JsonResponse({'success': True})
-    except Exception as e:
-        logger.error(f"Error creating role: {e}")
-        return JsonResponse({'success': False, 'message': str(e)}, status=500)
+
+        return Response({'success': True}, status=status.HTTP_201_CREATED)
+    else:
+        return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['PUT'])
+@permission_classes([IsAuthenticated])
 def edit_role(request, role_id):
     try:
         role = get_object_or_404(Role, id=role_id)
         role_data = request.data['role']
-        role_permissions_data = request.data['role_permissions']
+        role_permissions_data = request.data.get('role_permissions', [])
 
         role.name = role_data['name']
         role.is_active = role_data['is_active']
@@ -408,14 +443,19 @@ def edit_role(request, role_id):
         logger.error(f"Error editing role: {e}")
         return JsonResponse({'success': False, 'message': str(e)}, status=500)
 
-
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def delete_role(request, role_id):
-    role = get_object_or_404(Role, id=role_id)
-    role.is_deleted = True
-    role.save()
-    return redirect('backend:role_management')
+    try:
+        role = get_object_or_404(Role, id=role_id)
+        role.is_deleted = True
+        role.save()
+        return JsonResponse({'success': True})
+    except Role.DoesNotExist:
+        return JsonResponse({'error': 'Role not found'}, status=404)
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def toggle_role_status(request, role_id):
     role = get_object_or_404(Role, id=role_id)
     data = request.data
@@ -426,27 +466,33 @@ def toggle_role_status(request, role_id):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_modules(request):
-    modules = Module.objects.filter(is_deleted=False).values('id', 'name')
-    return JsonResponse({'modules': list(modules)})
-
+    modules = Module.objects.filter(is_deleted=False)
+    serializer = ModuleSerializer(modules, many=True)
+    return Response({'modules': serializer.data})
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def create_module(request):
-    data = request.data
-    module_name = data.get('module_name')
-    if module_name:
-        Module.objects.create(name=module_name)
-        return JsonResponse({'success': True})
-    return JsonResponse({'success': False, 'message': '模組名稱為必填項'})
+    module_name = request.data.get('module_name')
+    if not module_name:
+        return Response({'success': False, 'message': '模組名稱為必填項'})
+
+    if Module.objects.filter(name=module_name).exists():
+        return Response({'success': False, 'message': '模組名稱已存在'})
+
+    Module.objects.create(name=module_name)
+    return Response({'success': True})
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def delete_module(request, module_id):
     module = get_object_or_404(Module, id=module_id)
     module.is_deleted = True
     module.save()
-    return redirect('backend:module_management')
+    return JsonResponse({'success': True})
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def edit_module(request):
     data = request.data
     try:

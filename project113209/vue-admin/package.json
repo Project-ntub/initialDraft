@@ -16,6 +16,7 @@
     "core-js": "^3.8.3",
     "element-plus": "^2.7.7",
     "jspdf": "^2.5.1",
+    "mitt": "^3.0.1",
     "vue": "^3.2.13",
     "vue-apexcharts": "^1.6.2",
     "vue-chartjs": "^5.3.1",
