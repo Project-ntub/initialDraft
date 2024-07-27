@@ -1,0 +1,76 @@
+/* body {
+    font-family: Arial, sans-serif;
+    padding: 0;
+    margin: 0;
+    background-color: #f2f2f2;
+  } */
+  
+  /* .container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 80px);
+    width: 90%;
+    max-width: 600px;
+    margin: 0 auto;
+  } */
+  
+  .personal-card-page {
+    display: flex; /* 添加 flex 布局 */
+    overflow: hidden; /* 禁止页面滚动 */
+  }
+  
+  .main-panel {
+    margin-left: 60px; /* 根据 sidebar 宽度调整 */
+    
+  }
+  
+  .personal-card {
+    background-color: #2c3e50;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%; /* 使用百分比来实现响应式 */
+    max-width: 600px; /* 最大宽度 */
+    min-width: 300px; /* 最小宽度 */
+    min-height: 300px; /* 最小高度 */
+    max-height: 450px; /* 最大高度 */
+    margin-top: 13px;
+
+  }
+  
+  .personal-card img {
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    margin-bottom: 20px;
+  }
+  
+  .personal-card h2 {
+    font-size: 1.5rem; /* 调整标题字体大小 */
+  }
+  
+  .personal-card h3 {
+    font-size: 1.2rem; /* 调整副标题字体大小 */
+  }
+  
+  .personal-card p {
+    font-size: 1rem; /* 调整段落字体大小 */
+  }
+  
+  .edit-button {
+    padding: 10px 20px;
+    background-color: #6200ea;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+  
+  .edit-button:hover {
+    background-color: #3700b3;
+  }
+  

@@ -1,0 +1,38 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #fff; /* 白色背景 */
+    color: #333; /* 深色文字 */
+}
+.message {
+    padding: 20px 40px;
+    background-color: #f4f4f4; /* 淺灰色背景 */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+.message h1 {
+    margin: 0 0 10px;
+    font-size: 2.5em;
+    color: #007bff; /* 綠色標題文字 */
+}
+.message p {
+    margin: 0 0 20px;
+    font-size: 1.2em;
+}
+.message button {
+    padding: 10px 20px;
+    font-size: 1em;
+    color: #fff;
+    background-color: #007bff; /* 綠色按鈕 */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.message button:hover {
+    background-color: #0069d9; /* 深綠色按鈕 */
+}

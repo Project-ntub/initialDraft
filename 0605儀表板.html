@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>首頁 - 分店查詢</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+    }
+    .menu {
+      margin-bottom: 20px;
+    }
+    .menu ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .menu li {
+      margin-right: 20px;
+    }
+    .menu li a {
+      text-decoration: none;
+      color: #333;
+    }
+    .controls {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .controls button {
+      margin: 5px;
+    }
+    .chart-container {
+      width: 100%;
+      max-width: 600px;
+      margin: 20px auto;
+      display: none;
+    }
+    .chart-container canvas {
+      width: 100% !important;
+      height: auto !important;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgb(0,0,0);
+      background-color: rgba(0,0,0,0.4);
+    }
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 400px;
+    }
+    .modal-content label, .modal-content select, .modal-content button {
+      display: block;
+      margin: 10px 0;
+    }
+    @media (min-width: 768px) {
+      .menu ul {
+        justify-content: flex-start;
+      }
+      .menu li {
+        margin-right: 20px;
+      }
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <h2>首頁 - 分店查詢</h2>
+
+  <div class="menu">
+    <ul>
+      <li><a href="個人資訊.html">個人資訊</a></li>
+      <li><a href="帳號設定.html">帳號設定</a></li>
+      <li><a href="歷史紀錄動態日期.html">歷史紀錄</a></li>
+    </ul>
+  </div>
+
+  <div class="controls">
+    <button onclick="showChart('revenueChart')">營業額</button>
+    <button onclick="showChart('salesTrendChart')">銷售額</button>
+    <button onclick="showChart('inventoryChart')">庫存量</button>
+    <button onclick="showModal()">新增圖表</button>
+  </div>
+
+  <div class="chart-container" id="revenueChartContainer">
+    <canvas id="revenueChart"></canvas>
+  </div>
+  <div class="chart-container" id="salesTrendChartContainer">
+    <canvas id="salesTrendChart"></canvas>
+  </div>
+  <div class="chart-container" id="inventoryChartContainer">
+    <canvas id="inventoryChart"></canvas>
+  </div>
+
+  <div class="modal" id="chartModal">
+    <div class="modal-content">
+      <span onclick="closeModal()" style="float:right;cursor:pointer;">&times;</span>
+      <label for="newChartTypeSelect">選擇圖表類型:</label>
+      <select id="newChartTypeSelect">
+        <option value="line">直線圖</option>
+        <option value="bar">長條圖</option>
+        <option value="pie">圓餅圖</option>
+        <option value="scatter">散佈圖</option>
+        <option value="horizontalBar">橫條圖</option>
+      </select>
+      <button onclick="addNewChart()">確認新增</button>
+    </div>
+  </div>
+
+  <script>
+    const storeData = {
+      'A': { revenue: 100000, trend: [10, 20, 30, 40, 50], inventory: 1000 },
+      'B': { revenue: 80000, trend: [15, 25, 35, 45, 55], inventory: 800 },
+      'C': { revenue: 120000, trend: [20, 30, 40, 50, 60], inventory: 1200 }
+    };
+
+    const charts = {};
+
+    function createChart(canvasId, type, labels, data, label, backgroundColor, borderColor) {
+      const ctx = document.getElementById(canvasId).getContext('2d');
+      const chartConfig = {
+        type: type,
+        data: {
+          labels: labels,
+          datasets: [{
+            label: label,
+            data: data,
+            backgroundColor: backgroundColor,
+            borderColor: borderColor,
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      };
+
+      if (type === 'horizontalBar') {
+        chartConfig.type = 'bar';
+        chartConfig.options.indexAxis = 'y';
+      }
+
+      return new Chart(ctx, chartConfig);
+    }
+
+    function showChart(chartId) {
+      document.querySelectorAll('.chart-container').forEach(container => container.style.display = 'none');
+      document.getElementById(chartId + 'Container').style.display = 'block';
+    }
+
+    function showModal() {
+      document.getElementById('chartModal').style.display = 'block';
+    }
+
+    function closeModal() {
+      document.getElementById('chartModal').style.display = 'none';
+    }
+
+    function addNewChart() {
+      const chartType = document.getElementById('newChartTypeSelect').value;
+      const newChartId = `newChart${Object.keys(charts).length + 1}`;
+      const newCanvas = document.createElement('canvas');
+      newCanvas.id = newChartId;
+      newCanvas.classList.add('chart-container');
+      document.body.appendChild(newCanvas);
+
+      const newChart = createChart(newChartId, chartType, ['January', 'February', 'March', 'April', 'May'], [12, 19, 3, 5, 2, 3], '新圖表', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 1)');
+      charts[newChartId] = newChart;
+
+      closeModal();
+    }
+
+    function initDefaultCharts() {
+      charts.revenueChart = createChart('revenueChart', 'line', ['January', 'February', 'March', 'April', 'May'], storeData['A'].trend, '營業額', 'rgba(75, 192, 192, 0.2)', 'rgba(75, 192, 192, 1)');
+      charts.salesTrendChart = createChart('salesTrendChart', 'line', ['January', 'February', 'March', 'April', 'May'], storeData['B'].trend, '銷售趨勢', 'rgba(153, 102, 255, 0.2)', 'rgba(153, 102, 255, 1)');
+      charts.inventoryChart = createChart('inventoryChart', 'line', ['January', 'February', 'March', 'April', 'May'], storeData['C'].trend, '庫存量', 'rgba(255, 159, 64, 0.2)', 'rgba(255, 159, 64, 1)');
+    }
+
+    initDefaultCharts();
+    showChart('revenueChart'); // Show the initial chart
+  </script>
+</body>
+</html>
