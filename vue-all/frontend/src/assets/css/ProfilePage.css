@@ -1,0 +1,87 @@
+body {
+  font-family: Arial, sans-serif;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.header-bar {
+  width: 100%;
+  background-color: black;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 18px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+h2 {
+  text-align: center;
+  margin-top: 60px;
+}
+
+.info-container {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 20px;
+  margin-top: 100px;
+  margin-bottom: 20px;
+  width: 80%;
+  max-width: 600px;
+  text-align: center;
+}
+
+.info-container h3 {
+  margin-top: 0;
+}
+
+.info-container p {
+  margin: 5px 0;
+}
+
+.button-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.button-container button {
+  padding: 10px 20px;
+  margin: 0 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.button-container button.edit {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.button-container button.logout {
+  background-color: #f44336;
+  color: white;
+}
+
+.content {
+  margin-left: 60px;
+  padding: 20px;
+  transition: margin-left 0.3s;
+}
+
+.content.shift {
+  margin-left: 200px;
+}
+
+input[type="text"], input[type="email"] {
+  width: 100%;
+  padding: 8px;
+  margin: 5px 0;
+  box-sizing: border-box;
+}
