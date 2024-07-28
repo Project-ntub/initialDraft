@@ -1,0 +1,120 @@
+from django.core.management.base import BaseCommand
+from django.db import models, connections
+from django.utils import timezone
+
+# 確保你在 myapp/models.py 中定義了 UserPreferences 模型
+class UserPreferences(models.Model):
+    user_id = models.AutoField(primary_key=True)
+    fontsize = models.CharField(max_length=50)
+    notificationSettings = models.CharField(max_length=50)
+    autoLogin = models.CharField(max_length=50)
+
+    class Meta:
+        db_table = 'userpreferences'
+
+    def __str__(self):
+        return f"{self.user_id} - {self.fontsize} - {self.notificationSettings} - {self.autoLogin}"
+
+class Command(BaseCommand):
+    help = '管理 userpreferences 表的偏好設置'
+
+    def handle(self, *args, **kwargs):
+        self.stdout.write("獲取偏好設置: ")
+        self.stdout.write(str(self.get_preferences()))
+
+        self.stdout.write(self.add_preference("large", "on", "off"))
+        self.stdout.write(self.update_preference(1, "small", "off", "on"))
+        self.stdout.write(self.delete_preference(1))
+        self.stdout.write("查詢偏好設置: ")
+        self.stdout.write(str(self.query_preferences(fontsize="medium")))
+
+    def get_preferences(self):
+        try:
+            preference = UserPreferences.objects.first()
+            if preference:
+                return {
+                    "user_id": preference.user_id,
+                    "fontsize": preference.fontsize,
+                    "notificationSettings": preference.notificationSettings,
+                    "autoLogin": preference.autoLogin
+                }
+            else:
+                return {
+                    "fontsize": "medium",
+                    "notificationSettings": "off",
+                    "autoLogin": "off"
+                }
+        except Exception as e:
+            return str(e)
+
+    def update_preference(self, user_id, fontsize, notificationSettings, autoLogin):
+        try:
+            preference = UserPreferences.objects.get(user_id=user_id)
+            preference.fontsize = fontsize
+            preference.notificationSettings = notificationSettings
+            preference.autoLogin = autoLogin
+            preference.save()
+            return '偏好已更新'
+        except UserPreferences.DoesNotExist:
+            return '偏好不存在'
+        except Exception as e:
+            return str(e)
+
+    def add_preference(self, fontsize, notificationSettings, autoLogin):
+        try:
+            UserPreferences.objects.create(
+                fontsize=fontsize,
+                notificationSettings=notificationSettings,
+                autoLogin=autoLogin
+            )
+            return '偏好已新增'
+        except Exception as e:
+            return str(e)
+
+    def delete_preference(self, user_id):
+        try:
+            preference = UserPreferences.objects.get(user_id=user_id)
+            preference.delete()
+            return '偏好已刪除'
+        except UserPreferences.DoesNotExist:
+            return '偏好不存在'
+        except Exception as e:
+            return str(e)
+
+    def query_preferences(self, fontsize=None, notificationSettings=None, autoLogin=None):
+        try:
+            filters = {}
+            if fontsize:
+                filters['fontsize'] = fontsize
+            if notificationSettings:
+                filters['notificationSettings'] = notificationSettings
+            if autoLogin:
+                filters['autoLogin'] = autoLogin
+
+            preferences = UserPreferences.objects.filter(**filters)
+            result = []
+            for preference in preferences:
+                result.append({
+                    "user_id": preference.user_id,
+                    "fontsize": preference.fontsize,
+                    "notificationSettings": preference.notificationSettings,
+                    "autoLogin": preference.autoLogin
+                })
+            return result
+        except Exception as e:
+            return str(e)
+
+# 確保你在 myapp/models.py 中定義了 UserPreferences 模型
+from django.db import models
+
+class UserPreferences(models.Model):
+    user_id = models.AutoField(primary_key=True)
+    fontsize = models.CharField(max_length=50)
+    notificationSettings = models.CharField(max_length=50)
+    autoLogin = models.CharField(max_length=50)
+
+    class Meta:
+        db_table = 'userpreferences'
+
+    def __str__(self):
+        return f"{self.user_id} - {self.fontsize} - {self.notificationSettings} - {self.autoLogin}"
