@@ -1,58 +1,49 @@
 <template>
   <div class="container">
-    <h2>{{ isEdit ? "編輯模組" : "新增模組" }}</h2>
-    <form @submit.prevent="saveModule">
+    <h2>{{ moduleId ? '編輯模組' : '新增模組' }}</h2>
+    <form @submit.prevent="handleSubmit">
       <div class="form-group">
         <label for="module-name">模組名稱</label>
-        <input type="text" v-model="localModule.name" id="module-name" required />
+        <input type="text" v-model="localModuleName" id="module-name" required />
       </div>
-      <button type="submit" class="btn">{{ isEdit ? "保存變更" : "新增" }}</button>
-      <button type="button" class="btn secondary" @click="cancel">取消</button>
+      <button type="submit" class="btn">{{ moduleId ? '保存變更' : '新增' }}</button>
+      <button type="button" class="btn secondary" @click="close">取消</button>
     </form>
   </div>
 </template>
 
 <script>
-import axios from '../axios';
-
 export default {
   name: "ModuleForm",
+  props: {
+    moduleId: {
+      type: [String, Number],
+      default: null
+    },
+    moduleName: {
+      type: String,
+      default: ""
+    }
+  },
   data() {
     return {
-      localModule: {
-        name: '',
-        is_deleted: false
-      },
-      isEdit: false
+      localModuleName: this.moduleName
     };
   },
   methods: {
-    async saveModule() {
-      try {
-        const response = await axios.post('/api/backend/modules/', { name: this.localModule.name });
-        if (response.status === 201) {
-          alert('保存成功');
-          this.$emit('close');
-        } else {
-          alert('保存失敗');
-        }
-      } catch (error) {
-        console.error('Error saving module:', error.response ? error.response.data : error.message);
-        alert('保存失敗');
-      }
-    },
-    cancel() {
+    close() {
       this.$emit('close');
-    }
-  },
-  async mounted() {
-    const moduleId = this.$route.params.moduleId;
-    if (moduleId) {
-      this.isEdit = true;
-      await this.loadModule(moduleId);
+    },
+    handleSubmit() {
+      const moduleData = { name: this.localModuleName };
+      if (this.moduleId) {
+        this.$emit('edit', moduleData);
+      } else {
+        this.$emit('create', moduleData);
+      }
     }
   }
 };
 </script>
 
-<style scoped src="../assets/css/CreateModule.css"></style>
+<style scoped src="../assets/css/ModuleForm.css"></style>

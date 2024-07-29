@@ -13,6 +13,9 @@ class ModuleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Module
         fields = ('id', 'name', 'user_count', 'is_deleted')
+        extra_kwargs = {
+            'name': {'required': True},
+        }
 
     def get_user_count(self, obj):
         return User.objects.filter(roles__module=obj, is_active=True).count()
@@ -24,8 +27,17 @@ class RoleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Role
         fields = ['id', 'name', 'is_active', 'module', 'users']
+        extra_kwargs = {
+            'name': {'required': True},
+            'module': {'required': True},
+            'users': {'required': True}
+        }
 
 class RolePermissionSerializer(serializers.ModelSerializer):
     class Meta:
         model = RolePermission
         fields = ('id', 'role', 'permission_name', 'can_add', 'can_query', 'can_view', 'can_edit', 'can_delete', 'can_print', 'can_export', 'can_maintain', 'is_deleted')
+        extra_kwargs = {
+            'role': {'required': True},
+            'permission_name': {'required': True}
+        }

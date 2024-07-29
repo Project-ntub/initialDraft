@@ -345,9 +345,6 @@ def get_roles(request):
     data = list(roles.values())
     return JsonResponse(data, safe=False)
 
-def get_roles_by_module(request, module_id):
-    roles = Role.objects.filter(module_id=module_id, is_deleted=False).values('id', 'name')
-    return JsonResponse(list(roles), safe=False)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])

@@ -27,6 +27,7 @@
     </table>
 
     <ModuleForm v-if="showCreateModuleModal" @close="closeCreateModuleModal" @create="createModule" />
+    <ModuleForm v-if="showEditModuleModal" :moduleId="editModuleId" :moduleName="editModuleName" @close="closeEditModuleModal" @edit="editModule" />
   </div>
 </template>
 
@@ -42,8 +43,8 @@ export default {
   data() {
     return {
       modules: [],
-      users: [],
       showCreateModuleModal: false,
+      showEditModuleModal: false,
       newModuleName: "",
       editModuleName: "",
       editModuleId: null
@@ -53,7 +54,7 @@ export default {
     async loadModules() {
       try {
         const response = await axios.get('/api/backend/modules/');
-        this.modules = response.data;
+        this.modules = response.data || []; // 確保 modules 總是一个数组
       } catch (error) {
         console.error('Error fetching modules:', error.response ? error.response.data : error.message);
       }
@@ -85,9 +86,9 @@ export default {
     closeEditModuleModal() {
       this.showEditModuleModal = false;
     },
-    async editModule() {
+    async editModule(updatedModule) {
       try {
-        const response = await axios.put(`/api/backend/modules/${this.editModuleId}/`, { name: this.editModuleName });
+        const response = await axios.put(`/api/backend/modules/${this.editModuleId}/`, updatedModule);
         if (response.data.success) {
           this.loadModules();
           this.closeEditModuleModal();
@@ -118,17 +119,12 @@ export default {
       this.$router.push('/management/module-management');
     },
     getUserCount(moduleId) {
-      return this.users.filter(user => user.module.id === moduleId).length;
+      const module = this.modules.find(m => m.id === moduleId);
+      return module ? module.user_count : 0; // 確保返回值總是一个數字
     }
   },
-  async mounted() {
-    await this.loadModules();
-    try {
-      const response = await axios.get('/api/backend/users/');
-      this.users = response.data;
-    } catch (error) {
-      console.error('Error fetching users:', error.response ? error.response.data : error.message);
-    }
+  created() {
+    this.loadModules();
   }
 };
 </script>

@@ -12,7 +12,7 @@
       <label for="role">選擇角色:</label>
       <select id="role" v-model="selectedRole">
         <option value="">-- 選擇角色 --</option>
-        <option v-for="role in roles" :key="role.id">
+        <option v-for="role in roles" :key="role.id" :value="role.id">
           {{ role.name }}
         </option>
       </select>
@@ -33,14 +33,14 @@ export default {
       selectedRole: "",
       modules: [],
       roles: [],
-      user: {} // Initialize user as an empty object
+      user: {}
     };
   },
   methods: {
     loadModules() {
       axios.get("/api/backend/get_modules/")
         .then(response => {
-          this.modules = response.data.modules;
+          this.modules = response.data;
         })
         .catch(error => {
           console.error('Error loading modules:', error);

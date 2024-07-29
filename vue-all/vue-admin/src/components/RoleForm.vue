@@ -8,9 +8,16 @@
       </div>
       <div class="form-group">
         <label for="role-users">角色成員</label>
-        <select v-model="localRole.users" id="role-users" multiple>
-          <option v-for="user in users" :key="user.id" :value="user.id">{{ user.username }}</option>
-        </select>
+        <div class="member-container">
+          <div v-for="(userId, index) in localRole.users" :key="index" class="member-item">
+            <select v-model="localRole.users[index]" @change="updateMembers">
+              <option value="">-- 選擇成員 --</option>
+              <option v-for="user in filteredUsers" :key="user.id" :value="user.id">{{ user.username }}</option>
+            </select>
+            <button type="button" @click="removeMember(index)">-</button>
+          </div>
+          <button type="button" @click="addMember">+</button>
+        </div>
       </div>
       <div class="form-group">
         <label for="role-is-active">角色狀態</label>
@@ -19,7 +26,8 @@
       <div class="form-group">
         <label for="role-module">模組</label>
         <select v-model="localRole.module" id="role-module">
-          <option v-for="module in modules" :key="module.id" :value="module.id">{{ module.name }}</option>
+          <option value="">-- 選擇模組 --</option>
+          <option v-for="module in availableModules" :key="module.id" :value="module.id">{{ module.name }}</option>
         </select>
       </div>
       <div class="form-group">
@@ -65,7 +73,7 @@
 </template>
 
 <script>
-import axios from '../axios';
+import axios from 'axios';
 
 export default {
   name: "RoleForm",
@@ -77,19 +85,29 @@ export default {
         users: [],
         is_active: false
       },
-      users: [],
-      modules: [],
+      availableUsers: [],
+      availableModules: [],
       rolePermissions: [],
       isEdit: false
     };
   },
+  computed: {
+    filteredUsers() {
+      const selectedUserIds = new Set(this.localRole.users);
+      return this.availableUsers.filter(user => !selectedUserIds.has(user.id));
+    }
+  },
   methods: {
     async saveRole() {
       try {
+        const roleData = {
+          ...this.localRole,
+          users: this.localRole.users.map(user => user.id) // Ensure we send only user IDs
+        };
         const response = this.isEdit
-          ? await axios.put(`/api/backend/roles/${this.localRole.id}/`, this.localRole)
-          : await axios.post("/api/backend/roles/", this.localRole);
-        if (response.data.success) {
+          ? await axios.put(`/api/backend/roles/${this.localRole.id}/`, roleData)
+          : await axios.post("/api/backend/roles/", roleData);
+        if (response.status === 200 || response.status === 201) {
           alert("保存成功");
           this.$router.push({ name: 'roleManagement' });
         } else {
@@ -103,7 +121,7 @@ export default {
     async fetchUsers() {
       try {
         const response = await axios.get('/api/backend/users/');
-        this.users = response.data;
+        this.availableUsers = response.data;
       } catch (error) {
         console.error('Error fetching users:', error);
       }
@@ -111,10 +129,22 @@ export default {
     async fetchModules() {
       try {
         const response = await axios.get('/api/backend/modules/');
-        this.modules = response.data;
+        this.availableModules = response.data;
       } catch (error) {
         console.error('Error fetching modules:', error);
       }
+    },
+    addMember() {
+      this.localRole.users.push('');
+    },
+    removeMember(index) {
+      this.localRole.users.splice(index, 1);
+    },
+    updateMembers() {
+      this.$forceUpdate();
+    },
+    cancel() {
+      this.$router.push({ name: 'roleManagement' });
     },
     async fetchRolePermissions(roleId) {
       try {
@@ -124,38 +154,24 @@ export default {
         console.error('Error fetching role permissions:', error);
       }
     },
-    cancel() {
-      this.$router.push({ name: 'roleManagement' });
-    },
-    navigateToRolePermissions(roleId) {
-      this.$router.push(`/management/role_permissions/${roleId}`);
-    },
-    navigateToRoleManagement() {
-      this.$router.push('/management/role-management');
-    },
     navigateToAddPermission() {
       this.$router.push(`/management/role_permissions/${this.localRole.id}`);
     },
     async loadRole(roleId) {
       try {
         const response = await axios.get(`/api/backend/roles/${roleId}/`);
-        this.localRole = response.data;
+        const role = response.data;
+        this.localRole = {
+          id: role.id,
+          name: role.name,
+          module: role.module.id, // Ensure module ID is used
+          users: role.users.map(user => user.id), // Ensure only user IDs are used
+          is_active: role.is_active
+        };
         await this.fetchRolePermissions(roleId);
+        this.updateMembers();
       } catch (error) {
         console.error('Error loading role:', error.response ? error.response.data : error.message);
-      }
-    },
-    async deletePermission(permissionId) {
-      try {
-        const response = await axios.delete(`/api/backend/role_permissions/${permissionId}/`);
-        if (response.data.success) {
-          await this.fetchRolePermissions(this.localRole.id);
-        } else {
-          alert("刪除權限失敗");
-        }
-      } catch (error) {
-        console.error('Error deleting permission:', error.response ? error.response.data : error.message);
-        alert("刪除權限失敗");
       }
     }
   },
