@@ -1,4 +1,3 @@
-# settings.py
 import logging
 import os
 from pathlib import Path
@@ -115,7 +114,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
-    BASE_DIR / 'vue-admin' / 'dist',
+    # BASE_DIR / 'vue-admin' / 'dist',
 ]
 
 # Default primary key field type
@@ -218,7 +217,6 @@ LOGGING = {
         'level': 'DEBUG',
     },
 }
-
 
 CORS_ALLOW_CREDENTIALS = True
 

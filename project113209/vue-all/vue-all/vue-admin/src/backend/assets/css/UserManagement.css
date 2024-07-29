@@ -1,0 +1,121 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+  }
+  
+  .container {
+    width: 90%;
+    margin: 20px auto;
+    background-color: #ffffff;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+  
+  .header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  
+  .pending-approval-btn {
+    background-color: #4CAF50;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: white;
+    text-align: center;
+  }
+  
+  .pending-approval-btn:hover {
+    background-color: #45a049;
+  }
+  
+  .filter-section label, .filter-section select, .filter-section input {
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .user-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  
+  .user-table th, .user-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .user-table th {
+    background-color: #f2f2f2;
+  }
+  
+  .user-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .user-table tr:hover {
+    background-color: #ddd;
+  }
+  
+  .edit-btn, .delete-btn, .assigning-roles-btn {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+  }
+  
+  .edit-btn {
+    background-color: #ffa500;
+  }
+  
+  .edit-btn:hover {
+    background-color: #e59400;
+  }
+  
+  .delete-btn {
+    background-color: #f44336;
+  }
+  
+  .delete-btn:hover {
+    background-color: #d32f2f;
+  }
+  
+  .assigning-roles-btn {
+    background-color: #2196F3;
+  }
+  
+  .assigning-roles-btn:hover {
+    background-color: #1976D2;
+  }
+  
+  /* Add responsive design */
+  @media (max-width: 768px) {
+    .header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .user-table th, .user-table td {
+      padding: 6px;
+    }
+  
+    .edit-btn, .delete-btn, .assigning-roles-btn {
+      padding: 3px 5px;
+    }
+  }
