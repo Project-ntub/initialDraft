@@ -30,6 +30,9 @@
 </template>
 
 <script>
+import axios from '../axios'; // 使用配置好的 axios 实例
+import '../assets/css/LoginPage.css'; // 正確導入 CSS 文件
+
 export default {
   data() {
     return {
@@ -40,10 +43,24 @@ export default {
     };
   },
   methods: {
-    handleLogin() {
-      // 模擬登錄成功的邏輯，無論輸入什麼都認為登錄成功
-      this.loginFeedback = '登入成功';
-      this.$router.push('/home'); // 成功登錄後重定向到首頁
+    async handleLogin() {
+      try {
+        const response = await axios.post('/api/token/', {
+          email: this.email,
+          password: this.password
+        });
+        if (response.status === 200) {
+          localStorage.setItem('token', response.data.access);
+          this.loginFeedback = '登入成功';
+          this.$router.push('/home'); // 成功登錄後重定向到首頁
+        }
+      } catch (error) {
+        if (error.response && error.response.data) {
+          this.loginFeedback = error.response.data.detail || '登入失敗，請檢查您的電子郵件和密碼';
+        } else {
+          this.loginFeedback = '登入失敗，請稍後再試';
+        }
+      }
     },
     togglePasswordVisibility(inputId) {
       const passwordInput = document.getElementById(inputId);
@@ -56,5 +73,3 @@ export default {
   }
 };
 </script>
-
-<style scoped src="@/assets/css/LoginPage.css"></style>

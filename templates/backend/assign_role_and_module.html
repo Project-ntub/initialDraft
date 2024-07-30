@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>分配角色和模組</title>
+    <link
+      rel="stylesheet"
+      href="{% static 'backend/css/role_management.css' %}"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <h2>分配角色和模組給 {{ user.username }}</h2>
+      <form method="post">
+        {% csrf_token %}
+        <label for="module">選擇模組:</label>
+        <select id="module" name="module" onchange="loadRoles(this.value)">
+          <option value="">-- 選擇模組 --</option>
+          {% for module in modules %}
+          <option value="{{ module.id }}">{{ module.name }}</option>
+          {% endfor %}
+        </select>
+
+        <label for="role">選擇角色:</label>
+        <select id="role" name="role">
+          <option value="">-- 選擇角色 --</option>
+        </select>
+
+        <button type="submit">保存</button>
+      </form>
+      <button onclick="window.history.back()">回到上一頁</button>
+    </div>
+
+    <script>
+      function loadRoles(moduleId) {
+        if (moduleId) {
+          fetch(`/backend/get_roles_by_module/${moduleId}/`)
+            .then((response) => response.json())
+            .then((data) => {
+              const roleSelect = document.getElementById("role");
+              roleSelect.innerHTML = '<option value="">-- 選擇角色 --</option>';
+              data.forEach((role) => {
+                roleSelect.innerHTML += `<option value="${role.id}">${role.name}</option>`;
+              });
+            })
+            .catch((error) => console.error("Error:", error));
+        } else {
+          const roleSelect = document.getElementById("role");
+          roleSelect.innerHTML = '<option value="">-- 選擇角色 --</option>';
+        }
+      }
+    </script>
+  </body>
+</html>

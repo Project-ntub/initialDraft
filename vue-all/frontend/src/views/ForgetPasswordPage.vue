@@ -10,6 +10,8 @@
 </template>
 
 <script>
+import axios from '../axios';
+
 export default {
   name: 'ForgetPasswordPage',
   data() {
@@ -20,7 +22,14 @@ export default {
   methods: {
     sendPasswordReset() {
       if (this.email) {
-        alert('已發送密碼重設請求至您的電子郵件');
+        axios.post('/frontend/forgot_password/', { email: this.email })
+          .then(() => {
+            alert('已發送密碼重設請求至您的電子郵件');
+          })
+          .catch(error => {
+            console.error('Error sending password reset request:', error);
+            alert('發送失敗，請重試');
+          });
       } else {
         alert('請輸入有效的電子郵件地址');
       }

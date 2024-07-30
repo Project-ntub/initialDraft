@@ -38,6 +38,8 @@
 </template>
 
 <script>
+import axios from '../axios';
+
 export default {
   data() {
     return {
@@ -56,7 +58,15 @@ export default {
         alert('請輸入有效的電子郵件地址。');
         return;
       }
-      this.verificationFeedback = '驗證碼已發送到您的電子郵件，有效期限5分鐘。';
+
+      axios.get(`/frontend/send_verification_code/?email=${this.email}`)
+        .then(() => {
+          this.verificationFeedback = '驗證碼已發送到您的電子郵件，有效期限5分鐘。';
+        })
+        .catch(error => {
+          console.error('Error sending verification code:', error);
+          this.verificationFeedback = '發送驗證碼失敗，請重試。';
+        });
     },
     validateEmail(email) {
       const re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
@@ -87,7 +97,24 @@ export default {
         return;
       }
 
-      alert('註冊成功！');
+      const userData = {
+        username: this.username,
+        email: this.email,
+        password: this.password,
+        confirmPassword: this.confirmPassword,
+        phone: this.phone,
+        verificationCode: this.verificationCode
+      };
+
+      axios.post('/frontend/register/', userData)
+        .then(() => {
+          alert('註冊成功！');
+          this.$router.push('/'); // 跳转到首页
+        })
+        .catch(error => {
+          console.error('Error registering user:', error);
+          alert('註冊失敗，請重試。');
+        });
     },
   },
 };

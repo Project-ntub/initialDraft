@@ -1,0 +1,140 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>首頁</title>
+  <link rel="stylesheet" href="{% static 'frontend/css/home.css' %}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gaugeJS/dist/gauge.min.js"></script>
+  <script src="{% static 'frontend/js/home.js' %}"></script>
+  
+</head>
+<body>
+  <h2>首頁</h2>
+
+  <div class="navbar">
+    <div class="dropdown">
+      <button class="dropbtn">選單</button>
+      <div class="dropdown-content">
+        <a href="首頁.html">首頁</a>
+        <a href="個人資訊.html">個人資訊</a>
+        <a href="帳號設定.html">帳號設定</a>
+        <a href="歷史紀錄.html">歷史紀錄</a>
+        <a href="前台登出成功.html" onclick="logout()">登出</a> <!-- 新增登出按鈕 -->
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button onclick="showChart('sales')">銷售額</button>
+    <button onclick="showChart('revenue')">營業額</button>
+    <button onclick="showChart('inventory')">庫存量</button>
+  </div>
+
+  <div class="date-select">
+    <label for="yearSelect">選擇年份：</label>
+    <select id="yearSelect"></select>
+    
+    <label for="monthSelect">選擇月份：</label>
+    <select id="monthSelect"></select>
+    
+    <label for="daySelect">選擇日期：</label>
+    <select id="daySelect"></select>
+
+    <button id="queryButton">查詢</button> <!-- 新增的查詢按鈕 -->
+  </div>
+
+  <div class="chart-container" id="salesChartContainer">
+    <div class="chart-controls">
+      <div class="control-box">
+        <button onclick="changeDataset('sales', 'salesBarChart')">銷售額</button>
+        <button onclick="changeDataset('cost', 'salesBarChart')">銷售成本</button>
+        <button onclick="changeDataset('profit', 'salesBarChart')">銷售毛利</button>
+      </div>
+      <canvas id="salesBarChart"></canvas>
+    </div>
+    <div class="gauge-container">
+      <div>
+        <canvas id="salesGauge"></canvas>
+        <div class="chart-label">銷售額評估</div>
+      </div>
+      <div>
+        <canvas id="salesCostGauge"></canvas>
+        <div class="chart-label">銷售成本評估</div>
+      </div>
+      <div>
+        <canvas id="salesProfitGauge"></canvas>
+        <div class="chart-label">銷售毛利評估</div>
+      </div>
+    </div>
+    <div class="bar-chart-container">
+      <canvas id="salesBarChart"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-container" id="revenueChartContainer">
+    <div class="chart-controls">
+      <div class="control-box">
+        <button onclick="changeDataset('revenue', 'revenueBarChart')">營業收入</button>
+        <button onclick="changeDataset('cost', 'revenueBarChart')">營業成本</button>
+        <button onclick="changeDataset('profit', 'revenueBarChart')">營業毛利</button>
+      </div>
+      <canvas id="revenueBarChart"></canvas>
+    </div>
+    <div class="gauge-container">
+      <div>
+        <canvas id="revenueGauge"></canvas>
+        <div class="chart-label">營業額評估</div>
+      </div>
+      <div>
+        <canvas id="revenueCostGauge"></canvas>
+        <div class="chart-label">營業成本評估</div>
+      </div>
+      <div>
+        <canvas id="revenueProfitGauge"></canvas>
+        <div class="chart-label">營業毛利評估</div>
+      </div>
+    </div>
+    <div class="bar-chart-container">
+      <canvas id="revenueBarChart"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-container" id="inventoryChartContainer">
+    <div class="chart-controls">
+    <div class="control-box">
+      <button onclick="changeDataset('inventory', 'inventoryBarChart')">庫存量</button>
+      <button onclick="changeDataset('cost', 'inventoryBarChart')">庫存成本</button>
+      <button onclick="changeDataset('profit', 'inventoryBarChart')">庫存毛利</button>
+    </div>
+    <canvas id="inventoryBarChart"></canvas>
+  </div>
+    <div class="gauge-container">
+      <div>
+        <canvas id="inventoryGauge"></canvas>
+        <div class="chart-label">庫存量評估</div>
+      </div>
+      <div>
+        <canvas id="inventoryCostGauge"></canvas>
+        <div class="chart-label">庫存成本評估</div>
+      </div>
+      <div>
+        <canvas id="inventoryProfitGauge"></canvas>
+        <div class="chart-label">庫存毛利評估</div>
+      </div>
+    </div>
+    <div class="bar-chart-container">
+      <canvas id="inventoryBarChart"></canvas>
+    </div>
+
+    
+    
+  </div>
+
+  <script>
+    
+  </script>
+</body>
+</html>

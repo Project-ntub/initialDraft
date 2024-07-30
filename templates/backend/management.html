@@ -1,0 +1,61 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>管理介面</title>
+    <link rel="stylesheet" href="{% static 'backend/css/management.css' %}" />
+  </head>
+  <body>
+    <div class="hamburger-menu" onclick="toggleSidebar()">
+      <div class="hamburger-icon">☰</div>
+    </div>
+    <div class="sidebar">
+      <h2>管理介面</h2>
+      <a href="{% url 'backend:dashboard' %}" data-frame="dashboard"
+        >儀錶板管理</a
+      >
+      <a href="{% url 'backend:user_management' %}" data-frame="user-management"
+        >用戶管理</a
+      >
+      <a href="{% url 'backend:role_management' %}" data-frame="role-management"
+        >角色管理</a
+      >
+      <a href="{% url 'backend:history' %}" data-frame="history">歷史紀錄</a>
+      <button class="logout-btn">登出</button>
+    </div>
+    <div class="main-content" id="main-content">
+      <h1 id="welcome-title">歡迎來到管理介面</h1>
+      <p id="welcome-description">請選擇一個選項來管理。</p>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+          var sidebar = document.querySelector('.sidebar');
+          var mainContent = document.querySelector('.main-content');
+          var hamburgerIcon = document.querySelector('.hamburger-icon');
+          sidebar.classList.toggle('active');
+          mainContent.classList.toggle('shifted');
+          if (sidebar.classList.contains('active')) {
+              hamburgerIcon.textContent = '✕';
+          } else {
+              hamburgerIcon.textContent = '☰';
+          }
+      }
+
+        document.querySelectorAll('.sidebar a').forEach(function(link) {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+                var frameId = this.getAttribute('data-frame');
+                var mainContent = document.getElementById('main-content');
+                mainContent.innerHTML = '<iframe src="' + this.href + '" style="width: 100%; height: 100vh; border: none;"></iframe>';
+            });
+        });
+
+        document.querySelector('.logout-btn').addEventListener('click', function() {
+            window.location.href = '{% url 'backend:logout_success' %}'; // 跳轉到登出頁面
+        });
+    </script>
+  </body>
+</html>

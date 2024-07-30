@@ -1,81 +1,50 @@
 <template>
-    <div>
-      <div class="header-bar">重設密碼</div>
-      <div class="container">
-        <h2>重設密碼</h2>
-        <form>
-          <label for="newPassword">新密碼：</label>
-          <div class="input-container">
-            <input type="password" id="newPassword" v-model="newPassword">
-            <i class="fas fa-eye toggle-password" @click="togglePasswordVisibility('newPassword')"></i>
-          </div>
-  
-          <label for="confirmPassword">確認密碼：</label>
-          <div class="input-container">
-            <input type="password" id="confirmPassword" v-model="confirmPassword">
-            <i class="fas fa-eye toggle-password" @click="togglePasswordVisibility('confirmPassword')"></i>
-          </div>
-  
-          <button type="button" @click="resetPassword">重設密碼</button>
-        </form>
-      </div>
-    </div>
-  </template>
-  
-  <script>
-  export default {
-    name: 'ResetPasswordPage',
-    data() {
-      return {
-        newPassword: '',
-        confirmPassword: ''
-      };
-    },
-    methods: {
-      resetPassword() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const email = urlParams.get('email');
-        const token = urlParams.get('token');
-  
-        if (this.newPassword !== this.confirmPassword) {
-          alert('密碼不匹配');
-          return;
-        }
-  
-        fetch('http://localhost:3001/resetpassword', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ email: email, token: token, newPassword: this.newPassword })
-        })
-          .then(response => response.json())
-          .then(data => {
-            alert(data.message);
-            if (data.success) {
-              this.$router.push('/reset-success');
-            }
-          })
-          .catch(error => console.error('Error:', error));
-      },
-      togglePasswordVisibility(id) {
-        const passwordInput = document.getElementById(id);
-        const eyeIcon = passwordInput.nextElementSibling;
-        if (passwordInput.type === 'password') {
-          passwordInput.type = 'text';
-          eyeIcon.classList.remove('fa-eye');
-          eyeIcon.classList.add('fa-eye-slash');
-        } else {
-          passwordInput.type = 'password';
-          eyeIcon.classList.remove('fa-eye-slash');
-          eyeIcon.classList.add('fa-eye');
-        }
+  <div class="reset-password-container">
+    <h2>重置密碼</h2>
+    <form @submit.prevent="handleSubmit">
+      <label for="password">新密碼：</label>
+      <input type="password" id="password" v-model="password" required />
+      <label for="confirmPassword">確認新密碼：</label>
+      <input type="password" id="confirmPassword" v-model="confirmPassword" required />
+      <button type="submit">提交</button>
+    </form>
+    <div v-if="message">{{ message }}</div>
+  </div>
+</template>
+
+<script>
+import axios from 'axios';
+import '@/assets/css/ResetPasswordPage.css'; 
+
+export default {
+  data() {
+    return {
+      password: '',
+      confirmPassword: '',
+      message: '',
+      token: ''
+    };
+  },
+  created() {
+    this.token = this.$route.params.token;
+  },
+  methods: {
+    handleSubmit() {
+      if (this.password !== this.confirmPassword) {
+        this.message = '兩次密碼輸入不一致。';
+        return;
       }
+      axios.post(`http://localhost:8000/frontend/reset_password/${this.token}/`, {
+        password: this.password
+      })
+        .then(() => {
+          this.message = '密碼重置成功！';
+        })
+        .catch(error => {
+          console.error('Error resetting password:', error);
+          this.message = '重置失敗，請重試。';
+        });
     }
-  };
-  </script>
-  
-  <style scoped>
-  @import "../assets/css/ResetPasswordPage.css";
-  </style>
-  
+  }
+};
+</script>

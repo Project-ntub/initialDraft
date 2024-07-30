@@ -16,3 +16,10 @@ env/
 
 # Static files
 staticfiles/
+# 忽略 Python 緩存文件
+
+*.py[cod]
+
+# 忽略虛擬環境目錄
+venv/
+

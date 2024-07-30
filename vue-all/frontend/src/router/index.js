@@ -24,7 +24,12 @@ const routes = [
   { path: '/historydetails', name: '歷史紀錄詳情', component: HistoryDetails },
   { path: '/detail/:id', name: '歷史紀錄詳情', component: HistoryDetails },
   { path: '/history', name: '歷史紀錄', component: HistoryPage },
-  { path: '/resetpassword', name: 'ResetPassword', component: ResetPasswordPage },
+  {
+    path: '/reset_password/:token',
+    name: 'ResetPassword',
+    component: ResetPasswordPage, meta: { hideNavbar: true, hideSidebar: true }
+  },
+  
 ];
 
 const router = createRouter({
