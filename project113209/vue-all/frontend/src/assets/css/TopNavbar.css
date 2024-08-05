@@ -1,0 +1,22 @@
+/* .top-navbar {
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px;
+    background-color: #303F9F;
+    color: white; */
+  /* } */
+
+  .user-profile {
+    display: flex;
+    align-items: center;
+  }
+  
+  /* .user-profile img {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+  } */
+  
+
+  

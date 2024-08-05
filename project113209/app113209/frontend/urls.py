@@ -1,7 +1,8 @@
-# app113209\frontend\urls.py
+# app113209/frontend/urls.py
 from django.urls import path
 from . import views as frontend_views
 from django.views.generic import TemplateView
+from .views import get_chart_data
 
 app_name = 'frontend'
 
@@ -16,4 +17,5 @@ urlpatterns = [
     path('home/', frontend_views.home, name='frontend-home'),
     path('verify_otp/', frontend_views.verify_otp, name='frontend-verify_otp'),
     path('forgot_password/', frontend_views.forgot_password, name='frontend-forgot_password'),
+    path('api/chart_data/', get_chart_data, name='get_chart_data'),  # 合併的 URL 定義
 ]

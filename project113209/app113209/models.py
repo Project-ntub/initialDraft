@@ -116,3 +116,35 @@ class RoleUser(models.Model):
     class Meta:
         db_table = 'role_users'
         unique_together = ('role', 'user')
+# 前端
+# 在 models.py 中添加 FrontendSpecificModel
+class FrontendSpecificModel(models.Model):
+    # 定義欄位
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'frontend_specific_model'
+
+    def __str__(self):
+        return self.name
+    
+from django.db import models
+
+class ChartData(models.Model):
+    chart_type = models.CharField(max_length=100)
+    chart_name = models.CharField(max_length=100)
+    chart_data = models.TextField()
+    available = models.BooleanField(default=True)
+    create_id = models.IntegerField()
+    modify_id = models.IntegerField()
+    create_date = models.DateTimeField(auto_now_add=True)
+    modify_date = models.DateTimeField(auto_now=True)
+    branch_id = models.IntegerField()
+    name = models.CharField(max_length=100)  # 添加的字段
+
+    class Meta:
+        db_table = 'charts'  # 確保表名與你的數據庫表名一致
+

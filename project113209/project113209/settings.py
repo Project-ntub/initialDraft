@@ -32,7 +32,7 @@ INSTALLED_APPS = [
     'django_otp',
     'django_otp.plugins.otp_totp',
     'django_otp.plugins.otp_static',
-    'two_factor',
+    # 'two_factor',
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',  
@@ -113,10 +113,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',
-    # BASE_DIR / 'vue-admin' / 'dist',
+ BASE_DIR / 'static',
+    BASE_DIR / 'vue-all' / 'frontend' / 'dist',  # 指向前端的dist目錄
+    BASE_DIR / 'vue-all' / 'vue-admin' / 'dist',  # 指向vue-admin的dist目錄
 ]
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
@@ -164,7 +164,7 @@ CACHES = {
 # 认证后端
 AUTHENTICATION_BACKENDS = (
     'app113209.backends.EmailBackend',
-    'two_factor.auth_backend.TwoFactorBackend',
+    # 'two_factor.auth_backend.TwoFactorBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
 

@@ -148,7 +148,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = '911213sw@gmail.com'
-EMAIL_HOST_PASSWORD = 'qquvszizjvibmlov'
+EMAIL_HOST_PASSWORD = 'ogdz leqz rahi bnse'
 
 # Session settings
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True

@@ -115,3 +115,16 @@ class RolePermission(models.Model):
 
     def __str__(self):
         return self.permission_name
+
+# 前端
+class FrontendSpecificModel(models.Model):
+    user_name = models.CharField(max_length=100)
+    email = models.EmailField()
+    feedback = models.TextField()
+    submitted_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'frontend_specific_model'
+
+    def __str__(self):
+        return self.user_name

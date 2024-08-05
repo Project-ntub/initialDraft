@@ -1,8 +1,13 @@
-# app113209/frontend/api_urls.py
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 from .api_views import FrontendSpecificModelViewSet
+from . import views as frontend_views
+
+router = DefaultRouter()
+router.register(r'frontend_model', FrontendSpecificModelViewSet, basename='frontend_model')
 
 urlpatterns = [
-    path('frontend_view1/', FrontendSpecificModelViewSet.as_view({'get': 'list'}), name='frontend_view1'),
-    path('frontend_view2/', FrontendSpecificModelViewSet.as_view({'get': 'retrieve'}), name='frontend_view2'),
+    path('', include(router.urls)),
+    path('send_verification_code/', frontend_views.send_verification_code, name='send_verification_code'),
+    path('register/', frontend_views.register, name='register'),
 ]

@@ -13,6 +13,7 @@ from datetime import timedelta
 from django.core.mail import send_mail
 from django.conf import settings
 from django.http import JsonResponse
+from app113209.models import ChartData  # 確保導入正確的模型
 
 logger = logging.getLogger(__name__)
 
@@ -194,3 +195,15 @@ def forgot_password(request):
         # 在這裡處理忘記密碼邏輯，例如發送重置密碼的電子郵件
         return render(request, 'frontend/forgot_password_done.html', {'message': '重置密碼的連結已發送到您的電子郵件'})
     return render(request, 'frontend/forgot_password.html')
+
+# frontend/views.py
+def get_chart_data(request):
+    charts = ChartData.objects.filter(available=True)
+    data = []
+    for chart in charts:
+        data.append({
+            'chart_type': chart.chart_type,
+            'chart_name': chart.chart_name,
+            'chart_data': chart.chart_data,
+        })
+    return JsonResponse(data, safe=False)

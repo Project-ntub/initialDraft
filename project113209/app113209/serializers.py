@@ -1,6 +1,8 @@
 # app113209/serializers.py
 from rest_framework import serializers
 from .models import User, Module, Role, RolePermission
+# 前端
+from app113209.models import FrontendSpecificModel
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -41,3 +43,11 @@ class RolePermissionSerializer(serializers.ModelSerializer):
             'role': {'required': True},
             'permission_name': {'required': True}
         }
+# 前端
+# serializers.py
+
+
+class FrontendSpecificModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FrontendSpecificModel
+        fields = '__all__'  # 或者列出具體需要的字段，例如 ['name', 'description']

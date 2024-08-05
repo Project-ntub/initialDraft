@@ -1,0 +1,79 @@
+.history-page {
+  font-family: Arial, sans-serif;
+  background-color: #f7f7f7;
+  padding: 20px;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.search-container input {
+  flex-grow: 1;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.search-container button {
+  padding: 10px 15px;
+  font-size: 16px;
+  width: 100px; /* 设置按钮的宽度 */
+  margin-left: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+.search-container button:hover {
+  background-color: #0056b3;
+}
+
+.timeline {
+  list-style: none;
+  padding: 0;
+}
+
+.timeline-item {
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+
+.timeline-panel {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.timeline-heading h4 {
+  margin: 0 0 10px 0;
+  color: #3f51b5;
+}
+
+.timeline-body p {
+  margin: 0;
+}
+
+.timeline-user {
+  margin-top: 5px;
+  color: #777;
+}
+.history-page {
+  font-family: Arial, sans-serif;
+  background-color: #f7f7f7;
+  padding: 20px;
+  margin-top: 50px; /* 添加顶部外边距以避免被顶部导航栏遮挡 */
+  margin-left: 60px; /* 侧边栏收起时的左边距 */
+  transition: margin-left 0.3s; /* 添加过渡效果 */
+}

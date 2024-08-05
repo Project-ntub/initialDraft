@@ -1,6 +1,6 @@
-# app113209/serializers.py
+# app113209/frontend/serializers.py
 from rest_framework import serializers
-from .models import User, Module, Role, RolePermission
+from app113209.models import User, Module, Role, RolePermission, FrontendSpecificModel
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -29,3 +29,9 @@ class RolePermissionSerializer(serializers.ModelSerializer):
     class Meta:
         model = RolePermission
         fields = ('id', 'role', 'permission_name', 'can_add', 'can_query', 'can_view', 'can_edit', 'can_delete', 'can_print', 'can_export', 'can_maintain', 'is_deleted')
+
+# 前端
+class FrontendSpecificModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FrontendSpecificModel
+        fields = '__all__'

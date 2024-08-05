@@ -1,0 +1,32 @@
+.home-page {
+    display: flex;
+    margin-top: 50px;  /* 添加顶部外边距以避免被顶部导航栏遮挡 */
+  }
+  
+  .main-panel {
+    flex-grow: 1;
+    padding: 20px;
+    padding-top: 100px;  /* 额外添加顶部内边距 */
+  }
+  
+  .chart-controls {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+  }
+  
+  .charts-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .chart {
+    flex: 1 1 calc(33.333% - 20px); /* 调整这个百分比以根据每行的图表数量进行调整 */
+    min-width: 300px; /* 根据你的首选最小宽度进行调整 */
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
