@@ -27,6 +27,7 @@
     </table>
 
     <ModuleForm v-if="showCreateModuleModal" @close="closeCreateModuleModal" @create="createModule" />
+    <ModuleForm v-if="showEditModuleModal" :moduleId="editModuleId" :moduleName="editModuleName" @close="closeEditModuleModal" @edit="editModule" />
   </div>
 </template>
 
@@ -42,8 +43,8 @@ export default {
   data() {
     return {
       modules: [],
-      users: [],
       showCreateModuleModal: false,
+      showEditModuleModal: false,
       newModuleName: "",
       editModuleName: "",
       editModuleId: null
@@ -53,7 +54,8 @@ export default {
     async loadModules() {
       try {
         const response = await axios.get('/api/backend/modules/');
-        this.modules = response.data;
+        console.log('Modules from backend:', response.data);  // 打印前端接收的數據
+        this.modules = response.data.filter(module => !module.is_deleted) || [];
       } catch (error) {
         console.error('Error fetching modules:', error.response ? error.response.data : error.message);
       }
@@ -67,14 +69,16 @@ export default {
     async createModule(newModule) {
       try {
         const response = await axios.post('/api/backend/modules/', newModule);
-        if (response.data.success) {
+        if (response.status === 201) { // 201 Created
           this.loadModules();
           this.closeCreateModuleModal();
+          alert("新增模組成功");
         } else {
           alert("新增模組失敗");
         }
       } catch (error) {
         console.error('Error creating module:', error.response ? error.response.data : error.message);
+        alert("新增模組失敗");
       }
     },
     openEditModuleModal(id, name) {
@@ -85,32 +89,37 @@ export default {
     closeEditModuleModal() {
       this.showEditModuleModal = false;
     },
-    async editModule() {
+    async editModule(updatedModule) {
       try {
-        const response = await axios.put(`/api/backend/modules/${this.editModuleId}/`, { name: this.editModuleName });
-        if (response.data.success) {
+        const response = await axios.put(`/api/backend/modules/${this.editModuleId}/`, updatedModule);
+        if (response.status === 200) { // 200 OK
           this.loadModules();
           this.closeEditModuleModal();
+          alert("編輯模組成功");
         } else {
           alert("編輯模組失敗");
         }
       } catch (error) {
         console.error('Error editing module:', error.response ? error.response.data : error.message);
+        alert("編輯模組失敗");
       }
     },
-    async deleteModule(id) {
-      try {
-        const response = await axios.delete(`/api/backend/modules/${id}/`);
-        if (response.data.success) {
-          this.loadModules();
-        } else {
-          alert("刪除模組失敗");
-        }
-      } catch (error) {
-        console.error('Error deleting module:', error.response ? error.response.data : error.message);
-        alert("刪除模組失敗");
-      }
-    },
+    async deleteModule(id) { 
+      try { 
+        const response = await axios.delete(`/api/backend/modules/${id}/`); 
+        console.log('Delete response:', response);  // 打印刪除響應
+        if (response.status === 204) { 
+          this.loadModules(); 
+          alert("刪除成功");
+        } else { 
+          alert("刪除模組失敗"); 
+          console.error('Error deleting module:', response.data.message); 
+        } 
+      } catch (error) { 
+        console.error('Error deleting module:', error.response ? error.response.data : error.message); 
+        alert("刪除模組失敗"); 
+      } 
+    }, 
     navigateToRoleManagement() {
       this.$router.push('/management/role-management');
     },
@@ -118,17 +127,12 @@ export default {
       this.$router.push('/management/module-management');
     },
     getUserCount(moduleId) {
-      return this.users.filter(user => user.module.id === moduleId).length;
+      const module = this.modules.find(m => m.id === moduleId);
+      return module ? module.user_count : 0; // 確保返回值總是一个數字
     }
   },
-  async mounted() {
-    await this.loadModules();
-    try {
-      const response = await axios.get('/api/backend/users/');
-      this.users = response.data;
-    } catch (error) {
-      console.error('Error fetching users:', error.response ? error.response.data : error.message);
-    }
+  created() {
+    this.loadModules();
   }
 };
 </script>

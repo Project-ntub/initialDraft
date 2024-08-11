@@ -22,6 +22,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.db.models import Q
 from rest_framework import status, viewsets
+from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes, action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -180,6 +181,12 @@ class AllowIframeMiddleware:
 
 def pending_list(request):
     return render(request, 'backend/pending_list.html')
+
+class PendingUserListView(APIView):
+    def get(self, request):
+        users = User.objects.filter(is_active=False)
+        serializer = UserSerializer(users, many=True)
+        return Response(serializer.data)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -345,9 +352,6 @@ def get_roles(request):
     data = list(roles.values())
     return JsonResponse(data, safe=False)
 
-def get_roles_by_module(request, module_id):
-    roles = Role.objects.filter(module_id=module_id, is_deleted=False).values('id', 'name')
-    return JsonResponse(list(roles), safe=False)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -385,14 +389,14 @@ def module_management(request):
 @permission_classes([IsAuthenticated])
 def create_role(request):
     role_data = request.data.get('role', {})
-    role_permissions_data = request.data.get('role_permissions', [])
+    role_permission_data = request.data.get('role_permission', [])
 
     serializer = RoleSerializer(data=role_data)
     if serializer.is_valid():
         role = serializer.save()
 
         # 處理權限
-        for perm_data in role_permissions_data:
+        for perm_data in role_permission_data:
             RolePermission.objects.create(
                 role=role,
                 permission_name=perm_data.get('permission_name'),
@@ -416,7 +420,7 @@ def edit_role(request, role_id):
     try:
         role = get_object_or_404(Role, id=role_id)
         role_data = request.data['role']
-        role_permissions_data = request.data.get('role_permissions', [])
+        role_permission_data = request.data.get('role_permission', [])
 
         role.name = role_data['name']
         role.is_active = role_data['is_active']
@@ -424,7 +428,7 @@ def edit_role(request, role_id):
         role.save()
 
         role.rolepermission_set.all().delete()
-        for perm_data in role_permissions_data:
+        for perm_data in role_permission_data:
             RolePermission.objects.create(
                 role=role,
                 permission_name=perm_data['permission_name'],
@@ -486,10 +490,13 @@ def create_module(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def delete_module(request, module_id):
-    module = get_object_or_404(Module, id=module_id)
-    module.is_deleted = True
-    module.save()
-    return JsonResponse({'success': True})
+    try:
+        module = Module.objects.get(id=module_id)
+        module.is_deleted = True
+        module.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    except Module.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])

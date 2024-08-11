@@ -73,31 +73,8 @@ class Module(models.Model):
     def __str__(self):
         return self.name
 
-class Role(models.Model):
-    name = models.CharField(max_length=255)
-    is_active = models.BooleanField(default=True)
-    is_deleted = models.BooleanField(default=False)
-    module = models.ForeignKey('Module', on_delete=models.CASCADE)
-    users = models.ManyToManyField('User', through='RoleUser', related_name='roles')
-
-    class Meta:
-        db_table = 'role'
-
-    def __str__(self):
-        return self.name
-
-class RoleUser(models.Model):
-    user = models.ForeignKey('User', on_delete=models.CASCADE)
-    role = models.ForeignKey('Role', on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        db_table = 'role_users'
-        unique_together = ('role', 'user')
-
 class RolePermission(models.Model):
-    role = models.ForeignKey(Role, on_delete=models.CASCADE)
+    role = models.ForeignKey('Role', on_delete=models.CASCADE)
     permission_name = models.CharField(max_length=100)
     can_add = models.BooleanField(default=False)
     can_query = models.BooleanField(default=False)
@@ -115,3 +92,27 @@ class RolePermission(models.Model):
 
     def __str__(self):
         return self.permission_name
+
+class Role(models.Model):
+    name = models.CharField(max_length=255)
+    is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
+    module = models.ForeignKey('Module', on_delete=models.CASCADE)
+    users = models.ManyToManyField('User', through='RoleUser', related_name='roles')
+    permissions = models.ManyToManyField(RolePermission, related_name='roles')
+
+    class Meta:
+        db_table = 'role'
+
+    def __str__(self):
+        return self.name
+
+class RoleUser(models.Model):
+    user = models.ForeignKey('User', on_delete=models.CASCADE)
+    role = models.ForeignKey('Role', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'role_users'
+        unique_together = ('role', 'user')

@@ -130,7 +130,7 @@ export default {
     },
     deleteUser(userId) {
       if (confirm('確定要刪除此用戶嗎？')) {
-        axios.post(`/backend/delete_user/${userId}/`)
+        axios.delete(`/api/backend/delete_user/${userId}/`)
           .then(() => {
             this.fetchUsers();
           })

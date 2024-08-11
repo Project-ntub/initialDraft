@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Login from '../components/Login.vue';
+import Register from '../components/Register.vue';
+import ForgetPasswordPage from '../components/ForgetPasswordPage.vue';
 import Management from '../components/Management.vue';
 import Dashboard from '../components/Dashboard.vue';
 import UserManagement from '../components/UserManagement.vue';
@@ -15,6 +17,8 @@ import RolePermissions from '../components/RolePermissions.vue';
 const routes = [
   { path: '/', redirect: '/login' },
   { path: '/login', component: Login },
+  { path: '/register', component: Register },
+  { path: '/forgetpassword', component: ForgetPasswordPage },
   {
     path: '/management',
     component: Management,

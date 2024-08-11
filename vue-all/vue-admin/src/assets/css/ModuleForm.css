@@ -1,0 +1,36 @@
+/* src/assets/css/ModuleForm.css */
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #6c757d;
+    color: white;
+    margin-right: 10px;
+}
+
+.btn.secondary {
+    background-color: #6c757d;
+}
+
+.btn:hover {
+    background-color: #5a6268;
+}
+
+.btn.secondary:hover {
+    background-color: #5a6268;
+}

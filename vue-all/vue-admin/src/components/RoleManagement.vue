@@ -6,6 +6,9 @@
     </div>
     <h2>角色管理</h2>
     <button id="add-role-btn" class="btn" @click="openCreateRoleModal">新增角色</button>
+    <RoleModal :isVisible="showCreateRoleModal" @close="closeCreateRoleModal">
+      <RoleForm @role-saved="fetchRoles" @close="closeCreateRoleModal" />
+    </RoleModal>
     <label for="chart-module-select">圖表模組:</label>
     <select id="chart-module-select" v-model="selectedModule" @change="filterRolesByModule">
       <option value="all">所有模組</option>
@@ -32,13 +35,13 @@
           </td>
           <td>{{ role.users.length }}</td>
           <td>
-            <select>
+            <select v-model="role.selectedUser">
               <option v-for="user in role.users" :key="user.id" :value="user.id">{{ user.username }}</option>
             </select>
           </td>
-          <td>{{ role.module ? role.module.name : '未知模組' }}</td>
+          <td>{{ role.module_name ? role.module_name : '未知模組' }}</td>
           <td>
-            <button class="permissions-btn" @click="navigateToEditRole(role.id)">
+            <button class="permissions-btn" @click="openEditRoleModal(role.id)">
               角色權限
             </button>
             <button class="delete-btn" @click="deleteRole(role.id)">
@@ -49,31 +52,31 @@
       </tbody>
     </table>
 
-    <RoleForm v-if="showCreateRoleModal" :modules="modules" :users="users" @close="closeCreateRoleModal" @create="createRole" />
+    <RoleModal :isVisible="showEditRoleModal" @close="closeEditRoleModal">
+      <RoleForm :roleId="editingRoleId" @role-saved="fetchRoles" @close="closeEditRoleModal" />
+    </RoleModal>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+import RoleModal from './RoleModal.vue';
 import RoleForm from './RoleForm.vue';
 
 export default {
   name: 'RoleManagement',
   components: {
+    RoleModal,
     RoleForm
   },
   data() {
     return {
       roles: [],
       modules: [],
-      users: [],
       selectedModule: 'all',
       showCreateRoleModal: false,
-      newRole: {
-        name: '',
-        module: '',
-        members: []
-      }
+      showEditRoleModal: false,
+      editingRoleId: null
     };
   },
   computed: {
@@ -87,7 +90,10 @@ export default {
     async fetchRoles() {
       try {
         const response = await axios.get('/api/backend/roles/');
-        this.roles = response.data;
+        this.roles = response.data.map(role => ({
+          ...role,
+          selectedUser: role.users.length ? role.users[0].id : null
+        }));
       } catch (error) {
         console.error('Error fetching roles:', error);
       }
@@ -100,45 +106,23 @@ export default {
         console.error('Error fetching modules:', error);
       }
     },
-    async fetchUsers() {
-      try {
-        const response = await axios.get('/api/backend/users/');
-        this.users = response.data;
-      } catch (error) {
-        console.error('Error fetching users:', error);
-      }
-    },
     openCreateRoleModal() {
       this.showCreateRoleModal = true;
     },
     closeCreateRoleModal() {
       this.showCreateRoleModal = false;
     },
-    async createRole(roleData) {
-      try {
-        const response = await axios.post('/api/backend/roles/', {
-          role: roleData,
-          role_permissions: []
-        });
-        if (response.status === 201) {
-          this.fetchRoles();  // Reload roles data
-          this.closeCreateRoleModal();
-        } else {
-          alert(response.data.message || "新增角色失敗");
-        }
-      } catch (error) {
-        console.error("新增角色出現錯誤:", error);
-        alert("新增角色時出現錯誤");
-      }
+    openEditRoleModal(roleId) {
+      this.editingRoleId = roleId;
+      this.showEditRoleModal = true;
     },
-    filterRolesByModule() {
-      console.log('Filtering roles by module', this.selectedModule);
+    closeEditRoleModal() {
+      this.showEditRoleModal = false;
+      this.editingRoleId = null;
     },
     async toggleStatus(roleId, isActive) {
       try {
-        const response = await axios.post(`/api/backend/toggle_role_status/${roleId}/`, {
-          is_active: isActive
-        });
+        const response = await axios.post(`/api/backend/toggle_role_status/${roleId}/`, { is_active: isActive });
         if (response.data.success) {
           this.fetchRoles(); // Reload roles list
         } else {
@@ -148,9 +132,6 @@ export default {
         console.error('Error toggling status:', error);
         alert('切換狀態失敗');
       }
-    },
-    navigateToEditRole(roleId) {
-      this.$router.push({ name: 'editRole', params: { roleId } });
     },
     navigateToRoleManagement() {
       this.$router.push('/management/role-management');
@@ -175,7 +156,6 @@ export default {
   mounted() {
     this.fetchRoles();
     this.fetchModules();
-    this.fetchUsers();
   }
 };
 </script>

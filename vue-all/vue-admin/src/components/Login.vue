@@ -21,7 +21,7 @@
       還未擁有帳號? <router-link to="/register">註冊</router-link>
     </p>
     <p>
-      忘記密碼? <router-link to="/forgot_password">重置密碼</router-link>
+      忘記密碼? <router-link to="/forgetpassword">重置密碼</router-link>
     </p>
     <p v-if="error">{{ error }}</p>
   </div>
