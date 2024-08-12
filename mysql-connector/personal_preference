@@ -1,219 +1,120 @@
-import mysql.connector
-from mysql.connector import Error
+from django.core.management.base import BaseCommand
+from django.db import models, connections
+from django.utils import timezone
 
-def get_db_connection():
-    try:
-        connection = mysql.connector.connect(
-            host='140.131.114.242',
-            database='113-ntub113209',
-            user='ntub113209',
-            password='Sw@23110565'
-        )
-        if connection.is_connected():
-            print("Connected to the database")
-        return connection
-    except Error as e:
-        print(f"Error while connecting to MySQL: {e}")
-        return None
+# 確保你在 myapp/models.py 中定義了 UserPreferences 模型
+class UserPreferences(models.Model):
+    user_id = models.AutoField(primary_key=True)
+    fontsize = models.CharField(max_length=50)
+    notificationSettings = models.CharField(max_length=50)
+    autoLogin = models.CharField(max_length=50)
 
-# 測試連接
-if __name__ == "__main__":
-    connection = get_db_connection()
-    if connection:
-        connection.close()
+    class Meta:
+        db_table = 'userpreferences'
 
-import mysql.connector
-from mysql.connector import Error
+    def __str__(self):
+        return f"{self.user_id} - {self.fontsize} - {self.notificationSettings} - {self.autoLogin}"
 
-def get_db_connection():
-    try:
-        connection = mysql.connector.connect(
-            host='140.131.114.242',
-            database='113-ntub113209',
-            user='ntub113209',
-            password='Sw@23110565'
-        )
-        return connection
-    except Error as e:
-        print(f"Error while connecting to MySQL: {e}")
-        return None
+class Command(BaseCommand):
+    help = '管理 userpreferences 表的偏好設置'
 
-def get_preferences(user_id):
-    connection = get_db_connection()
-    if connection:
-        cursor = connection.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM userpreferences WHERE user_id = %s", (user_id,))
-        preference = cursor.fetchone()
-        connection.close()
-        return preference if preference else {"fontsize": "medium", "notificationSettings": False, "autoLogin": False}
-    else:
-        return {"error": "Database connection failed"}
+    def handle(self, *args, **kwargs):
+        self.stdout.write("獲取偏好設置: ")
+        self.stdout.write(str(self.get_preferences()))
 
-# 測試查詢
-if __name__ == "__main__":
-    user_id = 1
-    preferences = get_preferences(user_id)
-    print(preferences)
+        self.stdout.write(self.add_preference("large", "on", "on"))
+        self.stdout.write(self.update_preference(1, "small", "on", "on"))
+        self.stdout.write(self.delete_preference(1))
+        self.stdout.write("查詢偏好設置: ")
+        self.stdout.write(str(self.query_preferences(fontsize="medium")))
 
-import mysql.connector
-from mysql.connector import Error
-
-def get_db_connection():
-    try:
-        connection = mysql.connector.connect(
-            host='140.131.114.242',
-            database='113-ntub113209',
-            user='ntub113209',
-            password='Sw@23110565'
-        )
-        return connection
-    except Error as e:
-        print(f"Error while connecting to MySQL: {e}")
-        return None
-
-def update_preference(user_id, fontsize, notificationSettings, autoLogin):
-    connection = get_db_connection()
-    if connection:
-        cursor = connection.cursor()
-        sql = """
-            UPDATE userpreferences SET
-                fontsize = %s,
-                notificationSettings = %s,
-                autoLogin = %s
-            WHERE user_id = %s
-        """
-        cursor.execute(sql, (fontsize, notificationSettings, autoLogin, user_id))
-        connection.commit()
-        connection.close()
-        return {"message": "Preferences updated successfully"}
-    else:
-        return {"error": "Database connection failed"}
-
-import mysql.connector
-from mysql.connector import Error
-
-def get_db_connection():
-    try:
-        connection = mysql.connector.connect(
-            host='140.131.114.242',
-            database='113-ntub113209',
-            user='ntub113209',
-            password='Sw@23110565'
-        )
-        return connection
-    except Error as e:
-        print(f"Error while connecting to MySQL: {e}")
-        return None
-
-def update_preference(user_id, fontsize, notificationSettings, autoLogin):
-    connection = get_db_connection()
-    if connection:
-        cursor = connection.cursor()
-        sql = """
-            UPDATE userpreferences SET
-                fontsize = %s,
-                notificationSettings = %s,
-                autoLogin = %s
-            WHERE user_id = %s
-        """
+    def get_preferences(self):
         try:
-            cursor.execute(sql, (fontsize, int(notificationSettings), int(autoLogin), user_id))
-            connection.commit()
-            print(f"{cursor.rowcount} record(s) updated.")
-        except Error as e:
-            print(f"Error while updating MySQL: {e}")
-        finally:
-            connection.close()
-            return {"message": "Preferences updated successfully"}
-    else:
-        return {"error": "Database connection failed"}
+            preference = UserPreferences.objects.first()
+            if preference:
+                return {
+                    "user_id": preference.user_id,
+                    "fontsize": preference.fontsize,
+                    "notificationSettings": preference.notificationSettings,
+                    "autoLogin": preference.autoLogin
+                }
+            else:
+                return {
+                    "fontsize": "medium",
+                    "notificationSettings": "off",
+                    "autoLogin": "off"
+                }
+        except Exception as e:
+            return str(e)
 
-# 測試更新
-if __name__ == "__main__":
-    result = update_preference(1, 'large', True, True)
-    print(result)
-
-
-import mysql.connector
-from mysql.connector import Error
-
-def get_db_connection():
-    try:
-        connection = mysql.connector.connect(
-            host='140.131.114.242',
-            database='113-ntub113209',
-            user='ntub113209',
-            password='Sw@23110565'
-        )
-        return connection
-    except Error as e:
-        print(f"Error while connecting to MySQL: {e}")
-        return None
-
-def add_preference(user_id, fontsize, notificationSettings, autoLogin):
-    connection = get_db_connection()
-    if connection:
-        cursor = connection.cursor()
-        sql = """
-            INSERT INTO userpreferences (user_id, fontsize, notificationSettings, autoLogin)
-            VALUES (%s, %s, %s, %s)
-        """
+    def update_preference(self, user_id, fontsize, notificationSettings, autoLogin):
         try:
-            cursor.execute(sql, (user_id, fontsize, int(notificationSettings), int(autoLogin)))
-            connection.commit()
-            print(f"{cursor.rowcount} record(s) inserted.")
-        except Error as e:
-            print(f"Error while inserting into MySQL: {e}")
-        finally:
-            connection.close()
-            return {"message": "Preference added successfully"}
-    else:
-        return {"error": "Database connection failed"}
+            preference = UserPreferences.objects.get(user_id=user_id)
+            preference.fontsize = fontsize
+            preference.notificationSettings = notificationSettings
+            preference.autoLogin = autoLogin
+            preference.save()
+            return '偏好已更新'
+        except UserPreferences.DoesNotExist:
+            return '偏好不存在'
+        except Exception as e:
+            return str(e)
 
-# 測試新增
-if __name__ == "__main__":
-    result = add_preference(1, 'small', False, True)
-    print(result)
-
-
-import mysql.connector
-from mysql.connector import Error
-
-def get_db_connection():
-    try:
-        connection = mysql.connector.connect(
-            host='140.131.114.242',
-            database='113-ntub113209',
-            user='ntub113209',
-            password='Sw@23110565'
-        )
-        return connection
-    except Error as e:
-        print(f"Error while connecting to MySQL: {e}")
-        return None
-
-def delete_preference(user_id):
-    connection = get_db_connection()
-    if connection:
-        cursor = connection.cursor()
-        sql = "DELETE FROM userpreferences WHERE user_id = %s"
+    def add_preference(self, fontsize, notificationSettings, autoLogin):
         try:
-            cursor.execute(sql, (user_id,))
-            connection.commit()
-            print(f"{cursor.rowcount} record(s) deleted.")
-            return {"message": "Preference deleted successfully"}
-        except Error as e:
-            print(f"Error while deleting from MySQL: {e}")
-            return {"error": f"Error while deleting from MySQL: {e}"}
-        finally:
-            connection.close()
-    else:
-        return {"error": "Database connection failed"}
+            UserPreferences.objects.create(
+                fontsize=fontsize,
+                notificationSettings=notificationSettings,
+                autoLogin=autoLogin
+            )
+            return '偏好已新增'
+        except Exception as e:
+            return str(e)
 
-# 測試刪除
-if __name__ == "__main__":
-    user_id = 1  # 替換為要刪除的使用者ID
-    result = delete_preference(user_id)
-    print(result)
+    def delete_preference(self, user_id):
+        try:
+            preference = UserPreferences.objects.get(user_id=user_id)
+            preference.delete()
+            return '偏好已刪除'
+        except UserPreferences.DoesNotExist:
+            return '偏好不存在'
+        except Exception as e:
+            return str(e)
 
+    def query_preferences(self, fontsize=None, notificationSettings=None, autoLogin=None):
+        try:
+            filters = {}
+            if fontsize:
+                filters['fontsize'] = fontsize
+            if notificationSettings:
+                filters['notificationSettings'] = notificationSettings
+            if autoLogin:
+                filters['autoLogin'] = autoLogin
 
+            preferences = UserPreferences.objects.filter(**filters)
+            result = []
+            for preference in preferences:
+                result.append({
+                    "user_id": preference.user_id,
+                    "fontsize": preference.fontsize,
+                    "notificationSettings": preference.notificationSettings,
+                    "autoLogin": preference.autoLogin
+                })
+            return result
+        except Exception as e:
+            return str(e)
+
+# 確保你在 myapp/models.py 中定義了 UserPreferences 模型
+from django.db import models
+
+class UserPreferences(models.Model):
+    user_id = models.AutoField(primary_key=True)
+    fontsize = models.CharField(max_length=50)
+    notificationSettings = models.CharField(max_length=50)
+    autoLogin = models.CharField(max_length=50)
+
+    class Meta:
+        db_table = 'userpreferences'
+
+    def __str__(self):
+        return f"{self.user_id} - {self.fontsize} - {self.notificationSettings} - {self.autoLogin}"
