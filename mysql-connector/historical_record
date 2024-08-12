@@ -1,66 +1,52 @@
-import mysql.connector
-from mysql.connector import Error
-from datetime import datetime
+from django.core.management.base import BaseCommand
+from django.utils import timezone
+from app113209.models import DjangoAdminLog, UserActivityLogs  # 確保使用正確的應用程式名稱
 
-# 插入到 django_admin_log
-def insert_into_django_admin_log(connection, user, action, email):
-    try:
-        cursor = connection.cursor()
-        sql = "INSERT INTO django_admin_log (user_id, content_type_id, object_id, object_repr, action_flag, change_message, action_time) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        cursor.execute(sql, (user, None, None, None, action, email, timestamp))
-        connection.commit()
-        print("紀錄已插入到 django_admin_log")
-    except Error as e:
-        print(f"Error: {e}")
+class Command(BaseCommand):
+    help = 'Insert logs for specific users'
 
-# 插入到 user_activitylogs
-def insert_into_user_activitylogs(connection, user, activity, email):
-    try:
-        cursor = connection.cursor()
-        sql = "INSERT INTO user_activitylogs (user, activity, email, timestamp) VALUES (%s, %s, %s, %s)"
-        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        cursor.execute(sql, (user, activity, email, timestamp))
-        connection.commit()
-        print("紀錄已插入到 user_activitylogs")
-    except Error as e:
-        print(f"Error: {e}")
+    def handle(self, *args, **kwargs):
+        records = [
+            ('張三', 1, '新增角色', 'zhangsan@example.com'),  # 假設 action_flag 是整數型別
+            ('李四', 2, '刪除角色', 'lisi@example.com')       # 假設 action_flag 是整數型別
+        ]
 
-def main():
-    records = [
-        ('張三', '新增角色', 'zhangsan@example.com'),
-        ('李四', '刪除角色', 'lisi@example.com')
-    ]
+        activities = [
+            ('張三', '新增角色', 'zhangsan@example.com'),
+            ('李四', '刪除角色', 'lisi@example.com')
+        ]
 
-    activities = [
-        ('張三', '新增角色', 'zhangsan@example.com'),
-        ('李四', '刪除角色', 'lisi@example.com')
-    ]
+        for record in records:
+            self.insert_into_django_admin_log(*record)
+        
+        for activity in activities:
+            self.insert_into_user_activitylogs(*activity)
 
-    try:
-        connection = mysql.connector.connect(
-            host='140.131.114.242',
-            database='113-ntub113209',
-            user='ntub113209',
-            password='Sw@23110565'
-        )
-        if connection.is_connected():
-            print("Connected to MySQL database")
+    def insert_into_django_admin_log(self, user, action_flag, action, email):
+        try:
+            timestamp = timezone.now()
+            DjangoAdminLog.objects.create(
+                user_id=user,
+                content_type_id=None,
+                object_id=None,
+                object_repr=None,
+                action_flag=action_flag,  # 假設這是整數
+                change_message=email,
+                action_time=timestamp
+            )
+            self.stdout.write("紀錄已插入到 django_admin_log")
+        except Exception as e:
+            self.stdout.write(f"Error: {e}")
 
-            # 插入紀錄
-            for record in records:
-                insert_into_django_admin_log(connection, *record)
-            
-            for activity in activities:
-                insert_into_user_activitylogs(connection, *activity)
-
-    except Error as e:
-        print(f"Error while connecting to MySQL: {e}")
-
-    finally:
-        if connection.is_connected():
-            connection.close()
-            print('MySQL連線已關閉')
-
-if __name__ == "__main__":
-    main()
+    def insert_into_user_activitylogs(self, user, activity, email):
+        try:
+            timestamp = timezone.now()
+            UserActivityLogs.objects.create(
+                user=user,
+                activity=activity,
+                email=email,
+                timestamp=timestamp
+            )
+            self.stdout.write("紀錄已插入到 user_activitylogs")
+        except Exception as e:
+            self.stdout.write(f"Error: {e}")
